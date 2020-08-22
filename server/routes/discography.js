@@ -69,6 +69,10 @@ var getAlbumInfo = util.promisify(bcScraper.getAlbumInfo);
         return Promise.all(ps).then(collection => res.json(collection));
 */
 
+router.get('/labels', (req, res, next)=>{
+    res.json(labels.map(label =>label.name));
+});
+
 router.get('/getUrls', async(req, res, next)=>{
     res.json( await getUrls(labels));
 });

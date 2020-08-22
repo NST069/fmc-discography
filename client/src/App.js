@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import logo from './logo.svg';
 import './App.css';
 
@@ -11,10 +11,12 @@ function App() {
   const endpoint = "http://localhost:5000";
 
   const [albums, setAlbums] = useState([]);
+  
 
-  const getAllSNH = ()=>{
+  const getAllbyLabel = (label)=>{
     setAlbums([]);
-    axios.get(`${endpoint}/discography/getAllFromLabel/Saturn Ashes`)
+    console.log(label);
+    axios.get(`${endpoint}/discography/getAllFromLabel/${label}`)
     .then((res)=>{
       //res.data.map(label=>{setAlbums(label.albumData)});
       setAlbums(res.data.albumData);
@@ -24,7 +26,8 @@ function App() {
   return (
     <div className="App">
       <Main
-        getAllSNH={getAllSNH}
+        labels={["Saturn Ashes", "Outer Ring"]}
+        getAllbyLabel={getAllbyLabel}
         albums={albums}
       />
     </div>
