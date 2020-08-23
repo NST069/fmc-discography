@@ -1,46 +1,60 @@
 import React from 'react';
 
+import {
+    Button,
+    ButtonGroup,
+    ButtonToolbar,
+    ListGroup,
+    Spinner,
+} from 'react-bootstrap';
+
+import ReleaseCard from './ReleaseCard';
 
 const Main = ({labels, getAllbyLabel, getAll, albums, loading, sortPosts})=>{
 
 
     return(
         <div>
-            <button onClick={(event)=>{
-                event.preventDefault();
-                getAll();
-            }}>All</button>
-            {
-                labels.map(label=>
-                    <button onClick={(event)=>{
+            <ButtonToolbar>
+                <ButtonGroup className="mr-2">
+                    <Button onClick={(event)=>{
                         event.preventDefault();
-                        getAllbyLabel(label);
-                    }}>{label}</button>)
-            }
-            <div>
-                <button onClick={(event)=>{
-                    event.preventDefault();
-                    sortPosts("artist");
-                }}>by Artist</button>
-                <button onClick={(event)=>{
-                    event.preventDefault();
-                    sortPosts("title");
-                    }}>by Title</button>
-            </div>      
+                        getAll();
+                    }}>All</Button>
+                    {
+                        labels.map(label=>
+                            <Button onClick={(event)=>{
+                                event.preventDefault();
+                                getAllbyLabel(label);
+                            }}>{label}</Button>)
+                    }
+                </ButtonGroup>
+                <ButtonGroup className="mr-2">
+                    <Button variant="secondary" onClick={(event)=>{
+                        event.preventDefault();
+                        sortPosts("artist");
+                    }}>by Artist</Button>
+                    <Button variant="secondary" onClick={(event)=>{
+                        event.preventDefault();
+                        sortPosts("title");
+                        }}>by Title</Button>
+                </ButtonGroup>      
+            </ButtonToolbar>
             {
                 loading
-                ? <h1>LOADING...</h1>
+                ? <Spinner animation="border"/>
                 :
-                <table style={{padding:5+'px'}}>
-                    <tr>
+                <ListGroup horizontal="xl" classname="my-2">
                     {albums.map(album=>
-                        <td style={{marginTop:2+'px'}}>
-                            <img src={album.imageUrl} alt={`${album.artist} - ${album.title}`} />
-                            <p>{`${album.artist} - ${album.title}`}</p>
-                        </td>
+                        <ListGroup.Item key={album.id}>
+                            <ReleaseCard
+                                imageUrl={album.imageUrl}
+                                artist={album.artist}
+                                title={album.title}
+                            />
+                        </ListGroup.Item>
                     )}
-                    </tr>
-                </table>
+                </ListGroup>
             }
         </div>
     );

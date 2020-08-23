@@ -34,7 +34,7 @@ const updateTrackdata = async()=>{
         collection.map(async item => {
             let label = labels.find(lbl => lbl.name === item.name);
             label.albumUrls = item.urls;
-            
+            label.albumData=[];
             //let lbl = labels.find(label => label.name === item.name);
             let albumsInfo = item.urls.map(async url=>{/*
                 let albumInfo = [];
@@ -48,8 +48,6 @@ const updateTrackdata = async()=>{
                 return albumInfo;
                 //return albumInfo ? albumInfo : await getAlbumInfo(url);*/
                 //var getAlbumInfo = util.promisify(bcScraper.getAlbumInfo);
-                
-                label.albumData=[];
                 await bcScraper.getAlbumInfo(url, (err,res)=>{
                     label.albumData = [...label.albumData, res];
                     //return res;
@@ -78,16 +76,17 @@ router.get('/getUrls', async(req, res, next)=>{
 
 router.get('/getAllFromLabel/:label', (req, res, next)=>{
     updateTrackdata()
-    .then((result)=>{
-        res.json(labels.find(label => label.name === req.params.label).albumData);
+    .then(async(result)=>{
+        let albums = await labels.find(label => label.name === req.params.label).albumData;
+        res.json(albums);
     });
 });
 
 router.get('/getAll', (req, res, next)=>{
     updateTrackdata()
-    .then((result)=>{
+    .then(async(result)=>{
         let albums = [];
-        labels.map((label)=>label.albumData).map(a=>albums.push(...a))
+        await labels.map((label)=>label.albumData).map(a=>albums.push(...a))
         res.json(albums);
     })
 
