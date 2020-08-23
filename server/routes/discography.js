@@ -85,10 +85,9 @@ router.get('/getAllFromLabel/:label', (req, res, next)=>{
 router.get('/getAll', (req, res, next)=>{
     updateTrackdata()
     .then((result)=>{
-        let a = labels.map((label)=>label.albumData);
-        let aa = [];
-        a.map(aaa=>aa.push(...aaa));
-        res.json(aa);
+        let albums = [];
+        labels.map((label)=>label.albumData).map(a=>albums.push(...a))
+        res.json(albums);
     })
 
 });

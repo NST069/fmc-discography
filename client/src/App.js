@@ -12,6 +12,7 @@ function App() {
 
   const [albums, setAlbums] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [sortingRule, setSortingRule] = useState("artist");
   
 
   const getAllbyLabel = (label)=>{
@@ -37,13 +38,35 @@ function App() {
     })
   } 
 
+  const sortPosts = (rule)=>{
+    setLoading(true);
+    let r;
+    console.log(sortingRule, albums);
+    switch(rule){
+      case "artist":
+        r = (a,b)=>(a.artist.toLowerCase()).localeCompare(b.artist.toLowerCase());
+        break;
+      case "title":
+        r = (a,b)=>(a.title.toLowerCase()).localeCompare(b.title.toLowerCase());
+        break;
+      default:
+        break;
+    }
+    setSortingRule(rule);
+    setAlbums(albums.sort(r));
+    console.log(sortingRule, albums);
+    setLoading(false);
+  }
+
   return (
     <div className="App">
       <Main
         labels={["Saturn Ashes", "Outer Ring"]}
         getAllbyLabel={getAllbyLabel}
+        loading={loading}
         getAll={getAll}
         albums={albums}
+        sortPosts={sortPosts}
       />
     </div>
   );
