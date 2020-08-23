@@ -1,11 +1,15 @@
 import React from 'react';
 
 
-const Main = ({labels, getAllbyLabel, albums})=>{
+const Main = ({labels, getAllbyLabel, getAll, albums})=>{
 
 
     return(
         <div>
+            <button onClick={(event)=>{
+                event.preventDefault();
+                getAll();
+            }}>All</button>
             {
                 labels.map(label=>
                     <button onClick={(event)=>{

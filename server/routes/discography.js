@@ -21,10 +21,8 @@ const labels = [
 
 let updated = 0;
 
-const updateTrackdata = async(labels)=>{
+const updateTrackdata = async()=>{
     if(Date.now() - updated < 1000 * 60 * 60) return labels;
-    
-    console.log(labels)
 
     console.log("Updating data...");
     const geturls = util.promisify(bcScraper.getAlbumUrls);
@@ -78,17 +76,19 @@ router.get('/getUrls', async(req, res, next)=>{
 });
 
 router.get('/getAllFromLabel/:label', (req, res, next)=>{
-    updateTrackdata(labels)
-    .then(()=>{
-        
-        res.json(labels.find(label => label.name === req.params.label));
+    updateTrackdata()
+    .then((result)=>{
+        res.json(labels.find(label => label.name === req.params.label).albumData);
     });
 });
 
 router.get('/getAll', (req, res, next)=>{
-    updateTrackdata(labels)
-    .then(()=>{
-        res.json(labels);
+    updateTrackdata()
+    .then((result)=>{
+        let a = labels.map((label)=>label.albumData);
+        let aa = [];
+        a.map(aaa=>aa.push(...aaa));
+        res.json(aa);
     })
 
 });
