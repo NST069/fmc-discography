@@ -22,7 +22,10 @@ const Main = ({labels, getAllbyLabel, getAll, albums, loading, sortPosts})=>{
                     event.preventDefault();
                     sortPosts("artist");
                 }}>by Artist</button>
-                <button onClick={(event)=>sortPosts("title")}>by Title</button>
+                <button onClick={(event)=>{
+                    event.preventDefault();
+                    sortPosts("title");
+                    }}>by Title</button>
             </div>      
             {
                 loading

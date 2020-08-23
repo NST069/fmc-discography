@@ -38,10 +38,10 @@ function App() {
     })
   } 
 
-  const sortPosts = (rule)=>{
+  const sortPosts = async (rule)=>{
     setLoading(true);
     let r;
-    console.log(sortingRule, albums);
+    console.log(sortingRule, rule, albums);
     switch(rule){
       case "artist":
         r = (a,b)=>(a.artist.toLowerCase()).localeCompare(b.artist.toLowerCase());
@@ -53,8 +53,8 @@ function App() {
         break;
     }
     setSortingRule(rule);
-    setAlbums(albums.sort(r));
-    console.log(sortingRule, albums);
+    setAlbums(await albums.sort(r));
+    console.log(sortingRule, rule, albums);
     setLoading(false);
   }
 

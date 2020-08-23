@@ -48,7 +48,8 @@ const updateTrackdata = async()=>{
                 return albumInfo;
                 //return albumInfo ? albumInfo : await getAlbumInfo(url);*/
                 //var getAlbumInfo = util.promisify(bcScraper.getAlbumInfo);
-
+                
+                label.albumData=[];
                 await bcScraper.getAlbumInfo(url, (err,res)=>{
                     label.albumData = [...label.albumData, res];
                     //return res;
