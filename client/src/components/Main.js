@@ -44,7 +44,7 @@ const Main = ({labels, getAllbyLabel, getAll, albums, loading, sortPosts})=>{
                 loading
                 ? <Spinner animation="border"/>
                 :
-                <ListGroup horizontal="xl" classname="my-2">
+                <ListGroup horizontal="xl" className="my-2">
                     {albums.map(album=>
                         <ListGroup.Item key={album.id}>
                             <ReleaseCard
