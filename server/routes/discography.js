@@ -79,7 +79,7 @@ const composeAlbumInfo = (albumData)=>{
             }
         }),
         upc: albumData.raw.current.upc,
-        releaseDate: albumData.raw.album_release_date,
+        releaseDate: Date.parse(albumData.raw.current.release_date),
     };
 }
 
