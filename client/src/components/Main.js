@@ -48,9 +48,7 @@ const Main = ({labels, getAllbyLabel, getAll, albums, loading, sortPosts})=>{
                     {albums.map(album=>
                         <ListGroup.Item key={album.id}>
                             <ReleaseCard
-                                imageUrl={album.imageUrl}
-                                artist={album.artist}
-                                title={album.title}
+                                album={album}
                             />
                         </ListGroup.Item>
                     )}

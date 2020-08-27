@@ -40,6 +40,10 @@ function App() {
     })
   } 
 
+  useEffect(()=>{
+    getAll();
+  }, []);
+
   const sortPosts = async (rule)=>{
     setLoading(true);
     let r;

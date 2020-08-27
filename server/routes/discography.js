@@ -41,7 +41,6 @@ const updateTrackdata = async()=>{
     });
     var albumsList = labels.map(async label => {
         let aInfo = label.albumUrls.map(async url=>{
-            console.log("getting", url);
             return {name: label.name, data: await getAlbumInfo(url)};
         });
         await Promise.all(aInfo)
@@ -49,7 +48,7 @@ const updateTrackdata = async()=>{
             collection.map(label=>{
                 if(label===null) return; // TODO: reload
                 let currentLabel = labels.find(lbl=>lbl.name===label.name);
-                currentLabel.albumData = [...currentLabel.albumData, label.data]; //placing info objects
+                currentLabel.albumData = [...currentLabel.albumData, composeAlbumInfo(label.data)]; //placing info objects
             });
         })
     });
@@ -59,6 +58,30 @@ const updateTrackdata = async()=>{
         console.log("Done");
     });
 };
+
+const composeAlbumInfo = (albumData)=>{
+    return {
+        artist: albumData.artist,
+        title: albumData.title,
+        imageUrl: albumData.imageUrl,
+        tags: albumData.tags.map(tag => tag.name),
+        url: albumData.url,
+        id: albumData.raw.id,
+        itemType: albumData.raw.item_type,
+        tracks: albumData.raw.trackinfo.map(track=>{
+            return {
+                title: track.title,
+                id: track.id,
+                duration: Math.floor(track.duration),
+                //file: track.file.mp3-128,
+                trackNum: track.track_num,
+
+            }
+        }),
+        upc: albumData.raw.current.upc,
+        releaseDate: albumData.raw.album_release_date,
+    };
+}
 
 router.get('/labels', (req, res, next)=>{
     res.json(labels.map(label =>label.name));
@@ -71,7 +94,7 @@ router.get('/getUrls', async(req, res, next)=>{
 router.get('/getAllFromLabel/:label', (req, res, next)=>{
     updateTrackdata()
     .then(async(result)=>{
-        console.log(labels);
+        //console.log(labels);
         let albums = await labels.find(label => label.name === req.params.label).albumData;
         res.json(albums);
     });
@@ -81,7 +104,6 @@ router.get('/getAll', (req, res, next)=>{
     updateTrackdata()
     .then(async(result)=>{
         let albums = [];
-        console.log(labels);
         await labels.map((label)=>label.albumData).map(a=>albums.push(...a))
         res.json(albums);
     })
