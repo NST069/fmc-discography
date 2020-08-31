@@ -69,22 +69,24 @@ function App() {
 
   return (
     <div className="App">
-      <Header
-        darkMode={darkMode}
-        setDarkMode={setDarkMode}
-        labels={["Saturn Ashes", "Outer Ring"]}
-        getAllbyLabel={getAllbyLabel}
-        getAll={getAll}
-        sortPosts={sortPosts}
-      />
-      <Main
-        darkMode={darkMode}
-        loading={loading}
-        albums={albums}
-      />
-      <Footer
-        darkMode={darkMode}
-      />
+      <div className={darkMode?"bg-secondary":"bg-white"}>
+        <Header
+          darkMode={darkMode}
+          setDarkMode={setDarkMode}
+          labels={["Saturn Ashes", "Outer Ring"]}
+          getAllbyLabel={getAllbyLabel}
+          getAll={getAll}
+          sortPosts={sortPosts}
+        />
+        <Main
+          darkMode={darkMode}
+          loading={loading}
+          albums={albums}
+        />
+        <Footer
+          darkMode={darkMode}
+        />
+      </div>
     </div>
   );
 }

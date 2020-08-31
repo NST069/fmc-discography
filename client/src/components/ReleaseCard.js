@@ -17,9 +17,9 @@ const ReleaseCard = ({darkMode, album})=>{
         `upc: ${album.upc}`
         :null}
         */
-        <Card className="mt-3 mb-3" key={album.id} bg={darkMode?"secondary":"light"} text={darkMode?"white":"dark"}>
+        <Card className="mt-3 mb-3" key={album.id} bg={darkMode?"dark":"light"} text={darkMode?"white":"dark"}>
             <Card.Header>{`${album.artist} - ${album.title}`}</Card.Header>
-            <Media style={{margin:'5px'}}>
+            <Media style={{margin:'5px'}}> {/* TODO: Make Grid instead of Media */}
                 <a href={album.url}><Image
                     width={200}
                     height={200}
@@ -53,7 +53,7 @@ const ReleaseCard = ({darkMode, album})=>{
             </Media>
             <Card.Footer>
             {album.releaseDate?
-                <small className="text-muted">Released: {new Date(album.releaseDate).toDateString()}</small>
+                <small className={darkMode?"text-light":"text-muted"}>Released: {new Date(album.releaseDate).toDateString()}</small>
             :null}
             </Card.Footer>
         </Card>

@@ -10,7 +10,7 @@ const Main = ({darkMode, albums, loading})=>{
 
 
     return(
-        <div variant={darkMode?"dark":"light"}>
+        <div>
             {
                 loading
                 ? <Spinner animation="border"/>
