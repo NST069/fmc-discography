@@ -2,14 +2,14 @@ import React from 'react';
 
 import { 
         Card,
-        Button,
+        Image,
         Table,
         Media,
         Badge,
 
     }from 'react-bootstrap';
 
-const ReleaseCard = ({album})=>{
+const ReleaseCard = ({darkMode, album})=>{
 
     return(
         /*
@@ -17,26 +17,27 @@ const ReleaseCard = ({album})=>{
         `upc: ${album.upc}`
         :null}
         */
-        <Card style={{ width: '50rem' }}>
+        <Card className="mt-3 mb-3" key={album.id} bg={darkMode?"secondary":"light"} text={darkMode?"white":"dark"}>
             <Card.Header>{`${album.artist} - ${album.title}`}</Card.Header>
             <Media style={{margin:'5px'}}>
-                <a href={album.url}><img
+                <a href={album.url}><Image
                     width={200}
                     height={200}
                     className="mr-3"
                     src={album.imageUrl}
                     alt={`${album.artist} - ${album.title}`}
+                    rounded
                 /></a>
                 
                 <br/>
-                <Media.Body >
+                <Media.Body>
                     <p>
                     {
                         album.tags?
-                        album.tags.map(tag=> <Badge pill variant="secondary" style={{margin:'2px'}} key={tag}>{`#${tag}`}</Badge>)
+                        album.tags.map(tag=> <Badge pill variant={darkMode?"light":"secondary"} style={{margin:'2px'}} key={tag}>{`#${tag}`}</Badge>)
                         :null}
                     </p>
-                    <Table striped bordered hover size="sm">
+                    <Table striped bordered hover size="sm" variant={darkMode?"dark":"light"}>
                         <tbody>
                             {album.tracks.map(track=>
                                 <tr key={track.id}>

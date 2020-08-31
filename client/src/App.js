@@ -6,7 +6,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import axios from 'axios';
 
+import Header from './components/Header';
 import Main from './components/Main';
+import Footer from './components/Footer';
 
 function App() {
 
@@ -15,6 +17,7 @@ function App() {
   const [albums, setAlbums] = useState([]);
   const [loading, setLoading] = useState(false);
   const [sortingRule, setSortingRule] = useState("artist");
+  const [darkMode, setDarkMode] = useState(true);
   
 
   const getAllbyLabel = (label)=>{
@@ -66,13 +69,21 @@ function App() {
 
   return (
     <div className="App">
-      <Main
+      <Header
+        darkMode={darkMode}
+        setDarkMode={setDarkMode}
         labels={["Saturn Ashes", "Outer Ring"]}
         getAllbyLabel={getAllbyLabel}
-        loading={loading}
         getAll={getAll}
-        albums={albums}
         sortPosts={sortPosts}
+      />
+      <Main
+        darkMode={darkMode}
+        loading={loading}
+        albums={albums}
+      />
+      <Footer
+        darkMode={darkMode}
       />
     </div>
   );

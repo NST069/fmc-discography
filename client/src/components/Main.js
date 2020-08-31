@@ -1,58 +1,28 @@
 import React from 'react';
 
 import {
-    Button,
-    ButtonGroup,
-    ButtonToolbar,
-    ListGroup,
     Spinner,
 } from 'react-bootstrap';
 
 import ReleaseCard from './ReleaseCard';
 
-const Main = ({labels, getAllbyLabel, getAll, albums, loading, sortPosts})=>{
+const Main = ({darkMode, albums, loading})=>{
 
 
     return(
-        <div>
-            <ButtonToolbar>
-                <ButtonGroup className="mr-2">
-                    <Button onClick={(event)=>{
-                        event.preventDefault();
-                        getAll();
-                    }}>All</Button>
-                    {
-                        labels.map(label=>
-                            <Button onClick={(event)=>{
-                                event.preventDefault();
-                                getAllbyLabel(label);
-                            }}>{label}</Button>)
-                    }
-                </ButtonGroup>
-                <ButtonGroup className="mr-2">
-                    <Button variant="secondary" onClick={(event)=>{
-                        event.preventDefault();
-                        sortPosts("artist");
-                    }}>by Artist</Button>
-                    <Button variant="secondary" onClick={(event)=>{
-                        event.preventDefault();
-                        sortPosts("title");
-                        }}>by Title</Button>
-                </ButtonGroup>      
-            </ButtonToolbar>
+        <div variant={darkMode?"dark":"light"}>
             {
                 loading
                 ? <Spinner animation="border"/>
                 :
-                <ListGroup className="container" variant="flush">
-                    {albums.map(album=>
-                        <ListGroup.Item key={album.id}>
-                            <ReleaseCard
-                                album={album}
-                            />
-                        </ListGroup.Item>
+                <div className="container">
+                {albums.map(album=>
+                        <ReleaseCard
+                            darkMode={darkMode}
+                            album={album}
+                        />
                     )}
-                </ListGroup>
+                </div>
             }
         </div>
     );
