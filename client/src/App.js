@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -16,7 +15,8 @@ function App() {
 
   const [albums, setAlbums] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [sortingRule, setSortingRule] = useState("artist");
+  const [sortingRule, setSortingRule] = useState("new");
+  const [sortingOrder, setSortingOrder] = useState(true); //true = A->z / Newest first
   const [darkMode, setDarkMode] = useState(true);
   
 
@@ -50,20 +50,22 @@ function App() {
   const sortPosts = async (rule)=>{
     setLoading(true);
     let r;
-    console.log(sortingRule, rule, albums);
+    if(rule===undefined) rule=sortingRule;
     switch(rule){
+      case "new":
+        r = (a,b)=>(sortingOrder ? b.releaseDate - a.releaseDate : a.releaseDate - b.releaseDate);
+        break;
       case "artist":
-        r = (a,b)=>(a.artist.toLowerCase()).localeCompare(b.artist.toLowerCase());
+        r = (a,b)=>(sortingOrder ? (a.artist.toLowerCase()).localeCompare(b.artist.toLowerCase()) : (b.artist.toLowerCase()).localeCompare(a.artist.toLowerCase()));
         break;
       case "title":
-        r = (a,b)=>(a.title.toLowerCase()).localeCompare(b.title.toLowerCase());
+        r = (a,b)=>(sortingOrder ? (a.title.toLowerCase()).localeCompare(b.title.toLowerCase()) : (b.title.toLowerCase()).localeCompare(a.title.toLowerCase()));
         break;
       default:
         break;
     }
     setSortingRule(rule);
     setAlbums(await albums.sort(r));
-    console.log(sortingRule, rule, albums);
     setLoading(false);
   }
 
@@ -77,6 +79,8 @@ function App() {
           getAllbyLabel={getAllbyLabel}
           getAll={getAll}
           sortPosts={sortPosts}
+          sortingOrder={sortingOrder}
+          setSortingOrder={setSortingOrder}
         />
         <Main
           darkMode={darkMode}

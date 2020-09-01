@@ -10,14 +10,15 @@ const Main = ({darkMode, albums, loading})=>{
 
 
     return(
-        <div>
+        <div style={{minHeight:"100vh"}}>
             {
                 loading
-                ? <Spinner animation="border"/>
+                ?
+                    <Spinner animation="grow" variant={darkMode?"dark":"light"}/>
                 :
                 <div className="container">
                 {albums.map(album=>
-                        <ReleaseCard
+                        <ReleaseCard key={album.id}
                             darkMode={darkMode}
                             album={album}
                         />
