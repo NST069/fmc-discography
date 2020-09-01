@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import { 
         Card,
@@ -8,16 +8,15 @@ import {
         Container,
         Row,
         Col,
-    }from 'react-bootstrap';
+        Button,
+        Modal,
+}from 'react-bootstrap';
 
 const ReleaseCard = ({darkMode, album})=>{
 
+    const [modalShow, setModalShow] = useState(false);
+
     return(
-        /*
-        {album.upc?
-        `upc: ${album.upc}`
-        :null}
-        */
         <Card className="mt-3 mb-6" key={album.id} bg={darkMode?"dark":"light"} text={darkMode?"white":"dark"}>
             <Card.Header className="font-weight-bold">{`${album.artist} - ${album.title}`}</Card.Header>
             <Container style={{margin:'5px'}}>
@@ -39,6 +38,26 @@ const ReleaseCard = ({darkMode, album})=>{
                             alt={`${album.artist} - ${album.title}`}
                             rounded
                         /></a>
+                        <Button
+                            block
+                            size="lg"
+                            variant={darkMode?"secondary":"outline-secondary"}
+                            onClick={()=>setModalShow(true)}
+                        >Listen</Button>
+                        <Modal
+                            show={modalShow}
+                            onHide={()=>setModalShow(false)}
+                            size="auto"
+                            centered
+                        >
+                            <Modal.Body className={darkMode?"bg-secondary":"bg-white"}>
+                                <iframe style={{border: "0", width: "100%", height: (album.itemType==="track")?"120px":`${120 + 37*album.tracks.length}px` }} title={album.id}
+                                src={`https://bandcamp.com/EmbeddedPlayer/${album.itemType}=${album.id}/size=large/bgcol=${(darkMode)?'333333':'ffffff'}/linkcol=0f91ff/artwork=small/transparent=true/`} 
+                                seamless>
+                                    <a href={album.url}>{album.name} by {album.artist}</a>
+                                </iframe>
+                            </Modal.Body>
+                        </Modal>
                     </Col>
                     <Col xs={12} md={8}>
                         <Table striped bordered hover size="sm" variant={darkMode?"dark":"light"}>
@@ -56,9 +75,14 @@ const ReleaseCard = ({darkMode, album})=>{
                 </Row>
             </Container>
             <Card.Footer>
-            {album.releaseDate?
-                <small className={darkMode?"text-light":"text-muted"}>Released: {new Date(album.releaseDate).toDateString()}</small>
-            :null}
+            <small className={darkMode?"text-light":"text-muted"}>
+                {album.releaseDate?
+                    `Released: ${new Date(album.releaseDate).toDateString()} `
+                :''}
+                {album.upc?
+                    `upc: ${album.upc} `
+                :''}
+            </small>
             </Card.Footer>
         </Card>
     );
