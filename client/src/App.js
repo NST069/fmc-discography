@@ -75,7 +75,7 @@ function App() {
         <Header
           darkMode={darkMode}
           setDarkMode={setDarkMode}
-          labels={["Saturn Ashes", "Outer Ring"]}
+          labels={[{name: "Saturn Ashes", value:"1"}, {name: "Outer Ring", value:"2"}]}
           getAllbyLabel={getAllbyLabel}
           getAll={getAll}
           sortPosts={sortPosts}

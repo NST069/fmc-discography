@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {
     Navbar,
@@ -35,6 +35,9 @@ const Header = ({darkMode, setDarkMode, getAll, getAllbyLabel, labels, sortPosts
 
     const buttonTheme = darkMode?"secondary":"outline-secondary";
 
+    const [filterLabel, setFilterLabel] = useState('0');
+    const [selectedRule, setSelectedRule] = useState('1');
+
     return(
         <Navbar 
             variant={darkMode?"dark":"light"} 
@@ -43,32 +46,47 @@ const Header = ({darkMode, setDarkMode, getAll, getAllbyLabel, labels, sortPosts
         >
             <Navbar.Brand className="font-weight-bold">FULLMOONCREW</Navbar.Brand>
             <ButtonToolbar>
-                <ButtonGroup className="mr-2" variant={darkMode?"dark":"light"}>
-                    <Button variant={buttonTheme} onClick={(event)=>{
-                        event.preventDefault();
-                        getAll();
-                    }}>All</Button>
+                <ButtonGroup toggle className="mr-2" variant={darkMode?"dark":"light"}>
+                    <ToggleButton 
+                        type="radio"
+                        key={0}
+                        value="0"
+                        variant={buttonTheme} 
+                        checked={filterLabel === "0"}
+                        onChange={(event)=>{
+                            event.preventDefault();
+                            setFilterLabel("0");
+                            getAll();
+                    }}>All</ToggleButton>
                     {
                         labels.map(label=>
-                            <Button variant={buttonTheme} key={label} onClick={(event)=>{
-                                event.preventDefault();
-                                getAllbyLabel(label);
-                            }}>{label}</Button>)
+                            <ToggleButton 
+                                type="radio"
+                                variant={buttonTheme} 
+                                key={label.name} 
+                                value={label.value}
+                                checked={filterLabel === label.value}
+                                onChange={(event)=>{
+                                    event.preventDefault();
+                                    setFilterLabel(label.value);
+                                    getAllbyLabel(label.name);
+                            }}>{label.name}</ToggleButton>)
                     }
                 </ButtonGroup>
-                <ButtonGroup className="mr-2" variant={darkMode?"dark":"light"}>
-                    <Button variant={buttonTheme} onClick={(event)=>{
-                        event.preventDefault();
-                        sortPosts("new");
-                    }}>by New</Button>
-                    <Button variant={buttonTheme} onClick={(event)=>{
-                        event.preventDefault();
-                        sortPosts("artist");
-                    }}>by Artist</Button>
-                    <Button variant={buttonTheme} onClick={(event)=>{
-                        event.preventDefault();
-                        sortPosts("title");
-                    }}>by Title</Button>
+                <ButtonGroup toggle className="mr-2" variant={darkMode?"dark":"light"}>
+                    {[{name: "New", value: "1"}, {name: "Artist", value:"2"}, {name: "Title", value:"3"}].map((rule, idx)=>
+                        <ToggleButton 
+                            type="radio"
+                            key={idx}
+                            value={rule.value} 
+                            variant={buttonTheme}
+                            checked={selectedRule === rule.value}
+                            onChange={(event)=>{
+                                event.preventDefault();
+                                setSelectedRule(event.currentTarget.value);
+                                sortPosts(rule.name.toLowerCase());
+                        }}>by {rule.name}</ToggleButton>    
+                    )}
                     <ButtonGroup toggle>
                         <ToggleButton
                             type="checkbox"
@@ -78,6 +96,7 @@ const Header = ({darkMode, setDarkMode, getAll, getAllbyLabel, labels, sortPosts
                             onChange={(event)=>{
                                 event.preventDefault();
                                 setSortingOrder(!sortingOrder);
+                                sortPosts();
                             }}
                         >
                             {sortingOrder
