@@ -5,8 +5,6 @@ const util = require('util');
 const bcScraper = require('bandcamp-scraper');
 const Monitor = require('ping-monitor');
 
-// TODO: check if both websites are up https://www.npmjs.com/package/ping-monitor
-// If not, skip updating 
 // TODO: Update only new ones(which were not presented in older version of albumUrls), remove not presented in albumUrls
 // check if data updated???
 
@@ -28,12 +26,12 @@ const labels = [
 const snhMonitor = new Monitor({
     website: `https://saturnashes.bandcamp.com`,
     title: 'Saturn Ashes',
-    interval: 1
+    interval: 60
 });
 snhMonitor.on('up', async(res, state)=>{
     console.log(`${res.website} is up`);
     
-    console.log(`Updating data for Saturn Ashes...`);
+    console.log(`[${new Date(Date.now()).toLocaleString()}]: Updating data for Saturn Ashes...`);
     let currentLabel = labels.find(lbl=>lbl.name==='Saturn Ashes');
     
     const geturls = util.promisify(bcScraper.getAlbumUrls);
@@ -43,31 +41,33 @@ snhMonitor.on('up', async(res, state)=>{
     await Promise.all(urlsList)
     .then(urls=>{
         currentLabel.albumUrls = urls; //placing urls
-        currentLabel.albumData=[]; // TODO: Instead of rewriting the whole array, add/remove not listed
     });
 
     var albumsList = currentLabel.albumUrls.map(async url=>{
-            return await getAlbumInfo(url);
+        return await getAlbumInfo(url);
     });
     await Promise.all(albumsList)
     .then((albums)=>{
+        let albumsList = [];
         albums.map(album=>
-            currentLabel.albumData = [...currentLabel.albumData, composeAlbumInfo(album)]
-        ); //placing info objects
-        updated = Date.now();
-        console.log("Done");
+            albumsList = [...albumsList, composeAlbumInfo(album)]
+        ); 
+        currentLabel.albumData = albumsList;//placing info objects
+        
+        console.log(`[${new Date(Date.now()).toLocaleString()}]: Saturn Ashes updated`);
     });
 });
+snhMonitor.on('error', (error)=>console.log(`[${new Date(Date.now()).toLocaleString()}]: ERROR: ${error}`));
 
 const snhouterMonitor = new Monitor({
     website: `https://snhouter.bandcamp.com`,
     title: 'Outer Ring',
-    interval: 1
+    interval: 60
 });
 snhouterMonitor.on('up', async(res, state)=>{
     console.log(`${res.website} is up`);
     
-    console.log(`Updating data for Outer Ring...`);
+    console.log(`[${new Date(Date.now()).toLocaleString()}]: Updating data for Outer Ring...`);
     let currentLabel = labels.find(lbl=>lbl.name==='Outer Ring');
     
     const geturls = util.promisify(bcScraper.getAlbumUrls);
@@ -77,60 +77,23 @@ snhouterMonitor.on('up', async(res, state)=>{
     await Promise.all(urlsList)
     .then(urls=>{
         currentLabel.albumUrls = urls; //placing urls
-        currentLabel.albumData=[]; // TODO: Instead of rewriting the whole array, add/remove not listed
     });
 
     var albumsList = currentLabel.albumUrls.map(async url=>{
-            return await getAlbumInfo(url);
+        return await getAlbumInfo(url);
     });
     await Promise.all(albumsList)
     .then((albums)=>{
+        let albumsList = [];
         albums.map(album=>
-            currentLabel.albumData = [...currentLabel.albumData, composeAlbumInfo(album)]
-        ); //placing info objects
-        updated = Date.now();
-        console.log("Done");
+            albumsList = [...albumsList, composeAlbumInfo(album)]
+        ); 
+        currentLabel.albumData = albumsList; //placing info objects
+        
+        console.log(`[${new Date(Date.now()).toLocaleString()}]: Outer Ring updated`);
     });
 });
-
-let updated = 0;
-
-const updateTrackdata = async()=>{ //deprecated
-    if(Date.now() - updated < 1000 * 60 * 60) return labels; // no need to update 
-    console.log("Updating data...");
-    const geturls = util.promisify(bcScraper.getAlbumUrls);
-    const getAlbumInfo = util.promisify(bcScraper.getAlbumInfo);
-
-    var urlsList = labels.map(async label =>{
-        return { name: label.name, urls: await geturls(label.url)};
-    });
-    await Promise.all(urlsList)
-    .then(collection=>{
-        collection.map(label=>{
-            let currentLabel = labels.find(lbl=>lbl.name===label.name);
-            currentLabel.albumUrls = label.urls; //placing urls
-            currentLabel.albumData=[]; // TODO: Instead of rewriting the whole array, add/remove not listed
-        })
-    });
-    var albumsList = labels.map(async label => {
-        let aInfo = label.albumUrls.map(async url=>{
-            return {name: label.name, data: await getAlbumInfo(url)};
-        });
-        await Promise.all(aInfo)
-        .then((collection)=>{
-            collection.map(label=>{
-                if(label===null) return; // TODO: reload
-                let currentLabel = labels.find(lbl=>lbl.name===label.name);
-                currentLabel.albumData = [...currentLabel.albumData, composeAlbumInfo(label.data)]; //placing info objects
-            });
-        })
-    });
-    await Promise.all(albumsList)
-    .then((res)=>{
-        updated = Date.now();
-        console.log("Done");
-    });
-};
+snhMonitor.on('error', (error)=>console.log(`[${new Date(Date.now()).toLocaleString()}]: ERROR: ${error}`));
 
 const composeAlbumInfo = (albumData)=>{
     return {
@@ -165,21 +128,14 @@ router.get('/getUrls', async(req, res, next)=>{
 });
 
 router.get('/getAllFromLabel/:label', async(req, res, next)=>{
-    //updateTrackdata()
-    //.then(async(result)=>{
-        //console.log(labels);
-        let albums = await labels.find(label => label.name === req.params.label).albumData;
-        res.json(albums);
-    //});
+    let albums = await labels.find(label => label.name === req.params.label).albumData;
+    res.json(albums);
 });
 
 router.get('/getAll', async(req, res, next)=>{
-    //updateTrackdata()
-    //.then(async(result)=>{
-        let albums = [];
-        await labels.map((label)=>label.albumData).map(a=>albums.push(...a))
-        res.json(albums);
-    //})
+    let albums = [];
+    await labels.map((label)=>label.albumData).map(a=>albums.push(...a))
+    res.json(albums);
 
 });
 
