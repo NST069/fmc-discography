@@ -23,14 +23,14 @@ const ReleaseCard = ({darkMode, album})=>{
                 <Row className="justify-content-md-center mb-2">
                     {album.tags?
                         album.tags.map(tag=> 
-                            <Col md="auto" key={tag}>
-                                <Badge pill variant={darkMode?"secondary":"white"} style={{margin:'2px'}} key={tag}>{`#${tag}`}</Badge>
+                            <Col xs="auto" md="auto" key={tag}>
+                                <Badge pill variant={darkMode?"secondary":"white"} key={tag}>{`#${tag}`}</Badge>
                             </Col>)
                         :null
                     }
                 </Row>
                 <Row>
-                    <Col xs={6} md={4}>
+                    <Col xs={12} md={4}>
                         <a href={album.url}><Image
                             fluid
                             className="mr-3"
