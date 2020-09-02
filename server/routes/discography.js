@@ -3,6 +3,12 @@ const router = express.Router();
 
 const util = require('util');
 const bcScraper = require('bandcamp-scraper');
+const Monitor = require('ping-monitor');
+
+// TODO: check if both websites are up https://www.npmjs.com/package/ping-monitor
+// If not, skip updating 
+// TODO: Update only new ones(which were not presented in older version of albumUrls), remove not presented in albumUrls
+// check if data updated???
 
 const labels = [
     {
@@ -19,11 +25,78 @@ const labels = [
     }
 ];
 
+const snhMonitor = new Monitor({
+    website: `https://saturnashes.bandcamp.com`,
+    title: 'Saturn Ashes',
+    interval: 1
+});
+snhMonitor.on('up', async(res, state)=>{
+    console.log(`${res.website} is up`);
+    
+    console.log(`Updating data for Saturn Ashes...`);
+    let currentLabel = labels.find(lbl=>lbl.name==='Saturn Ashes');
+    
+    const geturls = util.promisify(bcScraper.getAlbumUrls);
+    const getAlbumInfo = util.promisify(bcScraper.getAlbumInfo);
+
+    var urlsList = await geturls(currentLabel.url);
+    await Promise.all(urlsList)
+    .then(urls=>{
+        currentLabel.albumUrls = urls; //placing urls
+        currentLabel.albumData=[]; // TODO: Instead of rewriting the whole array, add/remove not listed
+    });
+
+    var albumsList = currentLabel.albumUrls.map(async url=>{
+            return await getAlbumInfo(url);
+    });
+    await Promise.all(albumsList)
+    .then((albums)=>{
+        albums.map(album=>
+            currentLabel.albumData = [...currentLabel.albumData, composeAlbumInfo(album)]
+        ); //placing info objects
+        updated = Date.now();
+        console.log("Done");
+    });
+});
+
+const snhouterMonitor = new Monitor({
+    website: `https://snhouter.bandcamp.com`,
+    title: 'Outer Ring',
+    interval: 1
+});
+snhouterMonitor.on('up', async(res, state)=>{
+    console.log(`${res.website} is up`);
+    
+    console.log(`Updating data for Outer Ring...`);
+    let currentLabel = labels.find(lbl=>lbl.name==='Outer Ring');
+    
+    const geturls = util.promisify(bcScraper.getAlbumUrls);
+    const getAlbumInfo = util.promisify(bcScraper.getAlbumInfo);
+
+    var urlsList = await geturls(currentLabel.url);
+    await Promise.all(urlsList)
+    .then(urls=>{
+        currentLabel.albumUrls = urls; //placing urls
+        currentLabel.albumData=[]; // TODO: Instead of rewriting the whole array, add/remove not listed
+    });
+
+    var albumsList = currentLabel.albumUrls.map(async url=>{
+            return await getAlbumInfo(url);
+    });
+    await Promise.all(albumsList)
+    .then((albums)=>{
+        albums.map(album=>
+            currentLabel.albumData = [...currentLabel.albumData, composeAlbumInfo(album)]
+        ); //placing info objects
+        updated = Date.now();
+        console.log("Done");
+    });
+});
+
 let updated = 0;
 
-const updateTrackdata = async()=>{
-    if(Date.now() - updated < 1000 * 60 * 60) return labels; // no need to update
-
+const updateTrackdata = async()=>{ //deprecated
+    if(Date.now() - updated < 1000 * 60 * 60) return labels; // no need to update 
     console.log("Updating data...");
     const geturls = util.promisify(bcScraper.getAlbumUrls);
     const getAlbumInfo = util.promisify(bcScraper.getAlbumInfo);
@@ -91,22 +164,22 @@ router.get('/getUrls', async(req, res, next)=>{
     res.json( await getUrls(labels));
 });
 
-router.get('/getAllFromLabel/:label', (req, res, next)=>{
-    updateTrackdata()
-    .then(async(result)=>{
+router.get('/getAllFromLabel/:label', async(req, res, next)=>{
+    //updateTrackdata()
+    //.then(async(result)=>{
         //console.log(labels);
         let albums = await labels.find(label => label.name === req.params.label).albumData;
         res.json(albums);
-    });
+    //});
 });
 
-router.get('/getAll', (req, res, next)=>{
-    updateTrackdata()
-    .then(async(result)=>{
+router.get('/getAll', async(req, res, next)=>{
+    //updateTrackdata()
+    //.then(async(result)=>{
         let albums = [];
         await labels.map((label)=>label.albumData).map(a=>albums.push(...a))
         res.json(albums);
-    })
+    //})
 
 });
 
