@@ -26,7 +26,7 @@ const labels = [
 const snhMonitor = new Monitor({
     website: `https://saturnashes.bandcamp.com`,
     title: 'Saturn Ashes',
-    interval: 60
+    interval: 30
 });
 snhMonitor.on('up', async(res, state)=>{
     console.log(`${res.website} is up`);
@@ -62,7 +62,7 @@ snhMonitor.on('error', (error)=>console.log(`[${new Date(Date.now()).toLocaleStr
 const snhouterMonitor = new Monitor({
     website: `https://snhouter.bandcamp.com`,
     title: 'Outer Ring',
-    interval: 60
+    interval: 30
 });
 snhouterMonitor.on('up', async(res, state)=>{
     console.log(`${res.website} is up`);
@@ -93,7 +93,7 @@ snhouterMonitor.on('up', async(res, state)=>{
         console.log(`[${new Date(Date.now()).toLocaleString()}]: Outer Ring updated`);
     });
 });
-snhMonitor.on('error', (error)=>console.log(`[${new Date(Date.now()).toLocaleString()}]: ERROR: ${error}`));
+snhouterMonitor.on('error', (error)=>console.log(`[${new Date(Date.now()).toLocaleString()}]: ERROR: ${error}`));
 
 const composeAlbumInfo = (albumData)=>{
     return {

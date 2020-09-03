@@ -11,7 +11,7 @@ import Footer from './components/Footer';
 
 function App() {
 
-  const endpoint = "https://fmc-discography.herokuapp.com/";
+  const endpoint = "https://fmc-discography.herokuapp.com";
 
   const [albums, setAlbums] = useState([]);
   const [loading, setLoading] = useState(false);
