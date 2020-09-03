@@ -93,7 +93,7 @@ snhouterMonitor.on('up', async(res, state)=>{
         console.log(`[${new Date(Date.now()).toLocaleString()}]: Outer Ring updated`);
     });
 });
-snhOuterMonitor.on('error', (error)=>console.log(`[${new Date(Date.now()).toLocaleString()}]: ERROR: ${error}`));
+snhouterMonitor.on('error', (error)=>console.log(`[${new Date(Date.now()).toLocaleString()}]: ERROR: ${error}`));
 
 const composeAlbumInfo = (albumData)=>{
     return {
