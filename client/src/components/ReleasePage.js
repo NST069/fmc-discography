@@ -32,7 +32,7 @@ const ReleasePage = ({darkMode, album})=>{
                     >
                     Back</Button>
                 </Link>
-                {`${album.artist} - ${album.title}`}
+                <h1 className='display-4'>{`${album.artist} - ${album.title}`}</h1>
             </Card.Header>
             <Container style={{margin:'5px'}}>
                 <Row className="justify-content-md-center mb-2">
@@ -86,6 +86,12 @@ const ReleasePage = ({darkMode, album})=>{
                                 )}
                             </tbody>
                         </Table>
+                        {album.about?
+                            album.about.split("\n").map(str=><p>{str}</p>)
+                        :''}
+                        {album.credits?
+                            album.credits.split("\n").map(str=><p>{str}</p>)
+                        :''}
                     </Col>
                 </Row>
             </Container>
@@ -95,7 +101,10 @@ const ReleasePage = ({darkMode, album})=>{
                     `Released: ${new Date(album.releaseDate).toDateString()} `
                 :''}
                 {album.upc?
-                    `upc: ${album.upc} `
+                    `UPC: ${album.upc} `
+                :''}
+                {album.isrc?
+                    `ISRC: ${album.isrc} `
                 :''}
             </small>
             </Card.Footer>

@@ -103,6 +103,13 @@ const composeAlbumInfo = (albumData)=>{
         tags: albumData.tags.map(tag => tag.name),
         url: albumData.url,
         id: albumData.raw.id,
+        raw: {
+            id: albumData.raw.current.id,
+            art_id: albumData.raw.current.art_id,
+            band_id: albumData.raw.current.band_id,
+            encodings_id: albumData.raw.current.encodings_id,
+            selling_band_id: albumData.raw.current.selling_band_id,
+        },
         itemType: albumData.raw.item_type,
         tracks: albumData.raw.trackinfo.map(track=>{
             return {
@@ -115,7 +122,10 @@ const composeAlbumInfo = (albumData)=>{
             }
         }),
         upc: albumData.raw.current.upc,
+        isrc: albumData.raw.current.isrc,
         releaseDate: Date.parse(albumData.raw.current.release_date),
+        about: albumData.raw.current.about,
+        credits: albumData.raw.current.credits,
     };
 }
 
