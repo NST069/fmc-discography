@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import {
     Spinner, 
+    CardColumns,
 } from 'react-bootstrap';
 
 import ReleaseCard from './ReleaseCard';
@@ -27,20 +28,25 @@ const Main = ({darkMode, albums, loading})=>{
             <div className="container">
                 <Router>
                     <Route exact path="/">
+                    <div 
+                        className="mt-3 mb-60" 
+                        style={{ paddingBottom: 60}} //footer height
+                    >
                     {
                         loading
                         ?
                             <Spinner animation="grow" variant={darkMode?"dark":"light"}/>
                         :
-                        <div className="container" align="center">
+                        <CardColumns>
                             {albums.map(album=>
                                 <ReleaseCard key={album.id}
                                     darkMode={darkMode}
                                     album={album}
                                 />
                                 )}
-                        </div>
+                        </CardColumns>
                     }
+                    </div>
                     </Route>
                     <Route path='/:id' component={relPage}/>
                 </Router>

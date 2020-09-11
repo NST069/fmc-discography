@@ -21,7 +21,10 @@ const ReleasePage = ({darkMode, album})=>{
     return(
         <Card className="mt-3 mb-6" key={album.id} bg={darkMode?"dark":"light"} text={darkMode?"white":"dark"}>
             <Card.Header className="font-weight-bold">
-                <Link to='/'>
+                <Link 
+                    to='/'
+                    style={{ textDecoration: 'none' }}
+                >
                     <Button
                         block
                         size="sm"

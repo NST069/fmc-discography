@@ -10,15 +10,19 @@ import {
 const ReleaseCard = ({darkMode, album})=>{
 
     return(
-        <Card className="mt-3 mb-6" style={{ maxWidth: '18rem'}} key={album.id} bg={darkMode?"dark":"light"} text={darkMode?"white":"dark"}>
+        <Card key={album.id} bg={darkMode?"dark":"light"} text={darkMode?"white":"dark"}>
             <Card.Img 
-                variant="top" 
+                variant="top"
+                rounded 
                 src={album.imageUrl}
                 alt={`${album.artist} - ${album.title}`}
             />
             <Card.Body>
                 <Card.Title>{`${album.artist} - ${album.title}`}</Card.Title>
-                <Link to={`/${album.id}`}>
+                <Link 
+                    to={`/${album.id}`}
+                    style={{ textDecoration: 'none' }}
+                >
                     <Button
                         block
                         size="lg"
