@@ -76,17 +76,17 @@ function App() {
         <Header
           darkMode={darkMode}
           setDarkMode={setDarkMode}
+        />
+        <Main
+          darkMode={darkMode}
+          loading={loading}
+          albums={albums}
           labels={[{name: "Saturn Ashes", value:"1"}, {name: "Outer Ring", value:"2"}]}
           getAllbyLabel={getAllbyLabel}
           getAll={getAll}
           sortPosts={sortPosts}
           sortingOrder={sortingOrder}
           setSortingOrder={setSortingOrder}
-        />
-        <Main
-          darkMode={darkMode}
-          loading={loading}
-          albums={albums}
         />
         <Footer
           darkMode={darkMode}
