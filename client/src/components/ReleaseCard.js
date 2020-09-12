@@ -13,12 +13,12 @@ const ReleaseCard = ({darkMode, album})=>{
         <Card key={album.id} bg={darkMode?"dark":"light"} text={darkMode?"white":"dark"}>
             <Card.Img 
                 variant="top"
-                rounded 
                 src={album.imageUrl}
                 alt={`${album.artist} - ${album.title}`}
             />
             <Card.Body>
-                <Card.Title>{`${album.artist} - ${album.title}`}</Card.Title>
+                <Card.Text className="lead">{album.title}</Card.Text>
+                <Card.Text>{album.artist}</Card.Text>
                 <Link 
                     to={`/${album.id}`}
                     style={{ textDecoration: 'none' }}
