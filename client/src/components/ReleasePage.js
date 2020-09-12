@@ -18,6 +18,16 @@ const ReleasePage = ({darkMode, album})=>{
 
     const [modalShow, setModalShow] = useState(false);
 
+    const validUrl = (url)=>{ // TODO: make gloal if necessary
+        var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|'+ // domain name
+            '((\\d{1,3}\\.){3}\\d{1,3}))'+ // ip (v4) address
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ //port
+            '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+            '(\\#[-a-z\\d_]*)?$','i');
+            return pattern.test(url.trim());
+     }
+
     return(
         <Card className="mt-3 mb-6" key={album.id} bg={darkMode?"dark":"light"} text={darkMode?"white":"dark"}>
             <Card.Header className="font-weight-bold">
@@ -53,12 +63,15 @@ const ReleasePage = ({darkMode, album})=>{
                             alt={`${album.artist} - ${album.title}`}
                             rounded
                         /></a>
-                        <Button
-                            block
-                            size="lg"
-                            variant={darkMode?"secondary":"outline-secondary"}
-                            onClick={()=>setModalShow(true)}
-                        >Listen</Button>
+                        {(album.itemType==="album")?
+                            <Button
+                                block
+                                size="lg"
+                                variant={darkMode?"secondary":"outline-secondary"}
+                                onClick={()=>setModalShow(true)}
+                            >Listen</Button>
+                        :  null
+                        }
                         <Modal
                             show={modalShow}
                             onHide={()=>setModalShow(false)}
@@ -75,7 +88,13 @@ const ReleasePage = ({darkMode, album})=>{
                         </Modal>
                     </Col>
                     <Col xs={12} md={8}>
-                        <Table striped bordered hover size="sm" variant={darkMode?"dark":"light"}>
+                        {(album.itemType==="track")?
+                            <iframe style={{border: "0", width: "100%", height: "120px" }} title={album.id}
+                            src={`https://bandcamp.com/EmbeddedPlayer/${album.itemType}=${album.id}/size=large/bgcol=${(darkMode)?'333333':'ffffff'}/linkcol=0f91ff/artwork=small/transparent=true/`} 
+                            seamless>
+                                <a href={album.url}>{album.name} by {album.artist}</a>
+                            </iframe>
+                        :<Table striped bordered hover size="sm" variant={darkMode?"dark":"light"}>
                             <tbody>
                                 {album.tracks.map(track=>
                                     <tr key={track.id}>
@@ -85,26 +104,48 @@ const ReleasePage = ({darkMode, album})=>{
                                     </tr>
                                 )}
                             </tbody>
-                        </Table>
+                        </Table>}
                         {album.about?
-                            album.about.split("\n").map(str=><p>{str}</p>)
+                            album.about.split("\n").map((str, id)=>
+                            validUrl(str)?
+                                <a 
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={darkMode?"text-light":"text-muted"} 
+                                    style={{ textDecoration: 'none' }}
+                                    href={str}>{str}</a>
+                                :<p key={id}>{str}</p>
+                            )
                         :''}
                         {album.credits?
-                            album.credits.split("\n").map(str=><p>{str}</p>)
+                            album.credits.split("\n").map((str, id)=>
+                                validUrl(str)?
+                                    <a 
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className={darkMode?"text-light":"text-muted"} 
+                                        style={{ textDecoration: 'none' }}
+                                        href={str}>{str}</a>
+                                    :<p key={id}>{str}</p>
+                            )
                         :''}
                     </Col>
                 </Row>
             </Container>
             <Card.Footer>
+            <a 
+                className={darkMode?"text-light":"text-muted"} 
+                style={{ textDecoration: 'none' }}
+                href={album.label.website}>{album.label.name}</a>
             <small className={darkMode?"text-light":"text-muted"}>
                 {album.releaseDate?
-                    `Released: ${new Date(album.releaseDate).toDateString()} `
+                    ` Released: ${new Date(album.releaseDate).toDateString()}`
                 :''}
                 {album.upc?
-                    `UPC: ${album.upc} `
+                    ` UPC: ${album.upc}`
                 :''}
                 {album.isrc?
-                    `ISRC: ${album.isrc} `
+                    ` ISRC: ${album.isrc}`
                 :''}
             </small>
             </Card.Footer>

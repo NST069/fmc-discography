@@ -31,8 +31,8 @@ const snhMonitor = new Monitor({
 snhMonitor.on('up', async(res, state)=>{
     console.log(`${res.website} is up`);
     
-    console.log(`[${new Date(Date.now()).toLocaleString()}]: Updating data for Saturn Ashes...`);
-    let currentLabel = labels.find(lbl=>lbl.name==='Saturn Ashes');
+    console.log(`[${new Date(Date.now()).toLocaleString()}]: Updating data for ${snhMonitor.title}...`);
+    let currentLabel = labels.find(lbl=>lbl.name===snhMonitor.title);
     
     const geturls = util.promisify(bcScraper.getAlbumUrls);
     const getAlbumInfo = util.promisify(bcScraper.getAlbumInfo);
@@ -50,11 +50,11 @@ snhMonitor.on('up', async(res, state)=>{
     .then((albums)=>{
         let albumsList = [];
         albums.map(album=>
-            albumsList = [...albumsList, composeAlbumInfo(album)]
+            albumsList = [...albumsList, composeAlbumInfo(album, {name: snhMonitor.title, website: snhMonitor.website})]
         ); 
         currentLabel.albumData = albumsList;//placing info objects
         
-        console.log(`[${new Date(Date.now()).toLocaleString()}]: Saturn Ashes updated`);
+        console.log(`[${new Date(Date.now()).toLocaleString()}]: ${snhMonitor.title} updated`);
     });
 });
 snhMonitor.on('error', (error)=>console.log(`[${new Date(Date.now()).toLocaleString()}]: ERROR: ${error}`));
@@ -67,8 +67,8 @@ const snhouterMonitor = new Monitor({
 snhouterMonitor.on('up', async(res, state)=>{
     console.log(`${res.website} is up`);
     
-    console.log(`[${new Date(Date.now()).toLocaleString()}]: Updating data for Outer Ring...`);
-    let currentLabel = labels.find(lbl=>lbl.name==='Outer Ring');
+    console.log(`[${new Date(Date.now()).toLocaleString()}]: Updating data for ${snhouterMonitor.title}...`);
+    let currentLabel = labels.find(lbl=>lbl.name===snhouterMonitor.title);
     
     const geturls = util.promisify(bcScraper.getAlbumUrls);
     const getAlbumInfo = util.promisify(bcScraper.getAlbumInfo);
@@ -86,16 +86,16 @@ snhouterMonitor.on('up', async(res, state)=>{
     .then((albums)=>{
         let albumsList = [];
         albums.map(album=>
-            albumsList = [...albumsList, composeAlbumInfo(album)]
+            albumsList = [...albumsList, composeAlbumInfo(album, {name: snhouterMonitor.title, website: snhouterMonitor.website})]
         ); 
         currentLabel.albumData = albumsList; //placing info objects
         
-        console.log(`[${new Date(Date.now()).toLocaleString()}]: Outer Ring updated`);
+        console.log(`[${new Date(Date.now()).toLocaleString()}]: ${snhouterMonitor.title} updated`);
     });
 });
 snhouterMonitor.on('error', (error)=>console.log(`[${new Date(Date.now()).toLocaleString()}]: ERROR: ${error}`));
 
-const composeAlbumInfo = (albumData)=>{
+const composeAlbumInfo = (albumData, label)=>{
     return {
         artist: albumData.artist,
         title: albumData.title,
@@ -126,6 +126,7 @@ const composeAlbumInfo = (albumData)=>{
         releaseDate: Date.parse(albumData.raw.current.release_date),
         about: albumData.raw.current.about,
         credits: albumData.raw.current.credits,
+        label:label,
     };
 }
 
