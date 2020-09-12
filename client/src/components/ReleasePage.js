@@ -56,7 +56,11 @@ const ReleasePage = ({darkMode, album})=>{
                 </Row>
                 <Row>
                     <Col xs={12} md={4}>
-                        <a href={album.url}><Image
+                        <a 
+                            href={album.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        ><Image
                             fluid
                             className="mr-3"
                             src={album.imageUrl}
@@ -134,6 +138,8 @@ const ReleasePage = ({darkMode, album})=>{
             </Container>
             <Card.Footer>
             <a 
+                target="_blank"
+                rel="noopener noreferrer"
                 className={darkMode?"text-light":"text-muted"} 
                 style={{ textDecoration: 'none' }}
                 href={album.label.website}>{album.label.name}</a>

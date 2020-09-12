@@ -30,7 +30,11 @@ const Header = ({darkMode, setDarkMode})=>{
             bg={darkMode?"dark":"light"}
             sticky="top"
         >
-            <Navbar.Brand className="font-weight-bold">FULLMOONCREW</Navbar.Brand>
+            <a href='/' className="text-decoration-none">
+                <Navbar.Brand className="font-weight-bold lead">
+                    FULLMOONCREW
+                </Navbar.Brand>
+            </a>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-end">
                 <ButtonToolbar>
