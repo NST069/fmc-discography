@@ -34,7 +34,6 @@ function App() {
 
     axios.get(`${endpoint}/discography/getAll`)
     .then((res)=>{
-      console.log(res.data);
       setAlbums(res.data);
       setLoading(false);
     })
