@@ -116,7 +116,7 @@ const composeAlbumInfo = (albumData, label)=>{
                 title: track.title,
                 id: track.id,
                 duration: Math.floor(track.duration),
-                //file: track.file.mp3-128,
+                file: track.file['mp3-128'],
                 trackNum: track.track_num,
 
             }

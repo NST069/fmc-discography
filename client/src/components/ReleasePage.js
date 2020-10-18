@@ -14,6 +14,8 @@ import {
         Modal,
 }from 'react-bootstrap';
 
+import ReactAudioPlayer from 'react-audio-player';
+
 const ReleasePage = ({darkMode, album})=>{
 
     const [modalShow, setModalShow] = useState(false);
@@ -104,7 +106,12 @@ const ReleasePage = ({darkMode, album})=>{
                                     <tr key={track.id}>
                                         <td>{track.trackNum}</td>
                                         <td>{track.title}</td>
-                                        <td>{`${Math.floor(track.duration/60)}:${(track.duration%60<10?'0':'')+track.duration%60}`}</td>
+                                        <td>
+                                            <ReactAudioPlayer
+                                                src={track.file}
+                                                controls
+                                            />
+                                        </td>
                                     </tr>
                                 )}
                             </tbody>
