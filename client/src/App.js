@@ -8,6 +8,8 @@ import axios from 'axios';
 import Header from './components/Header';
 import Main from './components/Main';
 import Footer from './components/Footer';
+import PlayerFooter from './components/PlayerFooter';
+import ReactJkMusicPlayer from 'react-jinke-music-player'
 
 function App() {
 
@@ -19,7 +21,7 @@ function App() {
   const [sortingRule, setSortingRule] = useState("new");
   const [sortingOrder, setSortingOrder] = useState(true); //true = A->z / Newest first
   const [darkMode, setDarkMode] = useState(true);
-  
+  const [playlist, setPlaylist] = useState([]);
 
   const getAllbyLabel = (label)=>{
     setLoading(true);
@@ -42,10 +44,20 @@ function App() {
       setAlbums(res.data);
       setLoading(false);
     })
-  } 
+  };
+
+  const addToPlaylist = (track)=>{
+    setPlaylist([...playlist, track]);
+  };
+  
 
   useEffect(()=>{
     getAll();
+    setPlaylist([
+      {name: "NST069 - Matter", url: 'https://t4.bcbits.com/stream/674bad47b82ab1c72a0ebf957ef854fe/mp3-128/1711439680?p=0&ts=1603202473&t=8a12e9c221097f4aefd5d4e5dc62e8be6956877d&token=1603202473_11fdd5357bbf5073d676af64298e1d04f808a299'},
+      {name: "NST069 - Loneliness", url: 'https://t4.bcbits.com/stream/fcc84c28b36cf3fabd8afd051e7fcc33/mp3-128/466998539?p=0&ts=1603202473&t=bf27f939ee260b57a33dd62970782f00891fe391&token=1603202473_389dc54237822f67d8bb8a792717dc9c0b1cfbaf'},
+      {name: "hr3postnoi - ghost", url: 'https://t4.bcbits.com/stream/c22193d7f331dd6ffc268f80a62e6100/mp3-128/975474397?p=0&ts=1603202473&t=5a7bd8493b0206f505fada7eb1b8baf21b0dfc45&token=1603202473_2d40fa907ab5aa99e584fda89a3b079cfd58d0b9'}
+    ]);
   }, []);
 
   const sortPosts = async (rule)=>{
@@ -87,6 +99,16 @@ function App() {
           sortPosts={sortPosts}
           sortingOrder={sortingOrder}
           setSortingOrder={setSortingOrder}
+        />
+        {/* {playlist.length>0 
+        ?<PlayerFooter
+          darkMode={darkMode}
+          playlist={playlist}
+        />
+        :null} */}
+        <PlayerFooter
+          darkMode={darkMode}
+          playlist={playlist}
         />
         <Footer
           darkMode={darkMode}
