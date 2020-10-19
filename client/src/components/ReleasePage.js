@@ -16,7 +16,7 @@ import {
 
 import ReactAudioPlayer from 'react-audio-player';
 
-const ReleasePage = ({darkMode, album})=>{
+const ReleasePage = ({darkMode, album, addToPlaylist})=>{
 
     const [modalShow, setModalShow] = useState(false);
 
@@ -107,10 +107,13 @@ const ReleasePage = ({darkMode, album})=>{
                                         <td>{track.trackNum}</td>
                                         <td>{track.title}</td>
                                         <td>
-                                            <ReactAudioPlayer
+                                            {/* <ReactAudioPlayer
                                                 src={track.file}
                                                 controls
-                                            />
+                                            /> */}
+                                            <Button variant={darkMode?"secondary":"outline-secondary"} 
+                                                onClick={()=>addToPlaylist({id: track.id, name:`${album.artist} - ${track.title}`, url: track.file})}
+                                            >Add</Button>
                                         </td>
                                     </tr>
                                 )}

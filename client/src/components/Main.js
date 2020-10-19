@@ -15,7 +15,7 @@ import {
 import ReleaseCard from './ReleaseCard';
 import ReleasePage from './ReleasePage';
 
-const Main = ({darkMode, albums, loading, getAll, getAllbyLabel, labels, sortPosts, sortingOrder, setSortingOrder})=>{
+const Main = ({darkMode, albums, loading, getAll, getAllbyLabel, labels, sortPosts, sortingOrder, setSortingOrder, addToPlaylist})=>{
 
     const relPage = (props)=>{
         const id = parseInt(props.match.params.id, 10)
@@ -24,6 +24,7 @@ const Main = ({darkMode, albums, loading, getAll, getAllbyLabel, labels, sortPos
         ? <ReleasePage
                 darkMode={darkMode}
                 album={album}
+                addToPlaylist={addToPlaylist}
             />
         :  null;
     };

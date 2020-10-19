@@ -29,7 +29,7 @@ function App() {
     axios.get(`${endpoint}/discography/getAllFromLabel/${label}`)
     .then((res)=>{
       //res.data.map(label=>{setAlbums(label.albumData)});
-      console.log(res.data);
+      //console.log(res.data);
       setAlbums(res.data);
       setLoading(false);
     });
@@ -40,29 +40,24 @@ function App() {
 
     axios.get(`${endpoint}/discography/getAll`)
     .then((res)=>{
-      console.log(res.data);
+      //console.log(res.data);
       setAlbums(res.data);
       setLoading(false);
     })
   };
 
   const addToPlaylist = (track)=>{
+    if(playlist.find((t)=>t.id===track.id)) return;
     setPlaylist([...playlist, track]);
   };
 
   const deleteFromPlaylist = (id)=>{
     setPlaylist(playlist.filter((track)=>track.id!==id));
-    console.log(`Deleted id ${id}`);
   }
   
 
   useEffect(()=>{
     getAll();
-    setPlaylist([
-      {id: 0, name: "NST069 - Matter", url: 'https://t4.bcbits.com/stream/674bad47b82ab1c72a0ebf957ef854fe/mp3-128/1711439680?p=0&ts=1603202473&t=8a12e9c221097f4aefd5d4e5dc62e8be6956877d&token=1603202473_11fdd5357bbf5073d676af64298e1d04f808a299'},
-      {id: 1, name: "NST069 - Loneliness", url: 'https://t4.bcbits.com/stream/fcc84c28b36cf3fabd8afd051e7fcc33/mp3-128/466998539?p=0&ts=1603202473&t=bf27f939ee260b57a33dd62970782f00891fe391&token=1603202473_389dc54237822f67d8bb8a792717dc9c0b1cfbaf'},
-      {id: 2, name: "hr3postnoi - ghost", url: 'https://t4.bcbits.com/stream/c22193d7f331dd6ffc268f80a62e6100/mp3-128/975474397?p=0&ts=1603202473&t=5a7bd8493b0206f505fada7eb1b8baf21b0dfc45&token=1603202473_2d40fa907ab5aa99e584fda89a3b079cfd58d0b9'}
-    ]);
   }, []);
 
   const sortPosts = async (rule)=>{
@@ -104,18 +99,15 @@ function App() {
           sortPosts={sortPosts}
           sortingOrder={sortingOrder}
           setSortingOrder={setSortingOrder}
+          addToPlaylist={addToPlaylist}
         />
-        {/* {playlist.length>0 
-        ?<PlayerFooter
-          darkMode={darkMode}
-          playlist={playlist}
-        />
-        :null} */}
-        <PlayerFooter
+        {playlist.length>0 
+        ? <PlayerFooter
           darkMode={darkMode}
           playlist={playlist}
           deleteFromPlaylist={deleteFromPlaylist}
         />
+        :null}
         <Footer
           darkMode={darkMode}
         />
