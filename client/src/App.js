@@ -100,6 +100,9 @@ function App() {
           setSortingOrder={setSortingOrder}
           addToPlaylist={addToPlaylist}
         />
+        <Footer
+          darkMode={darkMode}
+        />
         {playlist.length>0 
         ? <PlayerFooter
           darkMode={darkMode}
@@ -107,9 +110,7 @@ function App() {
           deleteFromPlaylist={deleteFromPlaylist}
         />
         :null}
-        <Footer
-          darkMode={darkMode}
-        />
+        
       </div>
     </div>
   );

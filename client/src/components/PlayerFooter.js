@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 
 import {
-    Navbar,
     Popover,
     ListGroup,
     OverlayTrigger,
@@ -11,7 +10,6 @@ import {
     Col,
 } from 'react-bootstrap';
 
-//import ReactJkMusicPlayer from 'react-jinke-music-player'
 import AudioPlayer, {RHAP_UI} from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 
@@ -57,11 +55,7 @@ const PlayerFooter = ({darkMode, playlist, deleteFromPlaylist})=>{
       );
 
     return(
-        <Navbar 
-                variant={darkMode?"dark":"light"}
-                bg={darkMode?"dark":"light"}
-                fixed="bottom"
-        >
+        <div style={{position:"fixed", left: "0", bottom: "0", width: "100%"}}>
             <AudioPlayer 
                 showSkipControls
                 autoPlay={false}
@@ -84,7 +78,7 @@ const PlayerFooter = ({darkMode, playlist, deleteFromPlaylist})=>{
                     setCurrentTrackId((currentTrackId + 1)%playlist.length);
                 }}
             />
-        </Navbar>
+        </div>
     );
 }
 
