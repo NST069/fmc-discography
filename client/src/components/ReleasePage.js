@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 import { Link } from "react-router-dom";
 
@@ -31,13 +31,18 @@ const ReleasePage = ({darkMode, album, addToPlaylist})=>{
     };
 
     const isMd = useMediaQuery({ query: '(max-width: 768px)' });
+    const isSm = useMediaQuery({ query: '(max-width: 576px)' });
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+      }, []);
 
     const playIcon = (darkMode)?
-        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-play-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-play-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
             <path d="M11.596 8.697l-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
         </svg>
-        :<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-play" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" d="M10.804 8L5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>
+        :<svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-play" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fillRule="evenodd" d="M10.804 8L5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>
         </svg>;
 
     return(
@@ -54,7 +59,7 @@ const ReleasePage = ({darkMode, album, addToPlaylist})=>{
                     >
                     Back</Button>
                 </Link>
-                <p className={isMd?'h1':'display-4'}>{`${album.artist} - ${album.title}`}</p>
+                <p className={isSm?'h3':isMd?'h1':'display-4'}>{`${album.artist} - ${album.title}`}</p>
             </Card.Header>
             <Container style={{margin:'5px'}}>
                 <Row className="justify-content-md-center mb-2">

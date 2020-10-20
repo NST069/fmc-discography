@@ -35,8 +35,9 @@ const PlayerFooter = ({darkMode, playlist, deleteFromPlaylist})=>{
           <Popover.Title as="h3">Playlist</Popover.Title>
           <Popover.Content>
             {(playlist.length>0)?
+            <div className="popover-content" style={{maxHeight: '500px', overflowY: "auto"}}>
                 <Table striped bordered hover size="sm" variant="light">
-                    <tbody>
+                    <tbody >
                         {playlist.map(track=>
                             <tr key={track.id} onClick={()=>{setCurrentTrackId(playlist.findIndex(t=>t.id === track.id))}}>
                                 <td><p>{track.name}</p></td>
@@ -47,6 +48,7 @@ const PlayerFooter = ({darkMode, playlist, deleteFromPlaylist})=>{
                         )}
                     </tbody>
                 </Table>
+            </div>
             :"Empty"}
           </Popover.Content>
         </Popover>
@@ -63,7 +65,7 @@ const PlayerFooter = ({darkMode, playlist, deleteFromPlaylist})=>{
                 header={(playlist.length>0)?`Now playing: ${playlist[currentTrackId].name}`:"No tracks in playlist"}
                 customAdditionalControls={[
                     RHAP_UI.LOOP,
-                    <OverlayTrigger trigger="click" placement="top" overlay={Playlist}>
+                    <OverlayTrigger trigger="click" rootClose placement="top" overlay={Playlist}>
                         <Button variant="outline-secondary" size="sm">{playlistIcon}</Button>
                     </OverlayTrigger>,
                 ]}
