@@ -2,12 +2,9 @@ import React, {useState} from 'react';
 
 import {
     Popover,
-    ListGroup,
     OverlayTrigger,
     Button,
-    Container,
-    Row,
-    Col,
+    Table,
 } from 'react-bootstrap';
 
 import AudioPlayer, {RHAP_UI} from 'react-h5-audio-player';
@@ -34,26 +31,22 @@ const PlayerFooter = ({darkMode, playlist, deleteFromPlaylist})=>{
     const isSm = useMediaQuery({ query: '(max-width: 576px)' });
 
     const Playlist = (
-        <Popover id="popover-basic" width="auto">
+        <Popover id="popover-basic" style={{maxWidth: '100%'}}>
           <Popover.Title as="h3">Playlist</Popover.Title>
           <Popover.Content>
             {(playlist.length>0)?
-                <ListGroup>
-                    {playlist.map(track=>
-                        <ListGroup.Item key={track.id}>
-                            <Container>
-                                <Row>
-                                    <Col >
-                                        <p onClick={()=>{setCurrentTrackId(playlist.findIndex(t=>t.id === track.id))}}>{track.name}</p>
-                                    </Col>
-                                    <Col md="auto" >
-                                        <Button size="sm" variant ="light" onClick={()=>deleteFromPlaylist(track.id)}>{deleteIcon}</Button>
-                                    </Col>
-                                </Row>
-                            </Container>
-                        </ListGroup.Item>  
-                    )}
-                </ListGroup>
+                <Table striped bordered hover size="sm" variant="light">
+                    <tbody>
+                        {playlist.map(track=>
+                            <tr key={track.id} onClick={()=>{setCurrentTrackId(playlist.findIndex(t=>t.id === track.id))}}>
+                                <td><p>{track.name}</p></td>
+                                <td width="auto">
+                                    <Button size="sm" variant ="light" onClick={()=>deleteFromPlaylist(track.id)}>{deleteIcon}</Button>
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </Table>
             :"Empty"}
           </Popover.Content>
         </Popover>
@@ -63,7 +56,7 @@ const PlayerFooter = ({darkMode, playlist, deleteFromPlaylist})=>{
         <div style={{position:"fixed", left: "0", bottom: "0", width: "100%"}}>
             <AudioPlayer 
                 showSkipControls
-                autoPlay={false}
+                autoPlay
                 layout={isMd?"stacked":"horizontal"}
                 src={(playlist.length>0)?playlist[currentTrackId].url:""}
                 customVolumeControls = {(isSm)?[]:[RHAP_UI.VOLUME]}

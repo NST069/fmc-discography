@@ -14,6 +14,8 @@ import {
         Modal,
 }from 'react-bootstrap';
 
+import { useMediaQuery } from 'react-responsive';
+
 const ReleasePage = ({darkMode, album, addToPlaylist})=>{
 
     const [modalShow, setModalShow] = useState(false);
@@ -26,7 +28,17 @@ const ReleasePage = ({darkMode, album, addToPlaylist})=>{
             '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
             '(\\#[-a-z\\d_]*)?$','i');
             return pattern.test(url.trim());
-     }
+    };
+
+    const isMd = useMediaQuery({ query: '(max-width: 768px)' });
+
+    const playIcon = (darkMode)?
+        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-play-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11.596 8.697l-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+        </svg>
+        :<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-play" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M10.804 8L5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>
+        </svg>;
 
     return(
         <Card className="mt-3 mb-6" key={album.id} bg={darkMode?"dark":"light"} text={darkMode?"white":"dark"}>
@@ -42,7 +54,7 @@ const ReleasePage = ({darkMode, album, addToPlaylist})=>{
                     >
                     Back</Button>
                 </Link>
-                <h1 className='display-4'>{`${album.artist} - ${album.title}`}</h1>
+                <p className={isMd?'h1':'display-4'}>{`${album.artist} - ${album.title}`}</p>
             </Card.Header>
             <Container style={{margin:'5px'}}>
                 <Row className="justify-content-md-center mb-2">
@@ -93,12 +105,11 @@ const ReleasePage = ({darkMode, album, addToPlaylist})=>{
                             <tbody>
                                 {album.tracks.map(track=>
                                     <tr key={track.id}>
-                                        <td>{track.trackNum}</td>
                                         <td>{track.artist} - {track.title}</td>
                                         <td>
                                             <Button variant={darkMode?"secondary":"outline-secondary"} 
                                                 onClick={()=>addToPlaylist({id: track.id, name:`${track.artist} - ${track.title}`, url: track.file})}
-                                            >Add</Button>
+                                            >{playIcon}</Button>
                                         </td>
                                     </tr>
                                 )}
