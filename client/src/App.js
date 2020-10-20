@@ -9,7 +9,6 @@ import Header from './components/Header';
 import Main from './components/Main';
 import Footer from './components/Footer';
 import PlayerFooter from './components/PlayerFooter';
-import ReactJkMusicPlayer from 'react-jinke-music-player'
 
 function App() {
 

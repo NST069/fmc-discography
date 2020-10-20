@@ -6,6 +6,9 @@ import {
     ListGroup,
     OverlayTrigger,
     Button,
+    Container,
+    Row,
+    Col,
 } from 'react-bootstrap';
 
 //import ReactJkMusicPlayer from 'react-jinke-music-player'
@@ -28,15 +31,23 @@ const PlayerFooter = ({darkMode, playlist, deleteFromPlaylist})=>{
     </svg>;
 
     const Playlist = (
-        <Popover id="popover-basic">
+        <Popover id="popover-basic" width="auto">
           <Popover.Title as="h3">Playlist</Popover.Title>
           <Popover.Content>
             {(playlist.length>0)?
                 <ListGroup>
                     {playlist.map(track=>
                         <ListGroup.Item key={track.id}>
-                            {track.name}
-                            <i onClick={()=>deleteFromPlaylist(track.id)}>{deleteIcon}</i>
+                            <Container>
+                                <Row>
+                                    <Col >
+                                        <p onClick={()=>{setCurrentTrackId(playlist.findIndex(t=>t.id === track.id))}}>{track.name}</p>
+                                    </Col>
+                                    <Col md="auto" >
+                                        <Button size="sm" variant ="light" onClick={()=>deleteFromPlaylist(track.id)}>{deleteIcon}</Button>
+                                    </Col>
+                                </Row>
+                            </Container>
                         </ListGroup.Item>  
                     )}
                 </ListGroup>

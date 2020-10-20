@@ -113,7 +113,8 @@ const composeAlbumInfo = (albumData, label)=>{
         itemType: albumData.raw.item_type,
         tracks: albumData.raw.trackinfo.map(track=>{
             return {
-                title: track.title,
+                title: (track.title.split('-').length===1)?track.title:track.title.split('-')[1].trim(),
+                artist: (track.title.split('-').length===1)?albumData.artist:track.title.split('-')[0].trim(),
                 id: track.id,
                 duration: Math.floor(track.duration),
                 file: track.file['mp3-128'],
@@ -148,6 +149,11 @@ router.get('/getAll', async(req, res, next)=>{
     await labels.map((label)=>label.albumData).map(a=>albums.push(...a))
     res.json(albums);
 
+});
+
+router.get('/getRawAlbum', async(req, res, next)=>{
+    const getAlbumInfo = util.promisify(bcScraper.getAlbumInfo);
+    res.json(await getAlbumInfo('https://saturnashes.bandcamp.com/album/zen-vol-5'));
 });
 
 module.exports = router;

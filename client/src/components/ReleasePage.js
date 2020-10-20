@@ -14,8 +14,6 @@ import {
         Modal,
 }from 'react-bootstrap';
 
-import ReactAudioPlayer from 'react-audio-player';
-
 const ReleasePage = ({darkMode, album, addToPlaylist})=>{
 
     const [modalShow, setModalShow] = useState(false);
@@ -69,15 +67,12 @@ const ReleasePage = ({darkMode, album, addToPlaylist})=>{
                             alt={`${album.artist} - ${album.title}`}
                             rounded
                         /></a>
-                        {(album.itemType==="album")?
-                            <Button
-                                block
-                                size="lg"
-                                variant={darkMode?"secondary":"outline-secondary"}
-                                onClick={()=>setModalShow(true)}
-                            >Listen</Button>
-                        :  null
-                        }
+                        <Button
+                            block
+                            size="lg"
+                            variant={darkMode?"secondary":"outline-secondary"}
+                            onClick={()=>setModalShow(true)}
+                        >Listen</Button>
                         <Modal
                             show={modalShow}
                             onHide={()=>setModalShow(false)}
@@ -94,31 +89,21 @@ const ReleasePage = ({darkMode, album, addToPlaylist})=>{
                         </Modal>
                     </Col>
                     <Col xs={12} md={8}>
-                        {(album.itemType==="track")?
-                            <iframe style={{border: "0", width: "100%", height: "120px" }} title={album.id}
-                            src={`https://bandcamp.com/EmbeddedPlayer/${album.itemType}=${album.id}/size=large/bgcol=${(darkMode)?'333333':'ffffff'}/linkcol=0f91ff/artwork=small/transparent=true/`} 
-                            seamless>
-                                <a href={album.url}>{album.name} by {album.artist}</a>
-                            </iframe>
-                        :<Table striped bordered hover size="sm" variant={darkMode?"dark":"light"}>
+                        <Table striped bordered hover size="sm" variant={darkMode?"dark":"light"}>
                             <tbody>
                                 {album.tracks.map(track=>
                                     <tr key={track.id}>
                                         <td>{track.trackNum}</td>
-                                        <td>{track.title}</td>
+                                        <td>{track.artist} - {track.title}</td>
                                         <td>
-                                            {/* <ReactAudioPlayer
-                                                src={track.file}
-                                                controls
-                                            /> */}
                                             <Button variant={darkMode?"secondary":"outline-secondary"} 
-                                                onClick={()=>addToPlaylist({id: track.id, name:`${album.artist} - ${track.title}`, url: track.file})}
+                                                onClick={()=>addToPlaylist({id: track.id, name:`${track.artist} - ${track.title}`, url: track.file})}
                                             >Add</Button>
                                         </td>
                                     </tr>
                                 )}
                             </tbody>
-                        </Table>}
+                        </Table>
                         {album.about?
                             album.about.split("\n").map((str, id)=>
                             validUrl(str)?
