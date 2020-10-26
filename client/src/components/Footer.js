@@ -41,7 +41,7 @@ const Footer = ({darkMode})=>{
             </Navbar.Text>
             <Navbar.Collapse className="justify-content-end">
                 <Navbar.Text>
-                    <a href="https://github.com/nst069" target="_blank" rel="noopener noreferrer" className="text-decoration-none">@nst069</a> with ❤ and (something else)
+                    <a href="https://github.com/nst069" target="_blank" rel="noopener noreferrer" className="text-decoration-none">@nst069</a> with ❤ and 🪐♄
                 </Navbar.Text> 
             </Navbar.Collapse>
         </Navbar>
