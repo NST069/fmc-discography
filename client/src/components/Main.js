@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import {
     Spinner,
@@ -16,18 +16,6 @@ import ReleaseCard from './ReleaseCard';
 import ReleasePage from './ReleasePage';
 
 const Main = ({darkMode, albums, loading, getAll, getAllbyLabel, labels, sortPosts, sortingOrder, setSortingOrder, addToPlaylist})=>{
-
-    const relPage = (props)=>{
-        const id = parseInt(props.match.params.id, 10)
-        const album = albums.find(album => album.id === id);
-        return (album !== undefined)
-        ? <ReleasePage
-                darkMode={darkMode}
-                album={album}
-                addToPlaylist={addToPlaylist}
-            />
-        :  null;
-    };
 
     const buttonTheme = darkMode?"secondary":"outline-secondary";
 
@@ -50,6 +38,7 @@ const Main = ({darkMode, albums, loading, getAll, getAllbyLabel, labels, sortPos
         <div style={{minHeight:"100vh"}}>
             <div className="container">
                 <Router>
+                    <Switch>
                     <Route exact path="/">
                     <div 
                         className="mt-3 mb-60" 
@@ -148,7 +137,21 @@ const Main = ({darkMode, albums, loading, getAll, getAllbyLabel, labels, sortPos
                         </Container>
                     </div>
                     </Route>
-                    <Route path='/:id' component={relPage}/>
+                    <Route path='/:id' render={(props)=>{
+                        const id = parseInt(props.match.params.id, 10)
+                        const index = albums.findIndex(album => album.id === id);
+                        const album=albums[index];
+                        return (album !== undefined)
+                        ? <ReleasePage
+                                darkMode={darkMode}
+                                album={album}
+                                addToPlaylist={addToPlaylist}
+                                prev={albums[index-1]?albums[index-1]:null}
+                                next={albums[index+1]?albums[index+1]:null}
+                            />
+                        :  null;
+                    }}/>
+                    </Switch>
                 </Router>
             </div>
         </div>

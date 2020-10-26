@@ -7,7 +7,7 @@ import {
         Button,
 }from 'react-bootstrap';
 
-const ReleaseCard = ({darkMode, album, prev, next})=>{
+const ReleaseCard = ({darkMode, album})=>{
 
     return(
         <Card key={album.id} bg={darkMode?"dark":"light"} text={darkMode?"white":"dark"}>

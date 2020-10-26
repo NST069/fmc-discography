@@ -12,11 +12,13 @@ import {
         Col,
         Button,
         Modal,
+        OverlayTrigger,
+        Tooltip,
 }from 'react-bootstrap';
 
 import { useMediaQuery } from 'react-responsive';
 
-const ReleasePage = ({darkMode, album, addToPlaylist})=>{
+const ReleasePage = ({darkMode, album, addToPlaylist, prev, next})=>{
 
     const [modalShow, setModalShow] = useState(false);
 
@@ -44,22 +46,100 @@ const ReleasePage = ({darkMode, album, addToPlaylist})=>{
         :<svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-play" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
             <path fillRule="evenodd" d="M10.804 8L5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>
         </svg>;
+    const prevIcon = <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-arrow-left" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path fillRule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>;
+    const nextIcon = <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-arrow-right" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+    </svg>;
+    const backIcon = <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-arrow-90deg-up" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path fillRule="evenodd" d="M4.854 1.146a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L4 2.707V12.5A2.5 2.5 0 0 0 6.5 15h8a.5.5 0 0 0 0-1h-8A1.5 1.5 0 0 1 5 12.5V2.707l3.146 3.147a.5.5 0 1 0 .708-.708l-4-4z"/>
+    </svg>;
 
     return(
         <Card className="mt-3 mb-6" key={album.id} bg={darkMode?"dark":"light"} text={darkMode?"white":"dark"}>
             <Card.Header className="font-weight-bold">
-                <Link 
-                    to='/'
-                    style={{ textDecoration: 'none' }}
-                >
-                    <Button
-                        block
-                        size="sm"
-                        variant={darkMode?"secondary":"outline-secondary"}
+                <Container flex>
+                    <Row className = "mb-2">
+                    <Link 
+                        to='/'
+                        style={{ textDecoration: 'none' }}
                     >
-                    Back</Button>
-                </Link>
-                <p className={isSm?'h3':isMd?'h1':'display-4'}>{`${album.artist} - ${album.title}`}</p>
+                        <OverlayTrigger
+                            key="back"
+                            placement="top"
+                            overlay={
+                                <Tooltip >
+                                    Back
+                                </Tooltip>
+                            }
+                        >
+                            <Button
+                                block
+                                size="sm"
+                                variant={darkMode?"secondary":"outline-secondary"}
+                            >{backIcon}</Button>
+                        </OverlayTrigger>
+                    </Link>
+                    </Row>
+                    <Row>
+                        <Col md="auto">
+                            {prev != null?
+                            <Link 
+                                to={`/${prev.id}`}
+                                style={{ textDecoration: 'none' }}
+                            >
+                                <OverlayTrigger
+                                    key={prev.title}
+                                    placement="top"
+                                    overlay={
+                                        <Tooltip >
+                                            {prev.artist} - {prev.title}
+                                        </Tooltip>
+                                    }
+                                    >
+                                        <Button
+                                            block
+                                            size="sm"
+                                            variant={darkMode?"secondary":"outline-secondary"}
+                                        >
+                                        {prevIcon}</Button>
+                                </OverlayTrigger>
+                            </Link>
+                            :  null}
+                        </Col>
+                        <Col >
+                            <p className={isSm?'h3':isMd?'h1':'display-4'}>{`${album.artist} - ${album.title}`}</p>
+                        </Col>
+                        <Col md="auto">
+                            {next!=null?
+                            <Link 
+                                to={`/${next.id}`}
+                                style={{ textDecoration: 'none' }}
+                            >
+                                <OverlayTrigger
+                                    key={next.title}
+                                    placement="top"
+                                    overlay={
+                                        <Tooltip >
+                                            {next.artist} - {next.title}
+                                        </Tooltip>
+                                    }
+                                    >
+                                        <Button
+                                            block
+                                            size="sm"
+                                            variant={darkMode?"secondary":"outline-secondary"}
+                                        >
+                                        {nextIcon}</Button>
+                                    </OverlayTrigger>
+                            </Link>
+                            :null}
+                        </Col> 
+                    </Row>
+                </Container>
+                
+                
             </Card.Header>
             <Container style={{margin:'5px'}}>
                 <Row className="justify-content-md-center mb-2">
