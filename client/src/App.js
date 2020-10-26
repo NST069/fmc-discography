@@ -24,11 +24,8 @@ function App() {
 
   const getAllbyLabel = (label)=>{
     setLoading(true);
-    //console.log(label);
     axios.get(`${endpoint}/discography/getAllFromLabel/${label}`)
     .then((res)=>{
-      //res.data.map(label=>{setAlbums(label.albumData)});
-      //console.log(res.data);
       setAlbums(res.data);
       setLoading(false);
     });
@@ -39,7 +36,6 @@ function App() {
 
     axios.get(`${endpoint}/discography/getAll`)
     .then((res)=>{
-      //console.log(res.data);
       setAlbums(res.data);
       setLoading(false);
     })

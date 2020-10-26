@@ -22,7 +22,7 @@ const ReleasePage = ({darkMode, album, addToPlaylist, prev, next})=>{
 
     const [modalShow, setModalShow] = useState(false);
 
-    const validUrl = (url)=>{ // TODO: make gloal if necessary
+    const validUrl = (url)=>{ // TODO: make global if necessary
         var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
             '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|'+ // domain name
             '((\\d{1,3}\\.){3}\\d{1,3}))'+ // ip (v4) address
