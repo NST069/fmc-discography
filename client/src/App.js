@@ -8,6 +8,7 @@ import axios from 'axios';
 import Header from './components/Header';
 import Main from './components/Main';
 import Footer from './components/Footer';
+import PlayerFooter from './components/PlayerFooter';
 
 function App() {
 
@@ -18,7 +19,7 @@ function App() {
   const [sortingRule, setSortingRule] = useState("new");
   const [sortingOrder, setSortingOrder] = useState(true); //true = A->z / Newest first
   const [darkMode, setDarkMode] = useState(true);
-  
+  const [playlist, setPlaylist] = useState([]);
 
   const getAllbyLabel = (label)=>{
     setLoading(true);
@@ -37,7 +38,17 @@ function App() {
       setAlbums(res.data);
       setLoading(false);
     })
-  } 
+  };
+
+  const addToPlaylist = (track)=>{
+    if(playlist.find((t)=>t.id===track.id)) return;
+    setPlaylist([...playlist, track]);
+  };
+
+  const deleteFromPlaylist = (id)=>{
+    setPlaylist(playlist.filter((track)=>track.id!==id));
+  }
+  
 
   useEffect(()=>{
     getAll();
@@ -82,10 +93,19 @@ function App() {
           sortPosts={sortPosts}
           sortingOrder={sortingOrder}
           setSortingOrder={setSortingOrder}
+          addToPlaylist={addToPlaylist}
         />
         <Footer
           darkMode={darkMode}
         />
+        {playlist.length>0 
+        ? <PlayerFooter
+          darkMode={darkMode}
+          playlist={playlist}
+          deleteFromPlaylist={deleteFromPlaylist}
+        />
+        :null}
+        
       </div>
     </div>
   );

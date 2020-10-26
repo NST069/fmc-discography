@@ -23,14 +23,14 @@ const Header = ({darkMode, setDarkMode})=>{
     const buttonTheme = darkMode?"secondary":"outline-secondary";
 
     return(
-        <Navbar 
-            //collapseOnSelect
-            //expand="sm"
+        <Navbar
             variant={darkMode?"dark":"light"} 
             bg={darkMode?"dark":"light"}
             sticky="top"
         >
-            <Navbar.Brand className="font-weight-bold">FULLMOONCREW</Navbar.Brand>
+            <Navbar.Brand className="font-weight-bold lead">
+                    FULLMOONCREW
+            </Navbar.Brand>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-end">
                 <ButtonToolbar>
