@@ -132,11 +132,13 @@ const Main = ({darkMode, albums, loading, getAll, getAllbyLabel, labels, sortPos
                                 <Col>
                                     {loading?
                                         <Spinner animation="grow" variant={darkMode?"dark":"light"}/>
-                                    :albums.map(album=>
+                                    :albums.map((album, index, array)=>
                                             <div key={album.id} style={{display: 'inline-block', width:'350px', margin:'5px'}}>
                                                 <ReleaseCard key={album.id}
                                                     darkMode={darkMode}
                                                     album={album}
+                                                    prev={array[index-1]?array[index-1]:null}
+                                                    next={array[index+1]?array[index+1]:null}
                                                 />
                                             </div>
                                             )

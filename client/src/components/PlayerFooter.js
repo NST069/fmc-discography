@@ -15,6 +15,7 @@ import { useMediaQuery } from 'react-responsive';
 const PlayerFooter = ({darkMode, playlist, deleteFromPlaylist})=>{
     
     const [currentTrackId, setCurrentTrackId] = useState(0);
+    const [currentTrack, setCurrentTrack] = useState(playlist[0]);
 
     const playlistIcon = <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-music-note-list" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
         <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z"/>
@@ -39,15 +40,25 @@ const PlayerFooter = ({darkMode, playlist, deleteFromPlaylist})=>{
                 <Table striped bordered hover size="sm" variant="light">
                     <tbody >
                         {playlist.map(track=>
-                            <tr key={track.id} onClick={()=>{setCurrentTrackId(playlist.findIndex(t=>t.id === track.id))}}>
-                                <td><p>{track.name}</p></td>
+                            <tr key={track.id} >
+                                <td onClick={()=>{
+                                    setCurrentTrackId(playlist.findIndex(t=>t.id === track.id));
+                                    setCurrentTrack(playlist.find(t=>t.id === track.id));
+                                }}><p>{track.name}</p></td>
                                 <td width="auto">
-                                    <Button size="sm" variant ="light" onClick={()=>deleteFromPlaylist(track.id)}>{deleteIcon}</Button>
+                                    <Button size="sm" variant ="light" onClick={async()=>{
+                                        await deleteFromPlaylist(track.id);
+                                        if(track.id === currentTrack.id){
+                                            let id = (currentTrackId + 1)%playlist.length;
+                                            setCurrentTrackId(id);
+                                            setCurrentTrack(playlist[id]);
+                                        }
+                                    }}>{deleteIcon}</Button>
                                 </td>
                             </tr>
                         )}
                     </tbody>
-                </Table>
+                </Table> 
             </div>
             :"Empty"}
           </Popover.Content>
@@ -60,9 +71,9 @@ const PlayerFooter = ({darkMode, playlist, deleteFromPlaylist})=>{
                 showSkipControls
                 autoPlay
                 layout={isMd?"stacked":"horizontal"}
-                src={(playlist.length>0)?playlist[currentTrackId].url:""}
+                src={currentTrack.url}
                 customVolumeControls = {(isSm)?[]:[RHAP_UI.VOLUME]}
-                header={(playlist.length>0)?`Now playing: ${playlist[currentTrackId].name}`:"No tracks in playlist"}
+                header={(playlist.length>0)?`Now playing: ${currentTrack.name}`:"No tracks in playlist"}
                 customAdditionalControls={[
                     RHAP_UI.LOOP,
                     <OverlayTrigger trigger="click" rootClose placement="top" overlay={Playlist}>
@@ -70,13 +81,17 @@ const PlayerFooter = ({darkMode, playlist, deleteFromPlaylist})=>{
                     </OverlayTrigger>,
                 ]}
                 onClickPrevious={()=>{
-                    setCurrentTrackId((currentTrackId - 1)%playlist.length);
+                    let id = (currentTrackId-1 >= 0)?currentTrackId-1 : playlist.length-1 - currentTrackId;
+                    setCurrentTrackId(id);
+                    setCurrentTrack(playlist[id]);
                 }}
                 onClickNext={()=>{
                     setCurrentTrackId((currentTrackId + 1)%playlist.length);
+                    setCurrentTrack(playlist[currentTrackId]);
                 }}
                 onEnded={()=>{
                     setCurrentTrackId((currentTrackId + 1)%playlist.length);
+                    setCurrentTrack(playlist[currentTrackId]);
                 }}
             />
         </div>
