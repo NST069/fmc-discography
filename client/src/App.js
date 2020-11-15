@@ -16,6 +16,7 @@ function App() {
   const endpoint = "http://localhost:5000";
 
   const [albums, setAlbums] = useState([]);
+  const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [sortingRule, setSortingRule] = useState("new");
   const [sortingOrder, setSortingOrder] = useState(true); //true = A->z / Newest first
@@ -49,10 +50,20 @@ function App() {
   const deleteFromPlaylist = (id)=>{
     setPlaylist(playlist.filter((track)=>track.id!==id));
   }
+
+  const getVideos = ()=>{
+    setLoading(true);
+    axios.get(`${endpoint}/videography/getAllVideos`)
+    .then((res)=>{
+      setVideos(res.data);
+      setLoading(false);
+    });
+  }
   
 
   useEffect(()=>{
     getAll();
+    getVideos();
   }, []);
 
   const sortPosts = async (rule)=>{
@@ -95,6 +106,7 @@ function App() {
           sortingOrder={sortingOrder}
           setSortingOrder={setSortingOrder}
           addToPlaylist={addToPlaylist}
+          videos={videos}
         />
         <Footer
           darkMode={darkMode}

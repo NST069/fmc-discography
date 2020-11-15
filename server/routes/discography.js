@@ -128,7 +128,7 @@ const composeAlbumInfo = (albumData, label)=>{
         about: albumData.raw.current.about,
         credits: albumData.raw.current.credits,
         label:label,
-    };
+    }
 }
 
 router.get('/labels', (req, res, next)=>{

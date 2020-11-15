@@ -11,11 +11,12 @@ import {
     Col,
     Navbar,
 } from 'react-bootstrap';
+import ReactPlayer from 'react-player/lazy';
 
 import ReleaseCard from './ReleaseCard';
 import ReleasePage from './ReleasePage';
 
-const Main = ({darkMode, albums, loading, getAll, getAllbyLabel, labels, sortPosts, sortingOrder, setSortingOrder, addToPlaylist})=>{
+const Main = ({darkMode, albums, loading, getAll, getAllbyLabel, labels, sortPosts, sortingOrder, setSortingOrder, addToPlaylist, videos})=>{
 
     const buttonTheme = darkMode?"secondary":"outline-secondary";
 
@@ -137,10 +138,32 @@ const Main = ({darkMode, albums, loading, getAll, getAllbyLabel, labels, sortPos
                         </Container>
                     </div>
                     </Route>
+                    <Route exact path='/videos' render={(props)=>{
+                        return loading?
+                            <Spinner animation="grow" variant={darkMode?"dark":"light"}/>
+                        :videos.map((video)=>{
+                            console.log(video.videoId);
+                            return (
+                                <div key={video.videoId} style={{position:'relative', paddingTop:'56.25%'}}>
+                                    <ReactPlayer key={video.videoId} style={{position:'absolute', top:0, left:0}} light url={`https://www.youtube.com/watch?v=${video.videoId}`} width='100%' height='100%' />
+                                </div>    
+                            );
+                        }
+                        );
+                    }}/>
                     <Route path='/:id' render={(props)=>{
                         const id = parseInt(props.match.params.id, 10)
                         const index = albums.findIndex(album => album.id === id);
                         const album=albums[index];
+                        let video={};
+                        if(album !== undefined){
+                            console.log(album.title);
+                            video = videos.find(vid=>{
+                                console.log(vid.title);
+                                return vid.title.includes(album.title)
+                            });
+                            console.log(video)
+                        }
                         return (album !== undefined)
                         ? <ReleasePage
                                 darkMode={darkMode}
@@ -148,6 +171,7 @@ const Main = ({darkMode, albums, loading, getAll, getAllbyLabel, labels, sortPos
                                 addToPlaylist={addToPlaylist}
                                 prev={albums[index-1]?albums[index-1]:null}
                                 next={albums[index+1]?albums[index+1]:null}
+                                video={video}
                             />
                         :  null;
                     }}/>

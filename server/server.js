@@ -10,6 +10,8 @@ app.use(express.json());
 
 const discography = require('./routes/discography');
 app.use("/discography", discography);
+const videography = require('./routes/videography');
+app.use("/videography", videography);
 
 app.listen(PORT, ()=>{
     console.log(`Running on port ${PORT}`);
