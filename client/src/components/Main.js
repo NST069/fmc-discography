@@ -10,6 +10,7 @@ import {
     Row, 
     Col,
     Navbar,
+    Nav,
 } from 'react-bootstrap';
 import ReactPlayer from 'react-player/lazy';
 
@@ -22,6 +23,7 @@ const Main = ({darkMode, albums, loading, getAll, getAllbyLabel, labels, sortPos
 
     const [filterLabel, setFilterLabel] = useState('0');
     const [selectedRule, setSelectedRule] = useState('1');
+    const [selectedTab, setSelectedTab] = useState('main');
 
     const sortDn = 
         <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-sort-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -41,105 +43,116 @@ const Main = ({darkMode, albums, loading, getAll, getAllbyLabel, labels, sortPos
                 <Router>
                     <Switch>
                     <Route exact path="/">
-                    <div 
-                        className="mt-3 mb-60" 
-                        style={{ paddingBottom: 60}} //footer height
-                    >
-                        <Container fluid>
-                            <Row>
-                                <Col>
-                                    <Navbar
-                                        collapseOnSelect
-                                        expand="sm"
-                                    >
-                                        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                                        <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-center">
+                        <Nav fill variant={`pills nav-${darkMode?"dark":"light"}`} defaultActiveKey="main" activeKey={selectedTab} onSelect={(key, event)=>{
+                            setSelectedTab(key);
+                        }}>
+                            <Nav.Item>
+                                <Nav.Link eventKey="main" className={buttonTheme}>Main</Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <Nav.Link eventKey="videos">Videos</Nav.Link>
+                            </Nav.Item>
+                        </Nav>
+                        {selectedTab==='main'?
+                        <div 
+                            className="mt-3 mb-60" 
+                            style={{ paddingBottom: 60}} //footer height
+                        >
+                            <Container fluid>
+                                <Row>
+                                    <Col>
+                                        <Navbar
+                                            collapseOnSelect
+                                            expand="sm"
+                                        >
+                                            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                                            <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-center">
 
-                                            <ButtonGroup toggle className="mr-2" variant={darkMode?"dark":"light"}>
-                                                <ToggleButton 
-                                                    type="radio"
-                                                    key={0}
-                                                    value="0"
-                                                    variant={buttonTheme} 
-                                                    checked={filterLabel === "0"}
-                                                    onChange={(event)=>{
-                                                        event.preventDefault();
-                                                        setFilterLabel("0");
-                                                        getAll();
-                                                }}>All</ToggleButton>
-                                                {
-                                                    labels.map(label=>
-                                                        <ToggleButton 
-                                                            type="radio"
-                                                            variant={buttonTheme} 
-                                                            key={label.name} 
-                                                            value={label.value}
-                                                            checked={filterLabel === label.value}
-                                                            onChange={(event)=>{
-                                                                event.preventDefault();
-                                                                setFilterLabel(label.value);
-                                                                getAllbyLabel(label.name);
-                                                        }}>{label.name}</ToggleButton>)
-                                                }
-                                            </ButtonGroup>
-                                            <ButtonGroup toggle className="mr-2" variant={darkMode?"dark":"light"}>
-                                                {[{name: "New", value: "1"}, {name: "Artist", value:"2"}, {name: "Title", value:"3"}].map((rule, idx)=>
+                                                <ButtonGroup toggle className="mr-2" variant={darkMode?"dark":"light"}>
                                                     <ToggleButton 
                                                         type="radio"
-                                                        key={idx}
-                                                        value={rule.value} 
-                                                        variant={buttonTheme}
-                                                        checked={selectedRule === rule.value}
+                                                        key={0}
+                                                        value="0"
+                                                        variant={buttonTheme} 
+                                                        checked={filterLabel === "0"}
                                                         onChange={(event)=>{
                                                             event.preventDefault();
-                                                            setSelectedRule(event.currentTarget.value);
-                                                            sortPosts(rule.name.toLowerCase());
-                                                    }}>by {rule.name}</ToggleButton>    
-                                                )}
-                                                <ButtonGroup toggle>
-                                                    <ToggleButton
-                                                        type="checkbox"
-                                                        variant={buttonTheme}
-                                                        checked={sortingOrder}
-                                                        value="1"
-                                                        onChange={(event)=>{
-                                                            event.preventDefault();
-                                                            setSortingOrder(!sortingOrder);
-                                                            sortPosts();
-                                                        }}
-                                                    >
-                                                        {sortingOrder
-                                                        ? sortDn
-                                                        : sortUp}
-                                                    </ToggleButton>
+                                                            setFilterLabel("0");
+                                                            getAll();
+                                                    }}>All</ToggleButton>
+                                                    {
+                                                        labels.map(label=>
+                                                            <ToggleButton 
+                                                                type="radio"
+                                                                variant={buttonTheme} 
+                                                                key={label.name} 
+                                                                value={label.value}
+                                                                checked={filterLabel === label.value}
+                                                                onChange={(event)=>{
+                                                                    event.preventDefault();
+                                                                    setFilterLabel(label.value);
+                                                                    getAllbyLabel(label.name);
+                                                            }}>{label.name}</ToggleButton>)
+                                                    }
                                                 </ButtonGroup>
-                                            </ButtonGroup>
-                                        </Navbar.Collapse>
-                                    </Navbar>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col>
-                                    {loading?
-                                        <Spinner animation="grow" variant={darkMode?"dark":"light"}/>
-                                    :albums.map((album, index, array)=>
-                                            <div key={album.id} style={{display: 'inline-block', width:'350px', margin:'5px'}}>
-                                                <ReleaseCard key={album.id}
-                                                    darkMode={darkMode}
-                                                    album={album}
-                                                    prev={array[index-1]?array[index-1]:null}
-                                                    next={array[index+1]?array[index+1]:null}
-                                                />
-                                            </div>
-                                            )
-                                    }
-                                </Col>
-                            </Row>
-                        </Container>
-                    </div>
-                    </Route>
-                    <Route exact path='/videos' render={(props)=>{
-                        return loading?
+                                                <ButtonGroup toggle className="mr-2" variant={darkMode?"dark":"light"}>
+                                                    {[{name: "New", value: "1"}, {name: "Artist", value:"2"}, {name: "Title", value:"3"}].map((rule, idx)=>
+                                                        <ToggleButton 
+                                                            type="radio"
+                                                            key={idx}
+                                                            value={rule.value} 
+                                                            variant={buttonTheme}
+                                                            checked={selectedRule === rule.value}
+                                                            onChange={(event)=>{
+                                                                event.preventDefault();
+                                                                setSelectedRule(event.currentTarget.value);
+                                                                sortPosts(rule.name.toLowerCase());
+                                                        }}>by {rule.name}</ToggleButton>    
+                                                    )}
+                                                    <ButtonGroup toggle>
+                                                        <ToggleButton
+                                                            type="checkbox"
+                                                            variant={buttonTheme}
+                                                            checked={sortingOrder}
+                                                            value="1"
+                                                            onChange={(event)=>{
+                                                                event.preventDefault();
+                                                                setSortingOrder(!sortingOrder);
+                                                                sortPosts();
+                                                            }}
+                                                        >
+                                                            {sortingOrder
+                                                            ? sortDn
+                                                            : sortUp}
+                                                        </ToggleButton>
+                                                    </ButtonGroup>
+                                                </ButtonGroup>
+                                            </Navbar.Collapse>
+                                        </Navbar>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        {loading?
+                                            <Spinner animation="grow" variant={darkMode?"dark":"light"}/>
+                                        :albums.map((album, index, array)=>
+                                                <div key={album.id} style={{display: 'inline-block', width:'350px', margin:'5px'}}>
+                                                    <ReleaseCard key={album.id}
+                                                        darkMode={darkMode}
+                                                        album={album}
+                                                        prev={array[index-1]?array[index-1]:null}
+                                                        next={array[index+1]?array[index+1]:null}
+                                                    />
+                                                </div>
+                                                )
+                                        }
+                                    </Col>
+                                </Row>
+                            </Container>
+                        </div>
+                        :null}
+                        {selectedTab==='videos' ?
+                        loading?
                             <Spinner animation="grow" variant={darkMode?"dark":"light"}/>
                         :videos.map((video)=>{
                             console.log(video.videoId);
@@ -147,10 +160,10 @@ const Main = ({darkMode, albums, loading, getAll, getAllbyLabel, labels, sortPos
                                 <div key={video.videoId} style={{position:'relative', paddingTop:'56.25%'}}>
                                     <ReactPlayer key={video.videoId} style={{position:'absolute', top:0, left:0}} light url={`https://www.youtube.com/watch?v=${video.videoId}`} width='100%' height='100%' />
                                 </div>    
-                            );
-                        }
-                        );
-                    }}/>
+                            )
+                            })
+                        :null}
+                    </Route>
                     <Route path='/:id' render={(props)=>{
                         const id = parseInt(props.match.params.id, 10)
                         const index = albums.findIndex(album => album.id === id);
