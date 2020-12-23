@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
-    "bandcamp-scraper": "^1.2.8",
+    "bandcamp-scraper": "^1.3.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "ping-monitor": "^0.5.1",

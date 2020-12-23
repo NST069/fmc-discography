@@ -37,8 +37,17 @@ function App() {
 
     axios.get(`${endpoint}/discography/getAll`)
     .then((res)=>{
-      setAlbums(res.data);
-      setLoading(false);
+      console.log(res.data);
+      if(res.data.length===0)
+        throw new Error("No data returned");
+      else{
+        setAlbums(res.data);
+        setLoading(false);
+      }
+    })
+    .catch((err)=>{
+      new Promise(r=>setTimeout(r, 5000))
+      .then(()=>getAll());
     })
   };
 
@@ -55,9 +64,17 @@ function App() {
     setLoading(true);
     axios.get(`${endpoint}/videography/getAllVideos`)
     .then((res)=>{
-      setVideos(res.data);
-      setLoading(false);
-    });
+      if(res.data.length===0)
+        throw new Error("No data returned");
+      else{
+        setVideos(res.data);
+        setLoading(false);
+      }
+    })
+    .catch((err)=>{
+      new Promise(r=>setTimeout(r, 5000))
+      .then(()=>getVideos());
+    })
   }
   
 
