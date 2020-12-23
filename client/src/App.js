@@ -15,6 +15,7 @@ function App() {
   const endpoint = "https://fmc-discography.herokuapp.com";
 
   const [albums, setAlbums] = useState([]);
+  const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [sortingRule, setSortingRule] = useState("new");
   const [sortingOrder, setSortingOrder] = useState(true); //true = A->z / Newest first
@@ -35,8 +36,16 @@ function App() {
 
     axios.get(`${endpoint}/discography/getAll`)
     .then((res)=>{
-      setAlbums(res.data);
-      setLoading(false);
+      if(res.data.length===0)
+        throw new Error("No data returned");
+      else{
+        setAlbums(res.data);
+        setLoading(false);
+      }
+    })
+    .catch((err)=>{
+      new Promise(r=>setTimeout(r, 5000))
+      .then(()=>getAll());
     })
   };
 
@@ -48,10 +57,28 @@ function App() {
   const deleteFromPlaylist = (id)=>{
     setPlaylist(playlist.filter((track)=>track.id!==id));
   }
+
+  const getVideos = ()=>{
+    setLoading(true);
+    axios.get(`${endpoint}/videography/getAllVideos`)
+    .then((res)=>{
+      if(res.data.length===0)
+        throw new Error("No data returned");
+      else{
+        setVideos(res.data);
+        setLoading(false);
+      }
+    })
+    .catch((err)=>{
+      new Promise(r=>setTimeout(r, 5000))
+      .then(()=>getVideos());
+    })
+  }
   
 
   useEffect(()=>{
     getAll();
+    getVideos();
   }, []);
 
   const sortPosts = async (rule)=>{
@@ -94,6 +121,7 @@ function App() {
           sortingOrder={sortingOrder}
           setSortingOrder={setSortingOrder}
           addToPlaylist={addToPlaylist}
+          videos={videos}
         />
         <Footer
           darkMode={darkMode}

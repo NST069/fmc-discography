@@ -18,11 +18,13 @@ import {
 
 import { useMediaQuery } from 'react-responsive';
 
-const ReleasePage = ({darkMode, album, addToPlaylist, prev, next})=>{
+import ReactPlayer from 'react-player/lazy';
+
+const ReleasePage = ({darkMode, album, addToPlaylist, prev, next, video})=>{
 
     const [modalShow, setModalShow] = useState(false);
 
-    const validUrl = (url)=>{ // TODO: make gloal if necessary
+    const validUrl = (url)=>{ // TODO: make global if necessary
         var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
             '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|'+ // domain name
             '((\\d{1,3}\\.){3}\\d{1,3}))'+ // ip (v4) address
@@ -224,6 +226,11 @@ const ReleasePage = ({darkMode, album, addToPlaylist, prev, next})=>{
                                     :<p key={id}>{str}</p>
                             )
                         :''}
+                        {video?
+                            <div style={{position:'relative', paddingTop:'56.25%'}}>
+                                <ReactPlayer style={{position:'absolute', top:0, left:0}} light url={`https://www.youtube.com/watch?v=${video.videoId}`} width='100%' height='100%' />
+                            </div>
+                        :null}
                     </Col>
                 </Row>
             </Container>

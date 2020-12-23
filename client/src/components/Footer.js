@@ -21,7 +21,6 @@ const Footer = ({darkMode})=>{
         <Navbar 
             variant={darkMode?"dark":"light"}
             bg={darkMode?"dark":"light"}
-            //fixed="bottom"
         >
             <Navbar.Text>
                 {links.map(link=>
