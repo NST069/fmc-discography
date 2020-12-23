@@ -160,7 +160,6 @@ const Main = ({darkMode, albums, loading, getAll, getAllbyLabel, labels, sortPos
                         loading?
                             <Spinner animation="grow" variant={darkMode?"dark":"light"}/>
                         :videos.map((video)=>{
-                            console.log(video.videoId);
                             return (
                                 <VideoCard 
                                     id={video.videoId} 
@@ -176,12 +175,9 @@ const Main = ({darkMode, albums, loading, getAll, getAllbyLabel, labels, sortPos
                         const album=albums[index];
                         let video={};
                         if(album !== undefined){
-                            console.log(album.title);
                             video = videos.find(vid=>{
-                                console.log(vid.title);
                                 return vid.title.includes(album.title)
                             });
-                            console.log(video)
                         }
                         return (album !== undefined)
                         ? <ReleasePage

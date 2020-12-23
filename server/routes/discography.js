@@ -5,9 +5,6 @@ const util = require('util');
 const bcScraper = require('bandcamp-scraper');
 const Monitor = require('ping-monitor');
 
-// TODO: Update only new ones(which were not presented in older version of albumUrls), remove not presented in albumUrls
-// check if data updated???
-
 const labels = [
     {
         name: "Saturn Ashes",

@@ -36,7 +36,6 @@ channelMonitor.on('up', async(res,state)=>{
             .then((videos)=>{
                 videosInfo = [...videosInfo, ...videos.items];
                 cont=videos.continuation;
-                //console.log(cont);
             });
         }
         console.log(`[${new Date(Date.now()).toLocaleString()}]: ${channelMonitor.title} updated`);
