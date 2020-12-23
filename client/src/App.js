@@ -75,11 +75,11 @@ function App() {
     })
   }
   
-
+  
   useEffect(()=>{
     getAll();
     getVideos();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const sortPosts = async (rule)=>{
     setLoading(true);
