@@ -10,12 +10,11 @@ import {
     Row, 
     Col,
     Navbar,
-    Nav,
 } from 'react-bootstrap';
-import ReactPlayer from 'react-player/lazy';
 
 import ReleaseCard from './ReleaseCard';
 import ReleasePage from './ReleasePage';
+import VideoCard from './VideoCard';
 
 const Main = ({darkMode, albums, loading, getAll, getAllbyLabel, labels, sortPosts, sortingOrder, setSortingOrder, addToPlaylist, videos})=>{
 
@@ -43,16 +42,22 @@ const Main = ({darkMode, albums, loading, getAll, getAllbyLabel, labels, sortPos
                 <Router>
                     <Switch>
                     <Route exact path="/">
-                        <Nav fill variant={`pills nav-${darkMode?"dark":"light"}`} defaultActiveKey="main" activeKey={selectedTab} onSelect={(key, event)=>{
-                            setSelectedTab(key);
-                        }}>
-                            <Nav.Item>
-                                <Nav.Link eventKey="main" className={buttonTheme}>Main</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link eventKey="videos">Videos</Nav.Link>
-                            </Nav.Item>
-                        </Nav>
+                        <ButtonGroup toggle className="mr-2 d-flex" variant={darkMode?"dark":"light"}>
+                            {[{name: "main", caption: "Discography", value: 1}, {name:"videos", caption: "Videography", value: 1}].map((tab, idx)=>
+                            <ToggleButton 
+                            type="radio"
+                            className="btn-block mr-1 mt-1 btn-lg"
+                            key={idx}
+                            value={tab.value} 
+                            variant={buttonTheme}
+                            checked={selectedTab === tab.name}
+                            onChange={(event)=>{
+                                event.preventDefault();
+                                setSelectedTab(tab.name);
+                            }}>{tab.caption}</ToggleButton>
+                            )}
+                        </ButtonGroup>
+
                         {selectedTab==='main'?
                         <div 
                             className="mt-3 mb-60" 
@@ -157,9 +162,10 @@ const Main = ({darkMode, albums, loading, getAll, getAllbyLabel, labels, sortPos
                         :videos.map((video)=>{
                             console.log(video.videoId);
                             return (
-                                <div key={video.videoId} style={{position:'relative', paddingTop:'56.25%'}}>
-                                    <ReactPlayer key={video.videoId} style={{position:'absolute', top:0, left:0}} light url={`https://www.youtube.com/watch?v=${video.videoId}`} width='100%' height='100%' />
-                                </div>    
+                                <VideoCard 
+                                    id={video.videoId} 
+                                    darkMode={darkMode}
+                                />
                             )
                             })
                         :null}
