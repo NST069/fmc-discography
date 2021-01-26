@@ -1,14 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import './App.css';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "tailwindcss/tailwind.css"
 
 import axios from 'axios';
 
 import Header from './components/Header';
 import Main from './components/Main';
 import Footer from './components/Footer';
-import PlayerFooter from './components/PlayerFooter';
 
 function App() {
 
@@ -106,14 +104,11 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <div className={darkMode?"bg-secondary":"bg-white"}>
-        <Header
-          darkMode={darkMode}
-          setDarkMode={setDarkMode}
-        />
+    <div className="App bg-black flex flex-col min-h-screen">
+      <Header/>
+
+      <div className="flex-grow">
         <Main
-          darkMode={darkMode}
           loading={loading}
           albums={albums}
           labels={[{name: "Saturn Ashes", value:"1"}, {name: "Outer Ring", value:"2"}]}
@@ -125,18 +120,9 @@ function App() {
           addToPlaylist={addToPlaylist}
           videos={videos}
         />
-        <Footer
-          darkMode={darkMode}
-        />
-        {playlist.length>0 
-        ? <PlayerFooter
-          darkMode={darkMode}
-          playlist={playlist}
-          deleteFromPlaylist={deleteFromPlaylist}
-        />
-        :null}
-        
       </div>
+
+      <Footer/>
     </div>
   );
 }
