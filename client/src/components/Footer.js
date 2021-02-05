@@ -14,10 +14,10 @@ const Footer = ()=>{
         {name:'pinterest', url:'https://pinterest.com/nst069'},
     ];
     return(
-        <nav className="footer flex flex-col md:flex-row justify-between">
+        <nav className="footer flex flex-col md:flex-row justify-between z-20">
             <div className="">
                 {links.map(link=>
-                <div className="inline-block">
+                <div className="inline-block" key={link.name}>
                     <SocialMediaIconsReact 
                     key={link.name}
                     borderColor="rgba(0,0,0,0)" 

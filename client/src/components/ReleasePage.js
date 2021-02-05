@@ -1,6 +1,4 @@
-import React, {useEffect} from 'react';
-
-import { Link } from "react-router-dom";
+import React from 'react';
 
 import ReactPlayer from 'react-player/lazy';
 
@@ -26,7 +24,7 @@ const ReleasePage = ({loading, album, currentAlbum, video, getAlbumById, closeMo
                 <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
             </div>
         :
-        <div className="my-10 bg-gray-900 rounded-md">
+        <div className="bg-gray-900 rounded-md flex-grow md:overflow-hidden">
             <div className="flex flex-col md:flex-row justify-between bg-gray-800">
                 <button onClick={(event)=>{
                     event.preventDefault();
@@ -34,7 +32,7 @@ const ReleasePage = ({loading, album, currentAlbum, video, getAlbumById, closeMo
                 }} className="w-full md:w-auto py-2 px-4 font-semibold rounded-sm text-center text-white bg-gray-900 hover:bg-gray-800">
                     {backIcon}
                 </button>
-                <p className="text-4xl w-full font-bold tracking-wider text-center text-white px-1 py-1">{loading?"Loading...":`${currentAlbum.title} by ${currentAlbum.artist}`}</p>
+                <p className="text-4xl w-full font-bold tracking-wider text-center text-white px-1 py-1">{currentAlbum.title} by {currentAlbum.artist}</p>
             </div>
             <div className="m-3">
                 <div className="flex flex-wrap -mx-2">

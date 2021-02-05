@@ -143,6 +143,7 @@ const composeMetaAlbumInfo = (albumData, label)=>{
         imageUrl: albumData.imageUrl,
         id: albumData.raw.id,
         label:label,
+        releaseDate: Date.parse(albumData.raw.current.release_date),
     }
 }
 

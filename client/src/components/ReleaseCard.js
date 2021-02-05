@@ -9,16 +9,11 @@ const ReleaseCard = ({album, getAlbumById, openModal})=>{
             <img className="release-cover" src={album.imageUrl} alt={`${album.artist} - ${album.title}`}/>
             <p className="release-p release-title">{album.title}</p>
             <p className="release-p release-artist">{album.artist}</p>
-            {/* <Link 
-                to={`/${album.id}`}
-                style={{ textDecoration: 'none' }}
-                > */}
-                <button onClick={(event)=>{
-                    event.preventDefault();
-                    getAlbumById(album.id);
-                    openModal();
-                }} className="button button-dark">Show</button>
-            {/* </Link> */}
+            <button onClick={(event)=>{
+                event.preventDefault();
+                getAlbumById(album.id);
+                openModal();
+            }} className="button button-dark">Show</button>
         </div>
     );
 }

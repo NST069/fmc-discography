@@ -40,5 +40,8 @@
     .release-cover{
         @apply object-cover object-center
     }
+    .active{
+        @apply bg-gray-600 text-white rounded-full;
+    }
     
 }

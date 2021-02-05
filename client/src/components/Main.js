@@ -1,12 +1,9 @@
 import React, {useState, useEffect} from 'react';
 
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-
-import Modal from "react-modal";
-
 import ReleaseCard from './ReleaseCard';
 import ReleasePage from './ReleasePage';
 import VideoCard from './VideoCard';
+import Fullwidth from './Fullwidth';
 
 const Main = ({selectedTab, albums, loading, getAll, getAllbyLabel, getAlbumById, currentAlbum, labels, sortPosts, sortingOrder, setSortingOrder, addToPlaylist, videos})=>{
 
@@ -16,22 +13,10 @@ const Main = ({selectedTab, albums, loading, getAll, getAllbyLabel, getAlbumById
     
     const [showModal, setShowModal] = useState(false);
 
-    const styles = { 
-        content :{ 
-            overflow: 'auto', WebkitOverflowScrolling: 'touch',
-            borderRadius: '4px', outline: 'none', border:'none', padding: 'none',
-            top: '50%', left: '50%', right: 'auto', bottom: 'auto',
-            marginRight: '-50%', transform: 'translate(-50%, -50%)',
-            backgroundColor: 'transparent',           
-        },
-        overlay: {
-            backgroundColor: 'rgba(0,0,0,0.5)',
-        }
-    };
-    
-    useEffect(()=>{
-        Modal.setAppElement(document.getElementById('root'));
-    }, []);
+    useEffect(() => {
+        showModal && (document.body.style.overflow = 'hidden');
+        !showModal && (document.body.style.overflow = 'unset');
+     }, [showModal]);
 
     const openModal=()=>setShowModal(true);
     const closeModal=()=>setShowModal(false);
@@ -44,7 +29,7 @@ const Main = ({selectedTab, albums, loading, getAll, getAllbyLabel, getAlbumById
             });
         }
         return video;
-    }
+    };
 
     const sortDn = 
         <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-sort-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -62,20 +47,70 @@ const Main = ({selectedTab, albums, loading, getAll, getAllbyLabel, getAlbumById
        <div className="container mx-auto max-w-screen-lg">
                 {selectedTab==='Home'? null
                 :null}
-                {selectedTab==='Discography'?
-                <div className="card-container">
-                    {loading? 
-                        <div className="fixed top-0 right-0 h-screen w-screen z-50 flex justify-center items-center">
-                            <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
-                        </div>
-                    : albums.map((album, index, array)=>{
-                        return(<ReleaseCard key={album.id}
-                            album={album}
-                            getAlbumById={getAlbumById}
-                            openModal={openModal}
-                        />)
-                    })}
+                {selectedTab==='Discography'?<>
+                <div className="flex flex-row justify-around mt-5">
+                    <div className="bg-gray-900 text-sm text-gray-400 leading-none border-2 border-gray-800 rounded-full inline-flex">
+                        <button className={`${filterLabel==='0'?"active":""} inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-gray-300 focus:text-gray-300 rounded-full px-4 py-2`} 
+                            id="all"
+                            onClick={(event)=>{
+                                event.preventDefault();
+                                setFilterLabel('0');
+                                getAll();
+                            }}>
+                            <span>All</span>
+                        </button>
+                        {labels.map(label=>
+                            <button className={`${filterLabel===label.value?"active":""} inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-gray-300 focus:text-gray-300 rounded-full px-4 py-2`} 
+                                id={label.name}
+                                onClick={(event)=>{
+                                    event.preventDefault();
+                                    setFilterLabel(label.value);
+                                    getAllbyLabel(label.name);
+                                }}>
+                                <span>{label.name}</span>
+                            </button>
+                        )}
+                    </div>
+
+                    <div className="bg-gray-900 text-sm text-gray-400 leading-none border-2 border-gray-800 rounded-full inline-flex">
+                        <button className={` inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-gray-300 focus:text-gray-300 rounded-full px-4 py-2`} 
+                            id="sort"
+                            onClick={(event)=>{
+                                event.preventDefault();
+                                setSortingOrder(!sortingOrder);
+                                sortPosts();
+                            }}>
+                            <span>{sortingOrder ? sortDn : sortUp}</span>
+                        </button>
+                    </div>
+
+                    <div className="bg-gray-900 text-sm text-gray-400 leading-none border-2 border-gray-800 rounded-full inline-flex">
+                        {[{name: "New", value: "1"}, {name: "Artist", value:"2"}, {name: "Title", value:"3"}].map((rule, idx)=>
+                            <button className={`${selectedRule===rule.value?"active":""} inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-gray-300 focus:text-gray-300 rounded-full px-4 py-2`} 
+                                id={rule.name}
+                                onClick={(event)=>{
+                                    event.preventDefault();
+                                    setSelectedRule(rule.value);
+                                    sortPosts(rule.name.toLowerCase());
+                                }}>
+                                <span>{rule.name}</span>
+                            </button>
+                        )}
+                    </div>
                 </div>
+                    <div className="my-5 mx-4 grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 justify-center">
+                        {loading? 
+                            <div className="fixed top-0 right-0 h-screen w-screen z-50 flex justify-center items-center">
+                                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+                            </div>
+                        : albums.map((album, index, array)=>{
+                            return(<ReleaseCard key={album.id}
+                                album={album}
+                                getAlbumById={getAlbumById}
+                                openModal={openModal}
+                            />)
+                        })}
+                    </div></>
                 :null}
                 {selectedTab==='Videography'?
                     loading?
@@ -90,22 +125,29 @@ const Main = ({selectedTab, albums, loading, getAll, getAllbyLabel, getAlbumById
                     )
                     })
                 :null}
+                {selectedTab==="Fullwidth"?
+                    <Fullwidth/>
+                :null}
             
-            <Modal 
-                isOpen={showModal}
-                onRequestClose={()=>closeModal()}
-                style={styles}
-            >
-                <ReleasePage
-                    loading={loading}
-                    currentAlbum={currentAlbum}
-                    //prev={albums[index-1]?albums[index-1]:null}
-                    //next={albums[index+1]?albums[index+1]:null}
-                    video={getVideo(currentAlbum.id)}
-                    getAlbumById={getAlbumById}
-                    closeModal={closeModal}
-                    />
-            </Modal>
+
+            {showModal ? (
+                <>
+                <div className="justify-center items-center container md:flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+                    <div className="relative w-auto my-6 mx-auto max-w-3xl">
+                        <ReleasePage
+                            loading={loading}
+                            currentAlbum={currentAlbum}
+                            //prev={albums[index-1]?albums[index-1]:null}
+                            //next={albums[index+1]?albums[index+1]:null}
+                            video={getVideo(currentAlbum.id)}
+                            getAlbumById={getAlbumById}
+                            closeModal={closeModal}
+                        />
+                    </div>
+                </div>
+                <div className="opacity-25 fixed inset-0 z-10 bg-black"></div>
+                </>
+            ) : null}
         </div>
     );
 }

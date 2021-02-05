@@ -18,8 +18,6 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [sortingRule, setSortingRule] = useState("new");
   const [sortingOrder, setSortingOrder] = useState(true); //true = A->z / Newest first
-  //const [darkMode, setDarkMode] = useState(true);
-  //const [playlist, setPlaylist] = useState([]);
   const [currentAlbum, setCurrentAlbum] = useState({});
   const [selectedTab, setSelectedTab] = useState('Discography');
 
@@ -64,16 +62,7 @@ function App() {
       }
     });
   }
-
-  // const addToPlaylist = (track)=>{
-  //   if(playlist.find((t)=>t.id===track.id)) return;
-  //   setPlaylist([...playlist, track]);
-  // };
-
-  // const deleteFromPlaylist = (id)=>{
-  //   setPlaylist(playlist.filter((track)=>track.id!==id));
-  // }
-
+  
   const getVideos = ()=>{
     setLoading(true);
     axios.get(`${endpoint}/videography/getAllVideos`)
