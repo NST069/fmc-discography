@@ -6,24 +6,27 @@ import Modal from "react-modal";
 
 import ReleaseCard from './ReleaseCard';
 import ReleasePage from './ReleasePage';
+import VideoCard from './VideoCard';
 
-const Main = ({albums, loading, getAll, getAllbyLabel, getAlbumById, currentAlbum, labels, sortPosts, sortingOrder, setSortingOrder, addToPlaylist, videos})=>{
+const Main = ({selectedTab, albums, loading, getAll, getAllbyLabel, getAlbumById, currentAlbum, labels, sortPosts, sortingOrder, setSortingOrder, addToPlaylist, videos})=>{
 
 
     const [filterLabel, setFilterLabel] = useState('0');
     const [selectedRule, setSelectedRule] = useState('1');
-    const [selectedTab, setSelectedTab] = useState('main');
+    
     const [showModal, setShowModal] = useState(false);
 
     const styles = { 
         content :{ 
-            border: '1px solid #ccc', background: '#fff',
             overflow: 'auto', WebkitOverflowScrolling: 'touch',
-            borderRadius: '4px', outline: 'none', padding: '20px',
+            borderRadius: '4px', outline: 'none', border:'none', padding: 'none',
             top: '50%', left: '50%', right: 'auto', bottom: 'auto',
             marginRight: '-50%', transform: 'translate(-50%, -50%)',
             backgroundColor: 'transparent',           
-        } 
+        },
+        overlay: {
+            backgroundColor: 'rgba(0,0,0,0.5)',
+        }
     };
     
     useEffect(()=>{
@@ -57,20 +60,36 @@ const Main = ({albums, loading, getAll, getAllbyLabel, getAlbumById, currentAlbu
 
     return(
        <div className="container mx-auto max-w-screen-lg">
-            <div className="card-container">
-                {loading? 
-                    <div className="fixed top-0 right-0 h-screen w-screen z-50 flex justify-center items-center">
-                        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
-                    </div>
-                : albums.map((album, index, array)=>{
-                    //console.log(album.id)
-                    return(<ReleaseCard key={album.id}
-                        album={album}
-                        getAlbumById={getAlbumById}
-                        openModal={openModal}
-                    />)
-                })}
-            </div>
+                {selectedTab==='Home'? null
+                :null}
+                {selectedTab==='Discography'?
+                <div className="card-container">
+                    {loading? 
+                        <div className="fixed top-0 right-0 h-screen w-screen z-50 flex justify-center items-center">
+                            <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+                        </div>
+                    : albums.map((album, index, array)=>{
+                        return(<ReleaseCard key={album.id}
+                            album={album}
+                            getAlbumById={getAlbumById}
+                            openModal={openModal}
+                        />)
+                    })}
+                </div>
+                :null}
+                {selectedTab==='Videography'?
+                    loading?
+                        <div className="fixed top-0 right-0 h-screen w-screen z-50 flex justify-center items-center">
+                            <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+                        </div>
+                    :videos.map((video)=>{
+                    return (
+                        <VideoCard 
+                            id={video.videoId}
+                        />
+                    )
+                    })
+                :null}
             
             <Modal 
                 isOpen={showModal}
@@ -87,27 +106,6 @@ const Main = ({albums, loading, getAll, getAllbyLabel, getAlbumById, currentAlbu
                     closeModal={closeModal}
                     />
             </Modal>
-                {/*const index = albums.findIndex(album => album.id === id);
-                const album=albums[index];
-                let video={};
-                if(album !== undefined){
-                    video = videos.find(vid=>{
-                        return vid.title.includes(album.title)
-                    });
-                }
-                return (album !== undefined)
-                    ? <ReleasePage
-                    loading={loading}
-                    album={album}
-                    currentAlbum={currentAlbum}
-                    //prev={albums[index-1]?albums[index-1]:null}
-                    //next={albums[index+1]?albums[index+1]:null}
-                    video={video}
-                    getAlbumById={getAlbumById}
-                    />
-                    :  null;
-                }}/>
-            </>*/}
         </div>
     );
 }

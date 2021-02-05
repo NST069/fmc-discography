@@ -21,6 +21,7 @@ function App() {
   //const [darkMode, setDarkMode] = useState(true);
   //const [playlist, setPlaylist] = useState([]);
   const [currentAlbum, setCurrentAlbum] = useState({});
+  const [selectedTab, setSelectedTab] = useState('Discography');
 
   const getAllbyLabel = (label)=>{
     setLoading(true);
@@ -120,10 +121,13 @@ function App() {
 
   return (
     <div className="App bg-black flex flex-col min-h-screen">
-      <Header/>
+      <Header
+        setSelectedTab={setSelectedTab}
+      />
 
       <div className="flex-grow">
         <Main
+          selectedTab={selectedTab}
           loading={loading}
           albums={albums}
           labels={[{name: "Saturn Ashes", value:"1"}, {name: "Outer Ring", value:"2"}]}
