@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import ReactPlayer from 'react-player/lazy';
 
-const ReleasePage = ({album, video})=>{
+const ReleasePage = ({loading, album, currentAlbum, video, getAlbumById})=>{
 
     const validUrl = (url)=>{ // TODO: make global if necessary
         var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
@@ -15,35 +15,41 @@ const ReleasePage = ({album, video})=>{
             '(\\#[-a-z\\d_]*)?$','i');
             return pattern.test(url.trim());
     };
-
+    const getAlbum = async(id)=>await getAlbumById(id);
     useEffect(() => {
+        getAlbum(album.id);
         window.scrollTo(0, 0);
-      }, []);
+    }, []);
 
     const backIcon = <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-arrow-90deg-up" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
         <path fillRule="evenodd" d="M4.854 1.146a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L4 2.707V12.5A2.5 2.5 0 0 0 6.5 15h8a.5.5 0 0 0 0-1h-8A1.5 1.5 0 0 1 5 12.5V2.707l3.146 3.147a.5.5 0 1 0 .708-.708l-4-4z"/>
     </svg>;
 
-    return(
+    return(<>
+        {loading?
+            <div className="fixed top-0 right-0 h-screen w-screen z-50 flex justify-center items-center">
+                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+            </div>
+        :
         <div className="my-10 bg-gray-900 rounded-md">
             <div className="flex flex-col md:flex-row justify-between bg-gray-800">
                 <Link 
                     to='/'
                     style={{ textDecoration: 'none' }}
-                >
+                    >
                     <button className="w-full md:w-auto py-2 px-4 font-semibold rounded-sm text-center text-white bg-gray-900 hover:bg-gray-800">
                         {backIcon}
                     </button>
                 </Link>
                 
-                <p className="text-4xl w-full font-bold tracking-wider text-center text-white px-1 py-1">{album.title} by {album.artist}</p>
+                <p className="text-4xl w-full font-bold tracking-wider text-center text-white px-1 py-1">{loading?"Loading...":`${currentAlbum.title} by ${currentAlbum.artist}`}</p>
             </div>
             <div className="m-3">
                 <div className="flex flex-wrap -mx-2">
                     <div className="w-full md:w-1/3 px-2">
-                        <img className="w-full" src={album.imageUrl} alt={`${album.artist} - ${album.title}`}/>
+                        <img className="w-full" src={currentAlbum.imageUrl} alt={`${currentAlbum.artist} - ${currentAlbum.title}`}/>
                         <a 
-                            href={album.url}
+                            href={currentAlbum.url}
                             target="_blank"
                             rel="noopener noreferrer">
                             <button className="button button-dark">Listen</button>
@@ -51,9 +57,9 @@ const ReleasePage = ({album, video})=>{
                         
                     </div>
                     <div className="w-full md:w-2/3 px-2">
-                        {album.tags?
+                        {currentAlbum.tags?
                             <div className='my-2 flex flex-wrap -m-1'>
-                                {album.tags.map(tag=>
+                                {currentAlbum.tags.map(tag=>
                                     <span key={tag} className="m-1 bg-gray-800 hover:bg-gray-700 rounded-full px-2 font-light text-sm text-gray-200 leading-loose cursor-pointer">{tag}</span>
                                 )}
                             </div>
@@ -66,8 +72,8 @@ const ReleasePage = ({album, video})=>{
                                 </div>
                             </div>
                         :null}
-                        {album.about?
-                            album.about.split("\n").map((str, id)=>
+                        {currentAlbum.about?
+                            currentAlbum.about.split("\n").map((str, id)=>
                             validUrl(str)?
                                 <a 
                                     target="_blank"
@@ -77,8 +83,8 @@ const ReleasePage = ({album, video})=>{
                                 :<p className="font-light text-gray-400" key={id}>{str}</p>
                             )
                         :''}
-                        {album.credits?
-                            album.credits.split("\n").map((str, id)=>
+                        {currentAlbum.credits?
+                            currentAlbum.credits.split("\n").map((str, id)=>
                                 validUrl(str)?
                                     <a 
                                         target="_blank"
@@ -97,20 +103,22 @@ const ReleasePage = ({album, video})=>{
                     target="_blank"
                     rel="noopener noreferrer"
                     className="no-underline mx-3 flex-none font-light text-gray-500"
-                    href={album.label.website}>{album.label.name}</a>
+                    href={currentAlbum.label.website}>{currentAlbum.label.name}</a>
                 <p className="mx-3 flex-auto flex-grow font-light text-gray-500 text-right">
-                    {album.releaseDate?
-                        ` Released: ${new Date(album.releaseDate).toDateString()}`
+                    {currentAlbum.releaseDate?
+                        ` Released: ${new Date(currentAlbum.releaseDate).toDateString()}`
                     :''}
-                    {album.upc?
-                        ` UPC: ${album.upc}`
+                    {currentAlbum.upc?
+                        ` UPC: ${currentAlbum.upc}`
                     :''}
-                    {album.isrc?
-                        ` ISRC: ${album.isrc}`
+                    {currentAlbum.isrc?
+                        ` ISRC: ${currentAlbum.isrc}`
                     :''}
                 </p>
             </div>
         </div>
+        }
+        </>
     );
 }
 

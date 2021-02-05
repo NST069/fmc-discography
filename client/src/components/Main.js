@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import ReleaseCard from './ReleaseCard';
 import ReleasePage from './ReleasePage';
 
-const Main = ({albums, loading, getAll, getAllbyLabel, labels, sortPosts, sortingOrder, setSortingOrder, addToPlaylist, videos})=>{
+const Main = ({albums, loading, getAll, getAllbyLabel, getAlbumById, currentAlbum, labels, sortPosts, sortingOrder, setSortingOrder, addToPlaylist, videos})=>{
 
 
     const [filterLabel, setFilterLabel] = useState('0');
@@ -45,7 +45,8 @@ const Main = ({albums, loading, getAll, getAllbyLabel, labels, sortPosts, sortin
                         </div>
                     </Route>
                     <Route path='/:id' render={(props)=>{
-                        const id = parseInt(props.match.params.id, 10)
+                        const id = parseInt(props.match.params.id, 10);
+                            
                         const index = albums.findIndex(album => album.id === id);
                         const album=albums[index];
                         let video={};
@@ -55,16 +56,18 @@ const Main = ({albums, loading, getAll, getAllbyLabel, labels, sortPosts, sortin
                             });
                         }
                         return (album !== undefined)
-                        ? <ReleasePage
-                                album={album}
-                                addToPlaylist={addToPlaylist}
-                                prev={albums[index-1]?albums[index-1]:null}
-                                next={albums[index+1]?albums[index+1]:null}
-                                video={video}
+                            ? <ReleasePage
+                            loading={loading}
+                            album={album}
+                            currentAlbum={currentAlbum}
+                            //prev={albums[index-1]?albums[index-1]:null}
+                            //next={albums[index+1]?albums[index+1]:null}
+                            video={video}
+                            getAlbumById={getAlbumById}
                             />
-                        :  null;
-                    }}/>
-                </Switch>
+                            :  null;
+                        }}/>
+                        </Switch>
             </Router>
         </div>
     );

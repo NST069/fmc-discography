@@ -18,12 +18,13 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [sortingRule, setSortingRule] = useState("new");
   const [sortingOrder, setSortingOrder] = useState(true); //true = A->z / Newest first
-  const [darkMode, setDarkMode] = useState(true);
-  const [playlist, setPlaylist] = useState([]);
+  //const [darkMode, setDarkMode] = useState(true);
+  //const [playlist, setPlaylist] = useState([]);
+  const [currentAlbum, setCurrentAlbum] = useState({});
 
   const getAllbyLabel = (label)=>{
     setLoading(true);
-    axios.get(`${endpoint}/discography/getAllFromLabel/${label}`)
+    axios.get(`${endpoint}/discography/getAllMetaFromLabel/${label}`)
     .then((res)=>{
       setAlbums(res.data);
       setLoading(false);
@@ -33,9 +34,9 @@ function App() {
   const getAll = ()=>{
     setLoading(true);
 
-    axios.get(`${endpoint}/discography/getAll`)
+    axios.get(`${endpoint}/discography/getAllMeta`)
     .then((res)=>{
-      console.log(res.data);
+      //console.log(res.data);
       if(res.data.length===0)
         throw new Error("No data returned");
       else{
@@ -49,14 +50,28 @@ function App() {
     })
   };
 
-  const addToPlaylist = (track)=>{
-    if(playlist.find((t)=>t.id===track.id)) return;
-    setPlaylist([...playlist, track]);
-  };
-
-  const deleteFromPlaylist = (id)=>{
-    setPlaylist(playlist.filter((track)=>track.id!==id));
+  const getAlbumById = (id)=>{
+    setLoading(true);
+    setCurrentAlbum({});
+    axios.get(`${endpoint}/discography/getFullAlbum/${id}`)
+    .then((res)=>{
+      if(res.data.length===0)
+        throw new Error("No data returned");
+      else{
+        setCurrentAlbum(res.data);
+        setLoading(false);
+      }
+    });
   }
+
+  // const addToPlaylist = (track)=>{
+  //   if(playlist.find((t)=>t.id===track.id)) return;
+  //   setPlaylist([...playlist, track]);
+  // };
+
+  // const deleteFromPlaylist = (id)=>{
+  //   setPlaylist(playlist.filter((track)=>track.id!==id));
+  // }
 
   const getVideos = ()=>{
     setLoading(true);
@@ -114,10 +129,11 @@ function App() {
           labels={[{name: "Saturn Ashes", value:"1"}, {name: "Outer Ring", value:"2"}]}
           getAllbyLabel={getAllbyLabel}
           getAll={getAll}
+          getAlbumById={getAlbumById}
+          currentAlbum={currentAlbum}
           sortPosts={sortPosts}
           sortingOrder={sortingOrder}
           setSortingOrder={setSortingOrder}
-          addToPlaylist={addToPlaylist}
           videos={videos}
         />
       </div>
