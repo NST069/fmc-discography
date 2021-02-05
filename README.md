@@ -9,3 +9,13 @@
 - **Discography**: Contains all *releases* available on Bandcamp pages
 - **Videography**: Contains all *videos* from the YT channel
 - ★: Secret feature
+
+
+#### `v. 2.2`
+- Appearance changes:
+- Removed Routing
+- Full Album Info shows in a modal dialog
+- Main page coming soon
+#### `v. 2.1`
+- Added Discography tab
+- Added Videography tab
