@@ -2,6 +2,8 @@ import React, {useState, useEffect} from 'react';
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
+import Modal from "react-modal";
+
 import ReleaseCard from './ReleaseCard';
 import ReleasePage from './ReleasePage';
 
@@ -11,6 +13,35 @@ const Main = ({albums, loading, getAll, getAllbyLabel, getAlbumById, currentAlbu
     const [filterLabel, setFilterLabel] = useState('0');
     const [selectedRule, setSelectedRule] = useState('1');
     const [selectedTab, setSelectedTab] = useState('main');
+    const [showModal, setShowModal] = useState(false);
+
+    const styles = { 
+        content :{ 
+            border: '1px solid #ccc', background: '#fff',
+            overflow: 'auto', WebkitOverflowScrolling: 'touch',
+            borderRadius: '4px', outline: 'none', padding: '20px',
+            top: '50%', left: '50%', right: 'auto', bottom: 'auto',
+            marginRight: '-50%', transform: 'translate(-50%, -50%)',
+            backgroundColor: 'transparent',           
+        } 
+    };
+    
+    useEffect(()=>{
+        Modal.setAppElement(document.getElementById('root'));
+    }, []);
+
+    const openModal=()=>setShowModal(true);
+    const closeModal=()=>setShowModal(false);
+    const getVideo=(id)=>{
+        const album=albums.find((a)=>a.id===id);
+        let video={};
+        if(album !== undefined){
+            video = videos.find(vid=>{
+                return vid.title.includes(album.title)
+            });
+        }
+        return video;
+    }
 
     const sortDn = 
         <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-sort-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -26,49 +57,57 @@ const Main = ({albums, loading, getAll, getAllbyLabel, getAlbumById, currentAlbu
 
     return(
        <div className="container mx-auto max-w-screen-lg">
-           <Router>
-                <Switch>
-                    <Route exact path="/">
-                        <div className="card-container">
-                            {loading? 
-                                <div className="fixed top-0 right-0 h-screen w-screen z-50 flex justify-center items-center">
-                                    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
-                                </div>
-                            : albums.map((album, index, array)=>{
-                                console.log(album.id)
-                                return(<ReleaseCard key={album.id}
-                                    album={album}
-                                    prev={array[index-1]?array[index-1]:null}
-                                    next={array[index+1]?array[index+1]:null}
-                                />)
-                            })}
-                        </div>
-                    </Route>
-                    <Route path='/:id' render={(props)=>{
-                        const id = parseInt(props.match.params.id, 10);
-                            
-                        const index = albums.findIndex(album => album.id === id);
-                        const album=albums[index];
-                        let video={};
-                        if(album !== undefined){
-                            video = videos.find(vid=>{
-                                return vid.title.includes(album.title)
-                            });
-                        }
-                        return (album !== undefined)
-                            ? <ReleasePage
-                            loading={loading}
-                            album={album}
-                            currentAlbum={currentAlbum}
-                            //prev={albums[index-1]?albums[index-1]:null}
-                            //next={albums[index+1]?albums[index+1]:null}
-                            video={video}
-                            getAlbumById={getAlbumById}
-                            />
-                            :  null;
-                        }}/>
-                        </Switch>
-            </Router>
+            <div className="card-container">
+                {loading? 
+                    <div className="fixed top-0 right-0 h-screen w-screen z-50 flex justify-center items-center">
+                        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+                    </div>
+                : albums.map((album, index, array)=>{
+                    //console.log(album.id)
+                    return(<ReleaseCard key={album.id}
+                        album={album}
+                        getAlbumById={getAlbumById}
+                        openModal={openModal}
+                    />)
+                })}
+            </div>
+            
+            <Modal 
+                isOpen={showModal}
+                onRequestClose={()=>closeModal()}
+                style={styles}
+            >
+                <ReleasePage
+                    loading={loading}
+                    currentAlbum={currentAlbum}
+                    //prev={albums[index-1]?albums[index-1]:null}
+                    //next={albums[index+1]?albums[index+1]:null}
+                    video={getVideo(currentAlbum.id)}
+                    getAlbumById={getAlbumById}
+                    closeModal={closeModal}
+                    />
+            </Modal>
+                {/*const index = albums.findIndex(album => album.id === id);
+                const album=albums[index];
+                let video={};
+                if(album !== undefined){
+                    video = videos.find(vid=>{
+                        return vid.title.includes(album.title)
+                    });
+                }
+                return (album !== undefined)
+                    ? <ReleasePage
+                    loading={loading}
+                    album={album}
+                    currentAlbum={currentAlbum}
+                    //prev={albums[index-1]?albums[index-1]:null}
+                    //next={albums[index+1]?albums[index+1]:null}
+                    video={video}
+                    getAlbumById={getAlbumById}
+                    />
+                    :  null;
+                }}/>
+            </>*/}
         </div>
     );
 }

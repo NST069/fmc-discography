@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import ReactPlayer from 'react-player/lazy';
 
-const ReleasePage = ({loading, album, currentAlbum, video, getAlbumById})=>{
+const ReleasePage = ({loading, album, currentAlbum, video, getAlbumById, closeModal})=>{
 
     const validUrl = (url)=>{ // TODO: make global if necessary
         var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
@@ -15,11 +15,11 @@ const ReleasePage = ({loading, album, currentAlbum, video, getAlbumById})=>{
             '(\\#[-a-z\\d_]*)?$','i');
             return pattern.test(url.trim());
     };
-    const getAlbum = async(id)=>await getAlbumById(id);
-    useEffect(() => {
-        getAlbum(album.id);
-        window.scrollTo(0, 0);
-    }, []);
+    //const getAlbum = async(id)=>await getAlbumById(id);
+    // useEffect(() => {
+    //     //getAlbum(album.id);
+    //     window.scrollTo(0, 0);
+    // }, []);
 
     const backIcon = <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-arrow-90deg-up" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
         <path fillRule="evenodd" d="M4.854 1.146a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L4 2.707V12.5A2.5 2.5 0 0 0 6.5 15h8a.5.5 0 0 0 0-1h-8A1.5 1.5 0 0 1 5 12.5V2.707l3.146 3.147a.5.5 0 1 0 .708-.708l-4-4z"/>
@@ -33,14 +33,17 @@ const ReleasePage = ({loading, album, currentAlbum, video, getAlbumById})=>{
         :
         <div className="my-10 bg-gray-900 rounded-md">
             <div className="flex flex-col md:flex-row justify-between bg-gray-800">
-                <Link 
+                {/* <Link 
                     to='/'
                     style={{ textDecoration: 'none' }}
-                    >
-                    <button className="w-full md:w-auto py-2 px-4 font-semibold rounded-sm text-center text-white bg-gray-900 hover:bg-gray-800">
+                    > */}
+                    <button onClick={(event)=>{
+                        event.preventDefault();
+                        closeModal();
+                    }} className="w-full md:w-auto py-2 px-4 font-semibold rounded-sm text-center text-white bg-gray-900 hover:bg-gray-800">
                         {backIcon}
                     </button>
-                </Link>
+                {/* </Link> */}
                 
                 <p className="text-4xl w-full font-bold tracking-wider text-center text-white px-1 py-1">{loading?"Loading...":`${currentAlbum.title} by ${currentAlbum.artist}`}</p>
             </div>
