@@ -2,35 +2,19 @@ import React from 'react';
 
 import { Link } from "react-router-dom";
 
-import { 
-        Card,
-        Button,
-}from 'react-bootstrap';
-
-const ReleaseCard = ({darkMode, album})=>{
+const ReleaseCard = ({album, getAlbumById, openModal})=>{
 
     return(
-        <Card key={album.id} bg={darkMode?"dark":"light"} text={darkMode?"white":"dark"}>
-            <Card.Img 
-                variant="top"
-                src={album.imageUrl}
-                alt={`${album.artist} - ${album.title}`}
-            />
-            <Card.Body>
-                <Card.Text className="lead">{album.title}</Card.Text>
-                <Card.Text>{album.artist}</Card.Text>
-                <Link 
-                    to={`/${album.id}`}
-                    style={{ textDecoration: 'none' }}
-                >
-                    <Button
-                        block
-                        size="lg"
-                        variant={darkMode?"secondary":"outline-secondary"}
-                    >Show</Button>
-                </Link>
-            </Card.Body>
-        </Card>
+       <div className="release-card">
+            <img className="release-cover" src={album.imageUrl} alt={`${album.artist} - ${album.title}`}/>
+            <p className="release-p release-title">{album.title}</p>
+            <p className="release-p release-artist">{album.artist}</p>
+            <button onClick={(event)=>{
+                event.preventDefault();
+                getAlbumById(album.id);
+                openModal();
+            }} className="button button-dark">Show</button>
+        </div>
     );
 }
 

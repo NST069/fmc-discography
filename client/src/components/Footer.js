@@ -1,12 +1,8 @@
 import React from 'react';
 
-import {
-    Navbar,
-} from 'react-bootstrap';
-
 import {SocialMediaIconsReact} from 'social-media-icons-react';
 
-const Footer = ({darkMode})=>{
+const Footer = ()=>{
     const links=[
         {name:'instagram', url:'https://instagram.com/nst069'},
         {name:'github', url:'https://github.com/nst069'},
@@ -18,32 +14,31 @@ const Footer = ({darkMode})=>{
         {name:'pinterest', url:'https://pinterest.com/nst069'},
     ];
     return(
-        <Navbar 
-            variant={darkMode?"dark":"light"}
-            bg={darkMode?"dark":"light"}
-        >
-            <Navbar.Text>
+        <nav className="footer flex flex-col md:flex-row justify-between z-20">
+            <div className="">
                 {links.map(link=>
+                <div className="inline-block" key={link.name}>
                     <SocialMediaIconsReact 
-                        key={link.name}
-                        borderColor="rgba(0,0,0,0)" 
-                        borderWidth="5" 
-                        borderStyle="solid" 
-                        icon={link.name} 
-                        iconColor={darkMode?"rgba(255,255,255,1)":"rgba(0,0,0,1)"} 
-                        backgroundColor="rgba(0,0,0,0)" 
-                        iconSize="10" 
-                        roundness="20%" 
-                        url={link.url} 
-                        size="32" />
+                    key={link.name}
+                    borderColor="rgba(0,0,0,0)" 
+                    borderWidth="5" 
+                    borderStyle="solid" 
+                    icon={link.name} 
+                    iconColor="rgba(255,255,255,1)" 
+                    backgroundColor="rgba(0,0,0,0)" 
+                    iconSize="10" 
+                    roundness="20%" 
+                    url={link.url} 
+                    size="32" />
+                </div>
                 )}
-            </Navbar.Text>
-            <Navbar.Collapse className="justify-content-end">
-                <Navbar.Text>
-                    <a href="https://github.com/nst069" target="_blank" rel="noopener noreferrer" className="text-decoration-none">@nst069</a> with ❤ and 🪐♄
-                </Navbar.Text> 
-            </Navbar.Collapse>
-        </Navbar>
+            </div>
+            <div className="flex-auto px-4">
+                <p className="no-underline mx-3 flex-none font-light text-gray-500 text-right">
+                    <a href="https://github.com/nst069" target="_blank" rel="noopener noreferrer">@nst069</a> with ❤ and 🪐♄
+                </p>
+            </div>
+        </nav>
     );
 }
 

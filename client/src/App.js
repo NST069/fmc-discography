@@ -1,14 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import './App.css';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "tailwindcss/tailwind.css"
 
 import axios from 'axios';
 
 import Header from './components/Header';
 import Main from './components/Main';
 import Footer from './components/Footer';
-import PlayerFooter from './components/PlayerFooter';
 
 function App() {
 
@@ -19,12 +17,12 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [sortingRule, setSortingRule] = useState("new");
   const [sortingOrder, setSortingOrder] = useState(true); //true = A->z / Newest first
-  const [darkMode, setDarkMode] = useState(true);
-  const [playlist, setPlaylist] = useState([]);
+  const [currentAlbum, setCurrentAlbum] = useState({});
+  const [selectedTab, setSelectedTab] = useState('Discography');
 
   const getAllbyLabel = (label)=>{
     setLoading(true);
-    axios.get(`${endpoint}/discography/getAllFromLabel/${label}`)
+    axios.get(`${endpoint}/discography/getAllMetaFromLabel/${label}`)
     .then((res)=>{
       setAlbums(res.data);
       setLoading(false);
@@ -34,7 +32,7 @@ function App() {
   const getAll = ()=>{
     setLoading(true);
 
-    axios.get(`${endpoint}/discography/getAll`)
+    axios.get(`${endpoint}/discography/getAllMeta`)
     .then((res)=>{
       if(res.data.length===0)
         throw new Error("No data returned");
@@ -49,15 +47,20 @@ function App() {
     })
   };
 
-  const addToPlaylist = (track)=>{
-    if(playlist.find((t)=>t.id===track.id)) return;
-    setPlaylist([...playlist, track]);
-  };
-
-  const deleteFromPlaylist = (id)=>{
-    setPlaylist(playlist.filter((track)=>track.id!==id));
+  const getAlbumById = (id)=>{
+    setLoading(true);
+    setCurrentAlbum({});
+    axios.get(`${endpoint}/discography/getFullAlbum/${id}`)
+    .then((res)=>{
+      if(res.data.length===0)
+        throw new Error("No data returned");
+      else{
+        setCurrentAlbum(res.data);
+        setLoading(false);
+      }
+    });
   }
-
+  
   const getVideos = ()=>{
     setLoading(true);
     axios.get(`${endpoint}/videography/getAllVideos`)
@@ -104,37 +107,29 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <div className={darkMode?"bg-secondary":"bg-white"}>
-        <Header
-          darkMode={darkMode}
-          setDarkMode={setDarkMode}
-        />
+    <div className="App bg-black flex flex-col min-h-screen">
+      <Header
+        setSelectedTab={setSelectedTab}
+      />
+
+      <div className="flex-grow">
         <Main
-          darkMode={darkMode}
+          selectedTab={selectedTab}
           loading={loading}
           albums={albums}
           labels={[{name: "Saturn Ashes", value:"1"}, {name: "Outer Ring", value:"2"}]}
           getAllbyLabel={getAllbyLabel}
           getAll={getAll}
+          getAlbumById={getAlbumById}
+          currentAlbum={currentAlbum}
           sortPosts={sortPosts}
           sortingOrder={sortingOrder}
           setSortingOrder={setSortingOrder}
-          addToPlaylist={addToPlaylist}
           videos={videos}
         />
-        <Footer
-          darkMode={darkMode}
-        />
-        {playlist.length>0 
-        ? <PlayerFooter
-          darkMode={darkMode}
-          playlist={playlist}
-          deleteFromPlaylist={deleteFromPlaylist}
-        />
-        :null}
-        
       </div>
+
+      <Footer/>
     </div>
   );
 }

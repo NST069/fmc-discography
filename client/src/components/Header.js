@@ -1,58 +1,73 @@
-import React from 'react';
+import React, {useState} from 'react';
 
-import {
-    Navbar,
-    ButtonToolbar,
-    ButtonGroup,
-    ToggleButton,
-} from 'react-bootstrap';
+const Header = ({setSelectedTab})=>{
+  
+  const [navOpen, setNavOpen] = useState(false);
 
-const sunIcon = 
-    <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-sun" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-        <path d="M3.5 8a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0z"/>
-        <path fillRule="evenodd" d="M8.202.28a.25.25 0 0 0-.404 0l-.91 1.255a.25.25 0 0 1-.334.067L5.232.79a.25.25 0 0 0-.374.155l-.36 1.508a.25.25 0 0 1-.282.19l-1.532-.245a.25.25 0 0 0-.286.286l.244 1.532a.25.25 0 0 1-.189.282l-1.509.36a.25.25 0 0 0-.154.374l.812 1.322a.25.25 0 0 1-.067.333l-1.256.91a.25.25 0 0 0 0 .405l1.256.91a.25.25 0 0 1 .067.334L.79 10.768a.25.25 0 0 0 .154.374l1.51.36a.25.25 0 0 1 .188.282l-.244 1.532a.25.25 0 0 0 .286.286l1.532-.244a.25.25 0 0 1 .282.189l.36 1.508a.25.25 0 0 0 .374.155l1.322-.812a.25.25 0 0 1 .333.067l.91 1.256a.25.25 0 0 0 .405 0l.91-1.256a.25.25 0 0 1 .334-.067l1.322.812a.25.25 0 0 0 .374-.155l.36-1.508a.25.25 0 0 1 .282-.19l1.532.245a.25.25 0 0 0 .286-.286l-.244-1.532a.25.25 0 0 1 .189-.282l1.508-.36a.25.25 0 0 0 .155-.374l-.812-1.322a.25.25 0 0 1 .067-.333l1.256-.91a.25.25 0 0 0 0-.405l-1.256-.91a.25.25 0 0 1-.067-.334l.812-1.322a.25.25 0 0 0-.155-.374l-1.508-.36a.25.25 0 0 1-.19-.282l.245-1.532a.25.25 0 0 0-.286-.286l-1.532.244a.25.25 0 0 1-.282-.189l-.36-1.508a.25.25 0 0 0-.374-.155l-1.322.812a.25.25 0 0 1-.333-.067L8.203.28zM8 2.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z"/>
-    </svg>;
-
-const moonIcon =
-    <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-moon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-        <path fillRule="evenodd" d="M14.53 10.53a7 7 0 0 1-9.058-9.058A7.003 7.003 0 0 0 8 15a7.002 7.002 0 0 0 6.53-4.47z"/>
-    </svg>;
-
-const Header = ({darkMode, setDarkMode})=>{
-
-    const buttonTheme = darkMode?"secondary":"outline-secondary";
+  const menuIcon = <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-three-dots" viewBox="0 0 16 16">
+    <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+  </svg>;
+  const starIcon = <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-star" viewBox="0 0 16 16">
+    <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.523-3.356c.329-.314.158-.888-.283-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767l-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288l1.847-3.658 1.846 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.564.564 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
+  </svg>;
 
     return(
-        <Navbar
-            variant={darkMode?"dark":"light"} 
-            bg={darkMode?"dark":"light"}
-            sticky="top"
+      <nav className="flex items-center bg-gray-800 p-3 flex-wrap z-50">          
+        <span className="text-xl text-white font-bold uppercase tracking-wide"
+          >FULLMOONCREW</span>
+      <button
+        className="text-white inline-flex p-3 hover:bg-gray-900 rounded lg:hidden ml-auto hover:text-white outline-none nav-toggler"
+        data-target="#navigation"
+        onClick={()=>setNavOpen(!navOpen)}
+      >
+        <span>{menuIcon}</span>
+      </button>
+      <div
+        className={`${(navOpen ? "flex" : "hidden")} top-navbar w-full lg:inline-flex lg:flex-grow lg:w-auto`}
+        id="navigation"
+      >
+        <div
+          className="lg:inline-flex lg:flex-row lg:ml-auto lg:w-auto w-full lg:items-center items-start  flex flex-col lg:h-auto"
         >
-            <Navbar.Brand className="font-weight-bold lead">
-                    FULLMOONCREW
-            </Navbar.Brand>
-            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-            <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-end">
-                <ButtonToolbar>
-                    <ButtonGroup toggle>
-                        <ToggleButton
-                            type="checkbox"
-                            variant={buttonTheme}
-                            checked={darkMode}
-                            value="1"
-                            onChange={(event)=>{
-                                event.preventDefault();
-                                setDarkMode(!darkMode);
-                            }}
-                        >
-                            {darkMode
-                            ? moonIcon
-                            : sunIcon}
-                        </ToggleButton>
-                    </ButtonGroup>
-                </ButtonToolbar>
-            </Navbar.Collapse>
-        </Navbar>
+          <a
+            // onClick={(event)=>{
+            //   event.preventDefault();
+            //   setSelectedTab("Home");
+            // }}
+            className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-600 items-center justify-center"
+          >
+            <span>Home</span>
+          </a>
+          <a
+            onClick={(event)=>{
+              event.preventDefault();
+              setSelectedTab("Discography");
+            }}
+            className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
+          >
+            <span>Discography</span>
+          </a>
+          <a
+            onClick={(event)=>{
+              event.preventDefault();
+              setSelectedTab("Videography");
+            }}
+            className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
+          >
+            <span>Videography</span>
+          </a>
+          <a
+            onClick={(event)=>{
+              event.preventDefault();
+              setSelectedTab("Fullwidth");
+            }}
+            className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
+          >
+            <span>{starIcon}</span>
+          </a>
+        </div>
+      </div>
+    </nav>
     );
 }
 

@@ -8,15 +8,19 @@ const Monitor = require('ping-monitor');
 const labels = [
     {
         name: "Saturn Ashes",
+        short: "snh",
         url: `https://saturnashes.bandcamp.com`,
         albumUrls: [],
-        albumData: []
+        albumData: [],
+        metaAlbumData: [],
     },
     {
         name: "Outer Ring",
+        short: "snhouter",
         url: `https://snhouter.bandcamp.com`,
         albumUrls: [],
-        albumData: []
+        albumData: [],
+        metaAlbumData: [],
     }
 ];
 
@@ -45,11 +49,13 @@ snhMonitor.on('up', async(res, state)=>{
     });
     await Promise.all(albumsList)
     .then((albums)=>{
-        let albumsList = [];
-        albums.map(album=>
-            albumsList = [...albumsList, composeAlbumInfo(album, {name: snhMonitor.title, website: snhMonitor.website})]
-        ); 
+        let albumsList = [], metaList= [];
+        albums.map(album=>{
+            albumsList = [...albumsList, composeAlbumInfo(album, {name: snhMonitor.title, website: snhMonitor.website})];
+            metaList = [...metaList, composeMetaAlbumInfo(album, {name: snhMonitor.title, website: snhMonitor.website})];
+        }); 
         currentLabel.albumData = albumsList;//placing info objects
+        currentLabel.metaAlbumData = metaList;
         
         console.log(`[${new Date(Date.now()).toLocaleString()}]: ${snhMonitor.title} updated`);
     });
@@ -81,11 +87,13 @@ snhouterMonitor.on('up', async(res, state)=>{
     });
     await Promise.all(albumsList)
     .then((albums)=>{
-        let albumsList = [];
-        albums.map(album=>
-            albumsList = [...albumsList, composeAlbumInfo(album, {name: snhouterMonitor.title, website: snhouterMonitor.website})]
-        ); 
+        let albumsList = [], metaList= [];
+        albums.map(album=>{
+            albumsList = [...albumsList, composeAlbumInfo(album, {name: snhouterMonitor.title, website: snhouterMonitor.website})];
+            metaList = [...metaList, composeMetaAlbumInfo(album, {name: snhouterMonitor.title, website: snhouterMonitor.website})];
+        }); 
         currentLabel.albumData = albumsList; //placing info objects
+        currentLabel.metaAlbumData = metaList;
         
         console.log(`[${new Date(Date.now()).toLocaleString()}]: ${snhouterMonitor.title} updated`);
     });
@@ -128,8 +136,19 @@ const composeAlbumInfo = (albumData, label)=>{
     }
 }
 
+const composeMetaAlbumInfo = (albumData, label)=>{
+    return {
+        artist: albumData.artist,
+        title: albumData.title,
+        imageUrl: albumData.imageUrl,
+        id: albumData.raw.id,
+        label:label,
+        releaseDate: Date.parse(albumData.raw.current.release_date),
+    }
+}
+
 router.get('/labels', (req, res, next)=>{
-    res.json(labels.map(label =>label.name));
+    res.json(labels.map(label =>({name: label.name, url: label.url})));
 });
 
 router.get('/getUrls', async(req, res, next)=>{
@@ -141,11 +160,35 @@ router.get('/getAllFromLabel/:label', async(req, res, next)=>{
     res.json(albums);
 });
 
+router.get('/getAllMetaFromLabel/:label', async(req, res, next)=>{
+    let albums = await labels.find(label => label.name === req.params.label).metaAlbumData;
+    res.json(albums);
+});
+
 router.get('/getAll', async(req, res, next)=>{
     let albums = [];
     await labels.map((label)=>label.albumData).map(a=>albums.push(...a))
     res.json(albums);
 
+});
+
+router.get('/getAllMeta', async(req, res, next)=>{
+    let albums = [];
+    await labels.map((label)=>label.metaAlbumData).map(a=>albums.push(...a))
+    res.json(albums);
+
+});
+
+router.get('/getLastFromLabel/:label', async(req, res, next)=>{
+    const count = 10;
+    let albums=await labels.find(label => label.name === req.params.label).metaAlbumData.slice(0, count);
+    res.json(albums);
+});
+
+router.get('/getFullAlbum/:id', async(req, res, next)=>{
+    let albums = [];
+    await labels.map((label)=>label.albumData).map(a=>albums.push(...a));
+    res.json(albums.find(album=>album.id==req.params.id));
 });
 
 router.get('/getRawAlbum', async(req, res, next)=>{
