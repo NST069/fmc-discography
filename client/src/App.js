@@ -16,6 +16,7 @@ function App() {
   const [albums, setAlbums] = useState([]);
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loadingPage, setLoadingPage] = useState(false);
   const [sortingRule, setSortingRule] = useState("new");
   const [sortingOrder, setSortingOrder] = useState(true); //true = A->z / Newest first
   const [currentAlbum, setCurrentAlbum] = useState({});
@@ -50,7 +51,7 @@ function App() {
   };
 
   const getAlbumById = (id)=>{
-    setLoading(true);
+    setLoadingPage(true);
     setCurrentAlbum({});
     axios.get(`${endpoint}/discography/getFullAlbum/${id}`)
     .then((res)=>{
@@ -58,7 +59,8 @@ function App() {
         throw new Error("No data returned");
       else{
         setCurrentAlbum(res.data);
-        setLoading(false);
+        //console.log(res.data)
+        setLoadingPage(false);
       }
     });
   }
@@ -81,10 +83,10 @@ function App() {
   }
   
 
-  useEffect(()=>{
-    getAll();
-    getVideos();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // useEffect(()=>{
+  //   getAll();
+  //   getVideos();
+  // }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const sortPosts = async (rule)=>{
     setLoading(true);
@@ -118,6 +120,7 @@ function App() {
         <Main
           selectedTab={selectedTab}
           loading={loading}
+          loadingPage={loadingPage}
           albums={albums}
           labels={[{name: "Saturn Ashes", value:"1"}, {name: "Outer Ring", value:"2"}]}
           getAllbyLabel={getAllbyLabel}
@@ -128,6 +131,7 @@ function App() {
           sortingOrder={sortingOrder}
           setSortingOrder={setSortingOrder}
           videos={videos}
+          getVideos={getVideos}
         />
       </div>
 
