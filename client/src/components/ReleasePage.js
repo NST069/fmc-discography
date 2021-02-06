@@ -1,8 +1,10 @@
 import React from 'react';
 
-import ReactPlayer from 'react-player/lazy';
+//import ReactPlayer from 'react-player/lazy';
 
-const ReleasePage = ({loading, album, currentAlbum, video, getAlbumById, closeModal})=>{
+import Loading from './Loading';
+
+const ReleasePage = ({loading, currentAlbum, video, getAlbumById, closeModal})=>{
 
     const validUrl = (url)=>{ // TODO: make global if necessary
         var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
@@ -20,9 +22,7 @@ const ReleasePage = ({loading, album, currentAlbum, video, getAlbumById, closeMo
 
     return(<>
         {loading?
-            <div className="fixed top-0 right-0 h-screen w-screen z-50 flex justify-center items-center">
-                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
-            </div>
+            <Loading/>
         :
         <div className="bg-gray-900 rounded-md flex-grow md:overflow-hidden">
             <div className="flex flex-col md:flex-row justify-between bg-gray-800">
@@ -55,13 +55,33 @@ const ReleasePage = ({loading, album, currentAlbum, video, getAlbumById, closeMo
                             </div>
                             :null
                         }
-                        {video?
+                        {/* {video?
                             <div className="p-4">
                                 <div style={{position:'relative', paddingTop:'56.25%'}}>
                                     <ReactPlayer style={{position:'absolute', top:0, left:0}} light url={`https://www.youtube.com/watch?v=${video.videoId}`} width='100%' height='100%' controls />
                                 </div>
                             </div>
-                        :null}
+                        :null} */}
+                        <table className="table-auto border-collapse w-full rounded-lg">
+                            <tbody className="text-sm font-normal text-gray-400">
+                                <tr className="flex flex-row text-sm text-white font-medium bg-gray-700 text-left">
+                                    {currentAlbum.itemType==='album'?
+                                        <th className="p-3 text-left">#</th>
+                                    :null}
+                                    <th className="flex-grow p-3 text-left">Title</th>
+                                    <th className="p-3 text-left">Duration</th>
+                                </tr>
+                                {currentAlbum.tracks.map(track=>
+                                    <tr className="flex flex-row bg-gray-900 hover:bg-gray-800 ">
+                                        {currentAlbum.itemType==='album'?
+                                            <td className="p-3">{track.trackNum}</td>
+                                        :null}
+                                        <td className="flex-grow p-3">{`${track.artist===currentAlbum.artist?"":`${track.artist} - `}${track.title}`}</td>
+                                        <td className="p-3">{`${Math.floor(track.duration/60)}:${(track.duration%60<10?'0':'')+track.duration%60}`}</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
                         {currentAlbum.about?
                             currentAlbum.about.split("\n").map((str, id)=>
                             validUrl(str)?
