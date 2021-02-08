@@ -133,7 +133,7 @@ const composeAlbumInfo = (albumData, label)=>{
         about: albumData.raw.current.about,
         credits: albumData.raw.current.credits,
         label:label,
-    }
+    };
 }
 
 const composeMetaAlbumInfo = (albumData, label)=>{
@@ -144,7 +144,7 @@ const composeMetaAlbumInfo = (albumData, label)=>{
         id: albumData.raw.id,
         label:label,
         releaseDate: Date.parse(albumData.raw.current.release_date),
-    }
+    };
 }
 
 router.get('/labels', (req, res, next)=>{
