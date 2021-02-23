@@ -24,7 +24,7 @@ const Discography = ({
 
   useEffect(() => {
     getAll();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     showModal && (document.body.style.overflow = "hidden");
@@ -76,95 +76,97 @@ const Discography = ({
 
   return (
     <>
+      <h1 className=" text-4xl sm:text-5xl md:text-7xl font-bold text-gray-200 my-5 text-center">
+        Discography
+      </h1>
       <div className="grid place-items-center min-h-screen bg-gradient-to-b from-black to-gray-900 p-5">
-        <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-200 mb-5">
-          Discography
-        </h1>
-        <div className="flex flex-col mx-2 md:flex-row justify-around mt-5 gap-2">
-          <div className="bg-gray-900 text-sm text-gray-400 leading-none border-2 border-gray-800 rounded-full inline-flex justify-between">
-            <button
-              className={`${
-                filterLabel === "0" ? "active" : ""
-              } inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-gray-300 focus:text-gray-300 rounded-full px-4 py-2`}
-              id="all"
-              onClick={(event) => {
-                event.preventDefault();
-                setFilterLabel("0");
-                getAll();
-              }}
-            >
-              <span>All</span>
-            </button>
-            {labels.map((label) => (
-              <button
-                key={label.name}
-                className={`${
-                  filterLabel === label.value ? "active" : ""
-                } inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-gray-300 focus:text-gray-300 rounded-full px-4 py-2`}
-                id={label.name}
-                onClick={(event) => {
-                  event.preventDefault();
-                  setFilterLabel(label.value);
-                  getAllbyLabel(label.name);
-                }}
-              >
-                <span>{label.name}</span>
-              </button>
-            ))}
-          </div>
-
-          <div className="bg-gray-900 text-sm text-gray-400 leading-none border-2 border-gray-800 rounded-full inline-flex justify-center">
-            <button
-              className={` inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-gray-300 focus:text-gray-300 rounded-full px-4 py-2`}
-              id="sort"
-              onClick={(event) => {
-                event.preventDefault();
-                setSortingOrder(!sortingOrder);
-                sortPosts();
-              }}
-            >
-              <span>{sortingOrder ? sortDn : sortUp}</span>
-            </button>
-          </div>
-
-          <div className="bg-gray-900 text-sm text-gray-400 leading-none border-2 border-gray-800 rounded-full inline-flex justify-between">
-            {[
-              { name: "New", value: "1" },
-              { name: "Artist", value: "2" },
-              { name: "Title", value: "3" },
-            ].map((rule, idx) => (
-              <button
-                key={rule.name}
-                className={`${
-                  selectedRule === rule.value ? "active" : ""
-                } inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-gray-300 focus:text-gray-300 rounded-full px-4 py-2`}
-                id={rule.name}
-                onClick={(event) => {
-                  event.preventDefault();
-                  setSelectedRule(rule.value);
-                  sortPosts(rule.name.toLowerCase());
-                }}
-              >
-                <span>{rule.name}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-        <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-5">
-          {loading ? (
-            <Loading />
-          ) : (
-            albums.map((album, index, array) => (
-              <div key={album.id}>
-                <ReleaseCard
-                  album={album}
-                  getAlbumById={getAlbumById}
-                  openModal={openModal}
-                />
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            <div className="flex flex-col mx-2 md:flex-row justify-around mt-5 gap-2">
+              <div className="bg-gray-900 text-sm text-gray-400 leading-none border-2 border-gray-800 rounded-full inline-flex justify-between">
+                <button
+                  className={`${
+                    filterLabel === "0" ? "active" : ""
+                  } inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-gray-300 focus:text-gray-300 rounded-full px-4 py-2`}
+                  id="all"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setFilterLabel("0");
+                    getAll();
+                  }}
+                >
+                  <span>All</span>
+                </button>
+                {labels.map((label) => (
+                  <button
+                    key={label.name}
+                    className={`${
+                      filterLabel === label.value ? "active" : ""
+                    } inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-gray-300 focus:text-gray-300 rounded-full px-4 py-2`}
+                    id={label.name}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setFilterLabel(label.value);
+                      getAllbyLabel(label.name);
+                    }}
+                  >
+                    <span>{label.name}</span>
+                  </button>
+                ))}
               </div>
-            ))
-          )}
-        </section>
+
+              <div className="bg-gray-900 text-sm text-gray-400 leading-none border-2 border-gray-800 rounded-full inline-flex justify-center">
+                <button
+                  className={` inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-gray-300 focus:text-gray-300 rounded-full px-4 py-2`}
+                  id="sort"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setSortingOrder(!sortingOrder);
+                    sortPosts();
+                  }}
+                >
+                  <span>{sortingOrder ? sortDn : sortUp}</span>
+                </button>
+              </div>
+
+              <div className="bg-gray-900 text-sm text-gray-400 leading-none border-2 border-gray-800 rounded-full inline-flex justify-between">
+                {[
+                  { name: "New", value: "1" },
+                  { name: "Artist", value: "2" },
+                  { name: "Title", value: "3" },
+                ].map((rule, idx) => (
+                  <button
+                    key={rule.name}
+                    className={`${
+                      selectedRule === rule.value ? "active" : ""
+                    } inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-gray-300 focus:text-gray-300 rounded-full px-4 py-2`}
+                    id={rule.name}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setSelectedRule(rule.value);
+                      sortPosts(rule.name.toLowerCase());
+                    }}
+                  >
+                    <span>{rule.name}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-5">
+              {albums.map((album, index, array) => (
+                <div key={album.id}>
+                  <ReleaseCard
+                    album={album}
+                    getAlbumById={getAlbumById}
+                    openModal={openModal}
+                  />
+                </div>
+              ))}
+            </section>
+          </>
+        )}
       </div>
 
       {showModal ? (

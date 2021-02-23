@@ -47,7 +47,7 @@ const Header = ({ setSelectedTab }) => {
         id="navigation"
       >
         <div className="lg:inline-flex lg:flex-row lg:ml-auto lg:w-auto w-full lg:items-center items-start  flex flex-col lg:h-auto">
-          <a
+          <p
             // onClick={(event)=>{
             //   event.preventDefault();
             //   setSelectedTab("Home");
@@ -55,8 +55,8 @@ const Header = ({ setSelectedTab }) => {
             className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-600 items-center justify-center"
           >
             <span>Home</span>
-          </a>
-          <a
+          </p>
+          <p
             onClick={(event) => {
               event.preventDefault();
               setSelectedTab("Discography");
@@ -64,8 +64,8 @@ const Header = ({ setSelectedTab }) => {
             className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
           >
             <span>Discography</span>
-          </a>
-          <a
+          </p>
+          <p
             onClick={(event) => {
               event.preventDefault();
               setSelectedTab("Videography");
@@ -73,8 +73,8 @@ const Header = ({ setSelectedTab }) => {
             className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
           >
             <span>Videography</span>
-          </a>
-          <a
+          </p>
+          <p
             onClick={(event) => {
               event.preventDefault();
               setSelectedTab("Fullwidth");
@@ -82,7 +82,7 @@ const Header = ({ setSelectedTab }) => {
             className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
           >
             <span>{starIcon}</span>
-          </a>
+          </p>
         </div>
       </div>
     </nav>
