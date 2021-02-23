@@ -16,8 +16,6 @@ function App() {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingPage, setLoadingPage] = useState(false);
-  const [sortingRule, setSortingRule] = useState("new");
-  const [sortingOrder, setSortingOrder] = useState(true); //true = A->z / Newest first
   const [currentAlbum, setCurrentAlbum] = useState({});
   const [selectedTab, setSelectedTab] = useState("Discography");
 
@@ -31,7 +29,7 @@ function App() {
       });
   };
 
-  const getAll = () => {
+  const getAll = (setAlbs) => {
     setLoading(true);
 
     axios
@@ -41,6 +39,7 @@ function App() {
         if (res.data.length === 0) throw new Error("No data returned");
         else {
           setAlbums(res.data);
+          setAlbs(res.data);
           setLoading(false);
         }
       })
@@ -83,37 +82,6 @@ function App() {
   //   getVideos();
   // }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const sortPosts = async (rule) => {
-    setLoading(true);
-    let r;
-    if (rule === undefined) rule = sortingRule;
-    switch (rule) {
-      case "new":
-        r = (a, b) =>
-          sortingOrder
-            ? b.releaseDate - a.releaseDate
-            : a.releaseDate - b.releaseDate;
-        break;
-      case "artist":
-        r = (a, b) =>
-          sortingOrder
-            ? a.artist.toLowerCase().localeCompare(b.artist.toLowerCase())
-            : b.artist.toLowerCase().localeCompare(a.artist.toLowerCase());
-        break;
-      case "title":
-        r = (a, b) =>
-          sortingOrder
-            ? a.title.toLowerCase().localeCompare(b.title.toLowerCase())
-            : b.title.toLowerCase().localeCompare(a.title.toLowerCase());
-        break;
-      default:
-        break;
-    }
-    setSortingRule(rule);
-    setAlbums(await albums.sort(r));
-    setLoading(false);
-  };
-
   return (
     <div className="App bg-black flex flex-col min-h-screen">
       <Header setSelectedTab={setSelectedTab} />
@@ -122,6 +90,7 @@ function App() {
         <Main
           selectedTab={selectedTab}
           loading={loading}
+          setLoading={setLoading}
           loadingPage={loadingPage}
           albums={albums}
           labels={[
@@ -132,9 +101,6 @@ function App() {
           getAll={getAll}
           getAlbumById={getAlbumById}
           currentAlbum={currentAlbum}
-          sortPosts={sortPosts}
-          sortingOrder={sortingOrder}
-          setSortingOrder={setSortingOrder}
           videos={videos}
           getVideos={getVideos}
         />

@@ -8,15 +8,12 @@ const Main = ({
   selectedTab,
   albums,
   loading,
+  setLoading,
   loadingPage,
   getAll,
-  getAllbyLabel,
   getAlbumById,
   currentAlbum,
   labels,
-  sortPosts,
-  sortingOrder,
-  setSortingOrder,
   videos,
   getVideos,
 }) => {
@@ -26,16 +23,13 @@ const Main = ({
       {selectedTab === "Discography" ? (
         <Discography
           loading={loading}
+          setLoading={setLoading}
           loadingPage={loadingPage}
           albums={albums}
           currentAlbum={currentAlbum}
           labels={labels}
           getAll={getAll}
-          getAllbyLabel={getAllbyLabel}
           getAlbumById={getAlbumById}
-          sortPosts={sortPosts}
-          sortingOrder={sortingOrder}
-          setSortingOrder={setSortingOrder}
         />
       ) : null}
       {selectedTab === "Videography" ? (

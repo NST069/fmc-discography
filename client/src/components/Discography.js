@@ -6,24 +6,19 @@ import Loading from "./Loading";
 
 const Discography = ({
   loading,
+  setLoading,
   loadingPage,
   albums,
   currentAlbum,
   labels,
   getAll,
-  getAllbyLabel,
   getAlbumById,
-  sortPosts,
-  sortingOrder,
-  setSortingOrder,
 }) => {
-  const [filterLabel, setFilterLabel] = useState("0");
-  const [selectedRule, setSelectedRule] = useState("1");
-
   const [showModal, setShowModal] = useState(false);
+  const [albumList, setAlbumList] = useState([]);
 
   useEffect(() => {
-    getAll();
+    getAll(setAlbumList);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -34,6 +29,22 @@ const Discography = ({
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
 
+  const [navOpen, setNavOpen] = useState(false);
+  const [filterLabel, setFilterLabel] = useState("0");
+  const [selectedRule, setSelectedRule] = useState("1");
+
+  const menuIcon = (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      fill="currentColor"
+      className="bi bi-three-dots"
+      viewBox="0 0 16 16"
+    >
+      <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+    </svg>
+  );
   const sortDn = (
     <svg
       width="1em"
@@ -74,6 +85,39 @@ const Discography = ({
     </svg>
   );
 
+  const [sortingRule, setSortingRule] = useState("new");
+  const [sortingOrder, setSortingOrder] = useState(true); //true = A->z / Newest first
+  const sortPosts = async (rule) => {
+    setLoading(true);
+    let r;
+    if (rule === undefined) rule = sortingRule;
+    switch (rule) {
+      case "new":
+        r = (a, b) =>
+          sortingOrder
+            ? b.releaseDate - a.releaseDate
+            : a.releaseDate - b.releaseDate;
+        break;
+      case "artist":
+        r = (a, b) =>
+          sortingOrder
+            ? a.artist.toLowerCase().localeCompare(b.artist.toLowerCase())
+            : b.artist.toLowerCase().localeCompare(a.artist.toLowerCase());
+        break;
+      case "title":
+        r = (a, b) =>
+          sortingOrder
+            ? a.title.toLowerCase().localeCompare(b.title.toLowerCase())
+            : b.title.toLowerCase().localeCompare(a.title.toLowerCase());
+        break;
+      default:
+        break;
+    }
+    setSortingRule(rule);
+    setAlbumList(await albumList.sort(r));
+    setLoading(false);
+  };
+
   return (
     <>
       <h1 className=" text-4xl sm:text-5xl md:text-7xl font-bold text-gray-200 my-5 text-center">
@@ -84,78 +128,96 @@ const Discography = ({
           <Loading />
         ) : (
           <>
-            <div className="flex flex-col mx-2 md:flex-row justify-around mt-5 gap-2">
-              <div className="bg-gray-900 text-sm text-gray-400 leading-none border-2 border-gray-800 rounded-full inline-flex justify-between">
-                <button
-                  className={`${
-                    filterLabel === "0" ? "active" : ""
-                  } inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-gray-300 focus:text-gray-300 rounded-full px-4 py-2`}
-                  id="all"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    setFilterLabel("0");
-                    getAll();
-                  }}
-                >
-                  <span>All</span>
-                </button>
-                {labels.map((label) => (
-                  <button
-                    key={label.name}
-                    className={`${
-                      filterLabel === label.value ? "active" : ""
-                    } inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-gray-300 focus:text-gray-300 rounded-full px-4 py-2`}
-                    id={label.name}
-                    onClick={(event) => {
-                      event.preventDefault();
-                      setFilterLabel(label.value);
-                      getAllbyLabel(label.name);
-                    }}
-                  >
-                    <span>{label.name}</span>
-                  </button>
-                ))}
-              </div>
+            <button
+              className="text-white inline-flex p-3 hover:bg-gray-900 rounded sm:hidden ml-auto hover:text-white outline-none nav-toggler"
+              data-target="#navigation"
+              onClick={() => setNavOpen(!navOpen)}
+            >
+              <span>{menuIcon}</span>
+            </button>
+            <div
+              className={`${
+                navOpen ? "flex" : "hidden"
+              } top-navbar w-full sm:inline-flex sm:flex-grow sm:w-auto`}
+              id="navigation"
+            >
+              <div className="flex flex-col mx-2 sm:flex-row justify-around mt-5 gap-2">
+                <div className="flex flex-col mx-2 md:flex-row justify-around mt-5 gap-2">
+                  <div className="bg-gray-900 text-sm text-gray-400 leading-none border-2 border-gray-800 rounded-full inline-flex justify-between">
+                    <button
+                      className={`${
+                        filterLabel === "0" ? "active" : ""
+                      } inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-gray-300 focus:text-gray-300 rounded-full px-4 py-2`}
+                      id="all"
+                      onClick={(event) => {
+                        event.preventDefault();
+                        setFilterLabel("0");
+                        setAlbumList(albums);
+                      }}
+                    >
+                      <span>All</span>
+                    </button>
+                    {labels.map((label) => (
+                      <button
+                        key={label.name}
+                        className={`${
+                          filterLabel === label.value ? "active" : ""
+                        } inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-gray-300 focus:text-gray-300 rounded-full px-4 py-2`}
+                        id={label.name}
+                        onClick={(event) => {
+                          event.preventDefault();
+                          setFilterLabel(label.value);
+                          setAlbumList(
+                            albums.filter((a) => a.label.name === label.name)
+                          );
+                        }}
+                      >
+                        <span>{label.name}</span>
+                      </button>
+                    ))}
+                  </div>
 
-              <div className="bg-gray-900 text-sm text-gray-400 leading-none border-2 border-gray-800 rounded-full inline-flex justify-center">
-                <button
-                  className={` inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-gray-300 focus:text-gray-300 rounded-full px-4 py-2`}
-                  id="sort"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    setSortingOrder(!sortingOrder);
-                    sortPosts();
-                  }}
-                >
-                  <span>{sortingOrder ? sortDn : sortUp}</span>
-                </button>
-              </div>
+                  <div className="bg-gray-900 text-sm text-gray-400 leading-none border-2 border-gray-800 rounded-full inline-flex justify-center">
+                    <button
+                      className={` inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-gray-300 focus:text-gray-300 rounded-full px-4 py-2`}
+                      id="sort"
+                      onClick={(event) => {
+                        event.preventDefault();
+                        setSortingOrder(!sortingOrder);
+                        sortPosts();
+                      }}
+                    >
+                      <span>{sortingOrder ? sortDn : sortUp}</span>
+                    </button>
+                  </div>
 
-              <div className="bg-gray-900 text-sm text-gray-400 leading-none border-2 border-gray-800 rounded-full inline-flex justify-between">
-                {[
-                  { name: "New", value: "1" },
-                  { name: "Artist", value: "2" },
-                  { name: "Title", value: "3" },
-                ].map((rule, idx) => (
-                  <button
-                    key={rule.name}
-                    className={`${
-                      selectedRule === rule.value ? "active" : ""
-                    } inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-gray-300 focus:text-gray-300 rounded-full px-4 py-2`}
-                    id={rule.name}
-                    onClick={(event) => {
-                      event.preventDefault();
-                      setSelectedRule(rule.value);
-                      sortPosts(rule.name.toLowerCase());
-                    }}
-                  >
-                    <span>{rule.name}</span>
-                  </button>
-                ))}
+                  <div className="bg-gray-900 text-sm text-gray-400 leading-none border-2 border-gray-800 rounded-full inline-flex justify-between">
+                    {[
+                      { name: "New", value: "1" },
+                      { name: "Artist", value: "2" },
+                      { name: "Title", value: "3" },
+                    ].map((rule, idx) => (
+                      <button
+                        key={rule.name}
+                        className={`${
+                          selectedRule === rule.value ? "active" : ""
+                        } inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-gray-300 focus:text-gray-300 rounded-full px-4 py-2`}
+                        id={rule.name}
+                        onClick={(event) => {
+                          event.preventDefault();
+                          setSelectedRule(rule.value);
+                          sortPosts(rule.name.toLowerCase());
+                        }}
+                      >
+                        <span>{rule.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
             <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-5">
-              {albums.map((album, index, array) => (
+              {albumList.map((album, index, array) => (
                 <div key={album.id}>
                   <ReleaseCard
                     album={album}
