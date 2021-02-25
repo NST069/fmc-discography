@@ -10,7 +10,7 @@ import Footer from "./components/Footer";
 
 function App() {
   //const endpoint = "https://fmc-discography.herokuapp.com";
-  const endpoint = "http://localhost:5000";
+  const endpoint = process.env.ENDPOINT || "http://localhost:5000";
 
   const [albums, setAlbums] = useState([]);
   const [videos, setVideos] = useState([]);
@@ -39,6 +39,7 @@ function App() {
         if (res.data.length === 0) throw new Error("No data returned");
         else {
           setAlbums(res.data);
+          console.log(res.data);
           setAlbs(res.data);
           setLoading(false);
         }
@@ -55,7 +56,7 @@ function App() {
       if (res.data.length === 0) throw new Error("No data returned");
       else {
         setCurrentAlbum(res.data);
-        //console.log(res.data)
+        console.log(res.data);
         setLoadingPage(false);
       }
     });
@@ -68,6 +69,7 @@ function App() {
       .then((res) => {
         if (res.data.length === 0) throw new Error("No data returned");
         else {
+          console.log(res.data);
           setVideos(res.data);
           setLoading(false);
         }

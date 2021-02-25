@@ -5,6 +5,17 @@ const util = require("util");
 const bcScraper = require("bandcamp-scraper");
 const Monitor = require("ping-monitor");
 
+const isObject = require("lodash/isObject");
+const _keys = require("lodash/keys");
+
+const mongoose = require("mongoose");
+mongoose.connect(process.env.MONGO_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+const albumSchema = require("../schemas/album");
+const albumModel = mongoose.model("album", albumSchema);
+
 const labels = [
   {
     name: "Saturn Ashes",
@@ -23,6 +34,27 @@ const labels = [
     metaAlbumData: [],
   },
 ];
+
+const isUpToDate = (fresh, staged) => {
+  const BreakEx = {};
+  try {
+    _keys(fresh).map((key) => {
+      const areObjects = isObject(fresh[key]) && isObject(staged._doc[key]);
+      if (
+        (areObjects && !isUpToDate(fresh[key], staged._doc[key])) ||
+        (!areObjects && fresh[key] != staged._doc[key])
+      ) {
+        console.log(
+          `${key} is outdated for [${fresh.artist} - ${fresh.title}]. Old:${staged._doc[key]}, New:${fresh[key]}`
+        );
+        throw BreakEx;
+      }
+    });
+  } catch (e) {
+    if (e === BreakEx) return false;
+  }
+  return true;
+};
 
 const snhMonitor = new Monitor({
   website: `https://saturnashes.bandcamp.com`,
@@ -51,25 +83,45 @@ snhMonitor.on("up", async (res, state) => {
     return await getAlbumInfo(url);
   });
   await Promise.all(albumsList).then((albums) => {
-    let albumsList = [],
+    let albList = [],
       metaList = [];
-    albums.map((album) => {
-      albumsList = [
-        ...albumsList,
-        composeAlbumInfo(album, {
+    albums.map(async (album) => {
+      const alInfo = composeAlbumInfo(album, {
+        name: snhMonitor.title,
+        website: snhMonitor.website,
+      });
+      const curAlbum = new albumModel({
+        ...composeAlbumInfo(album, {
           name: snhMonitor.title,
           website: snhMonitor.website,
         }),
-      ];
-      metaList = [
-        ...metaList,
-        composeMetaAlbumInfo(album, {
+      });
+      albumModel.findOne({ id: curAlbum.id }, (err, doc) => {
+        if (!err) {
+          if (!doc) {
+            doc = curAlbum;
+            console.log(
+              `New release found: ${curAlbum.title} by ${curAlbum.artist}`
+            );
+            doc.save((err) => (err ? console.log(err) : null));
+          } /*if (!isUpToDate(alInfo, doc))*/ else {
+            albumModel.updateOne({ id: curAlbum.id }, alInfo, (err) =>
+              err ? console.log(err) : null
+            );
+            //console.log(`Updated: ${curAlbum.title} by ${curAlbum.artist}`);
+          }
+        }
+      });
+      const curAlbumMeta = new albumModel({
+        ...composeMetaAlbumInfo(album, {
           name: snhMonitor.title,
           website: snhMonitor.website,
         }),
-      ];
+      });
+      metaList = [...metaList, curAlbumMeta];
     });
-    currentLabel.albumData = albumsList; //placing info objects
+    currentLabel.albumData = albList; //placing info objects
+
     currentLabel.metaAlbumData = metaList;
 
     console.log(
@@ -108,25 +160,45 @@ snhouterMonitor.on("up", async (res, state) => {
     return await getAlbumInfo(url);
   });
   await Promise.all(albumsList).then((albums) => {
-    let albumsList = [],
+    let albList = [],
       metaList = [];
-    albums.map((album) => {
-      albumsList = [
-        ...albumsList,
-        composeAlbumInfo(album, {
+    albums.map(async (album) => {
+      const alInfo = composeAlbumInfo(album, {
+        name: snhouterMonitor.title,
+        website: snhouterMonitor.website,
+      });
+      const curAlbum = new albumModel({
+        ...composeAlbumInfo(album, {
           name: snhouterMonitor.title,
           website: snhouterMonitor.website,
         }),
-      ];
-      metaList = [
-        ...metaList,
-        composeMetaAlbumInfo(album, {
+      });
+      albumModel.findOne({ id: curAlbum.id }, (err, doc) => {
+        if (!err) {
+          if (!doc) {
+            doc = curAlbum;
+            console.log(
+              `New release found: ${curAlbum.title} by ${curAlbum.artist}`
+            );
+            doc.save((err) => (err ? console.log(err) : null));
+          } /*if (!isUpToDate(alInfo, doc))*/ else {
+            albumModel.updateOne({ id: curAlbum.id }, alInfo, (err) =>
+              err ? console.log(err) : null
+            );
+            //console.log(`Updated: ${curAlbum.title} by ${curAlbum.artist}`);
+          }
+        }
+      });
+      const curAlbumMeta = new albumModel({
+        ...composeMetaAlbumInfo(album, {
           name: snhouterMonitor.title,
           website: snhouterMonitor.website,
         }),
-      ];
+      });
+      metaList = [...metaList, curAlbumMeta];
     });
-    currentLabel.albumData = albumsList; //placing info objects
+    currentLabel.albumData = albList; //placing info objects
+
     currentLabel.metaAlbumData = metaList;
 
     console.log(
@@ -201,29 +273,35 @@ router.get("/getUrls", async (req, res, next) => {
 });
 
 router.get("/getAllFromLabel/:label", async (req, res, next) => {
-  let albums = await labels.find((label) => label.name === req.params.label)
-    .albumData;
-  res.json(albums);
+  albumModel.find({ "label.name": req.params.label }, (err, docs) => {
+    res.json(docs);
+  });
 });
 
 router.get("/getAllMetaFromLabel/:label", async (req, res, next) => {
-  let albums = await labels.find((label) => label.name === req.params.label)
-    .metaAlbumData;
-  res.json(albums);
+  albumModel.find(
+    { "label.name": req.params.label },
+    "artist title imageUrl id releaseDate label",
+    (err, docs) => {
+      res.json(docs);
+    }
+  );
 });
 
 router.get("/getAll", async (req, res, next) => {
-  let albums = [];
-  await labels.map((label) => label.albumData).map((a) => albums.push(...a));
-  res.json(albums);
+  albumModel.find({}, (err, docs) => {
+    res.json(docs);
+  });
 });
 
 router.get("/getAllMeta", async (req, res, next) => {
-  let albums = [];
-  await labels
-    .map((label) => label.metaAlbumData)
-    .map((a) => albums.push(...a));
-  res.json(albums);
+  albumModel.find(
+    {},
+    "artist title imageUrl id releaseDate label",
+    (err, docs) => {
+      res.json(docs);
+    }
+  );
 });
 
 router.get("/getLastFromLabel/:label", async (req, res, next) => {
@@ -235,9 +313,9 @@ router.get("/getLastFromLabel/:label", async (req, res, next) => {
 });
 
 router.get("/getFullAlbum/:id", async (req, res, next) => {
-  let albums = [];
-  await labels.map((label) => label.albumData).map((a) => albums.push(...a));
-  res.json(albums.find((album) => album.id == req.params.id));
+  albumModel.findOne({ id: req.params.id }, (err, doc) => {
+    res.json(doc);
+  });
 });
 
 router.get("/getRawAlbum", async (req, res, next) => {

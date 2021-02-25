@@ -189,7 +189,7 @@ const Footer = () => {
           focusable="false"
           data-prefix="fab"
           data-icon="spotify"
-          class="svg-inline--fa fa-spotify fa-w-16"
+          className="svg-inline--fa fa-spotify fa-w-16"
           role="img"
           viewBox="0 0 496 512"
         >

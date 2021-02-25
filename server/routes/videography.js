@@ -4,6 +4,38 @@ const router = express.Router();
 const Monitor = require("ping-monitor");
 const ytch = require("yt-channel-info");
 
+const isObject = require("lodash/isObject");
+const _keys = require("lodash/keys");
+
+const mongoose = require("mongoose");
+mongoose.connect(process.env.MONGO_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+const videoSchema = require("../schemas/video");
+const videoModel = mongoose.model("video", videoSchema);
+
+const isUpToDate = (fresh, staged) => {
+  const BreakEx = {};
+  try {
+    _keys(fresh).map((key) => {
+      const areObjects = isObject(fresh[key]) && isObject(staged._doc[key]);
+      if (
+        (areObjects && !isUpToDate(fresh[key], staged._doc[key])) ||
+        (!areObjects && fresh[key] != staged._doc[key])
+      ) {
+        console.log(
+          `${key} is outdated for [${fresh.artist} - ${fresh.title}]. Old:${staged._doc[key]}, New:${fresh[key]}`
+        );
+        throw BreakEx;
+      }
+    });
+  } catch (e) {
+    if (e === BreakEx) return false;
+  }
+  return true;
+};
+
 const channelId = "UCTIKZV5kjfJ2Hi3tsCUaUag";
 let channelInfo = {};
 let videosInfo = [];
@@ -36,6 +68,24 @@ channelMonitor.on("up", async (res, state) => {
     while (cont !== null) {
       await ytch.getChannelVideosMore(cont).then((videos) => {
         videosInfo = [...videosInfo, ...videos.items];
+        console.log(videos.items);
+        videos.items.map((video) => {
+          const vid = new videoModel({ ...video });
+          videoModel.findOne({ videoId: video.videoId }, (err, doc) => {
+            if (!err) {
+              if (!doc) {
+                doc = vid;
+                console.log(`New video found: ${video.title}`);
+                doc.save((err) => (err ? console.log(err) : null));
+              } /*if (!isUpToDate(alInfo, doc))*/ else {
+                videoModel.updateOne({ videoId: video.videoId }, vid, (err) =>
+                  err ? console.log(err) : null
+                );
+                //console.log(`Updated: ${video.title}`);
+              }
+            }
+          });
+        });
         cont = videos.continuation;
       });
     }
@@ -51,7 +101,13 @@ channelMonitor.on("error", (error) =>
 );
 
 router.get("/getAllVideos", (req, res, next) => {
-  res.json(videosInfo);
+  // res.json(videosInfo);
+  videoModel.find(
+    {},
+    /* null, { sort: publishedText },*/ (err, docs) => {
+      res.json(docs);
+    }
+  );
 });
 
 module.exports = router;
