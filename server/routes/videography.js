@@ -47,6 +47,26 @@ router.get("/channelInfo", (req, res, next) => {
   });
 });
 
+const pushVideosToDatabase = (videos) => {
+  videos.map((video) => {
+    const vid = new videoModel({ ...video });
+    videoModel.findOne({ videoId: video.videoId }, (err, doc) => {
+      if (!err) {
+        if (!doc) {
+          doc = vid;
+          console.log(`New video found: ${video.title}`);
+          doc.save((err) => (err ? console.log(err) : null));
+        } /*if (!isUpToDate(alInfo, doc))*/ else {
+          videoModel.updateOne({ videoId: video.videoId }, video, (err) =>
+            err ? console.log(err) : null
+          );
+          //console.log(`Updated: ${video.title}`);
+        }
+      }
+    });
+  });
+};
+
 const channelMonitor = new Monitor({
   website: "https://www.youtube.com/channel/UCTIKZV5kjfJ2Hi3tsCUaUag",
   title: "NST069 YT Channel",
@@ -64,36 +84,27 @@ channelMonitor.on("up", async (res, state) => {
 
   ytch.getChannelVideos(channelId, "newest").then(async (videos) => {
     videosInfo = videos.items;
+    //pushVideosToDatabase(videos.items);
     let cont = videos.continuation;
-    while (cont !== null) {
-      await ytch.getChannelVideosMore(cont).then((videos) => {
-        videosInfo = [...videosInfo, ...videos.items];
-        console.log(videos.items);
-        videos.items.map((video) => {
-          const vid = new videoModel({ ...video });
-          videoModel.findOne({ videoId: video.videoId }, (err, doc) => {
-            if (!err) {
-              if (!doc) {
-                doc = vid;
-                console.log(`New video found: ${video.title}`);
-                doc.save((err) => (err ? console.log(err) : null));
-              } /*if (!isUpToDate(alInfo, doc))*/ else {
-                videoModel.updateOne({ videoId: video.videoId }, vid, (err) =>
-                  err ? console.log(err) : null
-                );
-                //console.log(`Updated: ${video.title}`);
-              }
-            }
-          });
+    try {
+      while (cont != null) {
+        console.log(cont);
+        await ytch.getChannelVideosMore(cont).then((videos) => {
+          videosInfo = [...videosInfo, ...videos.items];
+          //pushVideosToDatabase(videos.items);
+          cont = videos.continuation;
         });
-        cont = videos.continuation;
-      });
+      }
+    } catch (err) {
+      console.log(err.message);
+    } finally {
+      pushVideosToDatabase(videosInfo);
+      console.log(
+        `[${new Date(Date.now()).toLocaleString()}]: ${
+          channelMonitor.title
+        } updated`
+      );
     }
-    console.log(
-      `[${new Date(Date.now()).toLocaleString()}]: ${
-        channelMonitor.title
-      } updated`
-    );
   });
 });
 channelMonitor.on("error", (error) =>
