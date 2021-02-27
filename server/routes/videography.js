@@ -48,7 +48,9 @@ router.get("/channelInfo", (req, res, next) => {
 });
 
 const pushVideosToDatabase = (videos) => {
+  const ids = [];
   videos.map((video) => {
+    ids.push(video.videoId);
     const vid = new videoModel({ ...video });
     videoModel.findOne({ videoId: video.videoId }, (err, doc) => {
       if (!err) {
@@ -64,6 +66,11 @@ const pushVideosToDatabase = (videos) => {
         }
       }
     });
+  });
+  videoModel.deleteMany({ videoId: { $nin: ids } }, (err, res) => {
+    if (err) console.log(err);
+    else if (res.deletedCount > 0)
+      console.log(`Removed ${res.deletedCount} videos`);
   });
 };
 

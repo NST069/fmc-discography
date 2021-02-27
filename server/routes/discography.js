@@ -56,6 +56,38 @@ const isUpToDate = (fresh, staged) => {
   return true;
 };
 
+const pushAlbumsToDatabase = (albums) => {
+  const ids = [];
+  albums.map((album) => {
+    ids.push(album.id);
+    const curAlbum = new albumModel({ ...album });
+    albumModel.findOne({ id: curAlbum.id }, (err, doc) => {
+      if (!err) {
+        if (!doc) {
+          doc = curAlbum;
+          console.log(
+            `New release found: ${curAlbum.title} by ${curAlbum.artist}`
+          );
+          doc.save((err) => (err ? console.log(err) : null));
+        } /*if (!isUpToDate(alInfo, doc))*/ else {
+          albumModel.updateOne({ id: curAlbum.id }, album, (err, res) =>
+            err ? console.log(err) : null
+          );
+          //console.log(`Updated: ${curAlbum.title} by ${curAlbum.artist}`);
+        }
+      }
+    });
+  });
+  albumModel.deleteMany(
+    { id: { $nin: ids }, label: { name: albums[0].label.name } },
+    (err, res) => {
+      if (err) console.log(err);
+      else if (res.deletedCount > 0)
+        console.log(`Removed ${res.deletedCount} releases`);
+    }
+  );
+};
+
 const snhMonitor = new Monitor({
   website: `https://saturnashes.bandcamp.com`,
   title: "Saturn Ashes",
@@ -90,28 +122,29 @@ snhMonitor.on("up", async (res, state) => {
         name: snhMonitor.title,
         website: snhMonitor.website,
       });
-      const curAlbum = new albumModel({
-        ...composeAlbumInfo(album, {
-          name: snhMonitor.title,
-          website: snhMonitor.website,
-        }),
-      });
-      albumModel.findOne({ id: curAlbum.id }, (err, doc) => {
-        if (!err) {
-          if (!doc) {
-            doc = curAlbum;
-            console.log(
-              `New release found: ${curAlbum.title} by ${curAlbum.artist}`
-            );
-            doc.save((err) => (err ? console.log(err) : null));
-          } /*if (!isUpToDate(alInfo, doc))*/ else {
-            albumModel.updateOne({ id: curAlbum.id }, alInfo, (err) =>
-              err ? console.log(err) : null
-            );
-            //console.log(`Updated: ${curAlbum.title} by ${curAlbum.artist}`);
-          }
-        }
-      });
+      // const curAlbum = new albumModel({
+      //   ...composeAlbumInfo(album, {
+      //     name: snhMonitor.title,
+      //     website: snhMonitor.website,
+      //   }),
+      // });
+      // albumModel.findOne({ id: curAlbum.id }, (err, doc) => {
+      //   if (!err) {
+      //     if (!doc) {
+      //       doc = curAlbum;
+      //       console.log(
+      //         `New release found: ${curAlbum.title} by ${curAlbum.artist}`
+      //       );
+      //       doc.save((err) => (err ? console.log(err) : null));
+      //     } /*if (!isUpToDate(alInfo, doc))*/ else {
+      //       albumModel.updateOne({ id: curAlbum.id }, alInfo, (err) =>
+      //         err ? console.log(err) : null
+      //       );
+      //       //console.log(`Updated: ${curAlbum.title} by ${curAlbum.artist}`);
+      //     }
+      //   }
+      // });
+      albList = [...albList, alInfo];
       const curAlbumMeta = new albumModel({
         ...composeMetaAlbumInfo(album, {
           name: snhMonitor.title,
@@ -120,8 +153,9 @@ snhMonitor.on("up", async (res, state) => {
       });
       metaList = [...metaList, curAlbumMeta];
     });
-    currentLabel.albumData = albList; //placing info objects
 
+    pushAlbumsToDatabase(albList);
+    currentLabel.albumData = albList; //placing info objects
     currentLabel.metaAlbumData = metaList;
 
     console.log(
@@ -167,28 +201,29 @@ snhouterMonitor.on("up", async (res, state) => {
         name: snhouterMonitor.title,
         website: snhouterMonitor.website,
       });
-      const curAlbum = new albumModel({
-        ...composeAlbumInfo(album, {
-          name: snhouterMonitor.title,
-          website: snhouterMonitor.website,
-        }),
-      });
-      albumModel.findOne({ id: curAlbum.id }, (err, doc) => {
-        if (!err) {
-          if (!doc) {
-            doc = curAlbum;
-            console.log(
-              `New release found: ${curAlbum.title} by ${curAlbum.artist}`
-            );
-            doc.save((err) => (err ? console.log(err) : null));
-          } /*if (!isUpToDate(alInfo, doc))*/ else {
-            albumModel.updateOne({ id: curAlbum.id }, alInfo, (err) =>
-              err ? console.log(err) : null
-            );
-            //console.log(`Updated: ${curAlbum.title} by ${curAlbum.artist}`);
-          }
-        }
-      });
+      // const curAlbum = new albumModel({
+      //   ...composeAlbumInfo(album, {
+      //     name: snhouterMonitor.title,
+      //     website: snhouterMonitor.website,
+      //   }),
+      // });
+      // albumModel.findOne({ id: curAlbum.id }, (err, doc) => {
+      //   if (!err) {
+      //     if (!doc) {
+      //       doc = curAlbum;
+      //       console.log(
+      //         `New release found: ${curAlbum.title} by ${curAlbum.artist}`
+      //       );
+      //       doc.save((err) => (err ? console.log(err) : null));
+      //     } /*if (!isUpToDate(alInfo, doc))*/ else {
+      //       albumModel.updateOne({ id: curAlbum.id }, alInfo, (err) =>
+      //         err ? console.log(err) : null
+      //       );
+      //       //console.log(`Updated: ${curAlbum.title} by ${curAlbum.artist}`);
+      //     }
+      //   }
+      // });
+      albList = [...albList, alInfo];
       const curAlbumMeta = new albumModel({
         ...composeMetaAlbumInfo(album, {
           name: snhouterMonitor.title,
@@ -197,8 +232,8 @@ snhouterMonitor.on("up", async (res, state) => {
       });
       metaList = [...metaList, curAlbumMeta];
     });
+    pushAlbumsToDatabase(albList);
     currentLabel.albumData = albList; //placing info objects
-
     currentLabel.metaAlbumData = metaList;
 
     console.log(
