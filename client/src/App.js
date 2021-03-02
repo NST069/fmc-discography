@@ -79,6 +79,20 @@ function App() {
       });
   };
 
+  const getLatestFromLabel = (label, setResult, setResLoading) => {
+    setResLoading(true);
+    axios
+      .get(`${endpoint}/discography/getLatestFromLabel/${label}`)
+      .then((res) => {
+        if (res.data.length === 0) throw new Error("No data returned");
+        else {
+          setResult(res.data);
+          console.log(res.data);
+          setResLoading(false);
+        }
+      });
+  };
+
   // useEffect(()=>{
   //   getAll();
   //   getVideos();
@@ -105,6 +119,7 @@ function App() {
           currentAlbum={currentAlbum}
           videos={videos}
           getVideos={getVideos}
+          getLatestFromLabel={getLatestFromLabel}
         />
       </div>
 

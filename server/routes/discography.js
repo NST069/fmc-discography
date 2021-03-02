@@ -339,12 +339,18 @@ router.get("/getAllMeta", async (req, res, next) => {
   );
 });
 
-router.get("/getLastFromLabel/:label", async (req, res, next) => {
-  const count = 10;
-  let albums = await labels
-    .find((label) => label.name === req.params.label)
-    .metaAlbumData.slice(0, count);
-  res.json(albums);
+router.get("/getLatestFromLabel/:label", async (req, res, next) => {
+  const count = 5;
+  albumModel
+    .find(
+      { "label.name": req.params.label },
+      "artist title imageUrl id releaseDate label url"
+    )
+    .sort({ releaseDate: -1 })
+    .limit(count)
+    .exec((err, docs) => {
+      res.json(docs);
+    });
 });
 
 router.get("/getFullAlbum/:id", async (req, res, next) => {

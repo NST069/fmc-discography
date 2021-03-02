@@ -48,11 +48,11 @@ const Header = ({ setSelectedTab }) => {
       >
         <div className="lg:inline-flex lg:flex-row lg:ml-auto lg:w-auto w-full lg:items-center items-start  flex flex-col lg:h-auto">
           <p
-            // onClick={(event)=>{
-            //   event.preventDefault();
-            //   setSelectedTab("Home");
-            // }}
-            className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-600 items-center justify-center"
+            onClick={(event) => {
+              event.preventDefault();
+              setSelectedTab("Home");
+            }}
+            className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
           >
             <span>Home</span>
           </p>
