@@ -184,7 +184,7 @@ const Homepage = ({ getLatestFromLabel }) => {
                   />
                   <div className="flex flex-col ml-5 text-left">
                     <h1 className="text-white font-semibold text-4xl mb-2">
-                      Snh.Outer
+                      Snh.Art
                     </h1>
                     <p className="text-gray-300 mt-2">NST069</p>
                   </div>

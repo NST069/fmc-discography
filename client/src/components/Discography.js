@@ -87,6 +87,11 @@ const Discography = ({
 
   const [sortingRule, setSortingRule] = useState("new");
   const [sortingOrder, setSortingOrder] = useState(true); //true = A->z / Newest first
+  const rules = [
+    { name: "New", value: "1" },
+    { name: "Artist", value: "2" },
+    { name: "Title", value: "3" },
+  ];
   const sortPosts = async (rule) => {
     setLoading(true);
     let r;
@@ -141,78 +146,91 @@ const Discography = ({
               } top-navbar w-full sm:inline-flex sm:flex-grow sm:w-auto`}
               id="navigation"
             >
-              <div className="flex flex-col mx-2 sm:flex-row justify-around mt-5 gap-2">
-                <div className="flex flex-col mx-2 md:flex-row justify-around mt-5 gap-2">
-                  <div className="bg-gray-900 text-sm text-gray-400 leading-none border-2 border-gray-800 rounded-full inline-flex justify-between">
+              <div className="flex flex-col mx-2 w-full sm:w-auto sm:flex-row justify-around mt-5 gap-2">
+                <div
+                  className="inline-flex mr-2 rounded-full leading-none"
+                  role="group"
+                >
+                  <button
+                    type="button"
+                    className={`${
+                      filterLabel === "0" ? "bg-gray-700" : "bg-gray-900"
+                    } focus:outline-none text-gray-400 text-sm py-2.5 px-5 rounded-l-full hover:bg-gray-800 hover:shadow-lg w-full sm:w-auto`}
+                    key="all"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setFilterLabel("0");
+                      setAlbumList(albums);
+                    }}
+                  >
+                    All
+                  </button>
+                  {labels.map((label, idx) => (
                     <button
+                      type="button"
                       className={`${
-                        filterLabel === "0" ? "active" : ""
-                      } inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-gray-300 focus:text-gray-300 rounded-full px-4 py-2`}
-                      id="all"
+                        filterLabel === label.value
+                          ? "bg-gray-700"
+                          : "bg-gray-900"
+                      } focus:outline-none text-gray-400 text-sm py-2.5 px-5 ${
+                        labels[idx + 1] ? "" : "rounded-r-full"
+                      } hover:bg-gray-800 hover:shadow-lg w-full sm:w-auto`}
+                      key={label.name}
                       onClick={(event) => {
                         event.preventDefault();
-                        setFilterLabel("0");
-                        setAlbumList(albums);
+                        setFilterLabel(label.value);
+                        setAlbumList(
+                          albums.filter((a) => a.label.name === label.name)
+                        );
                       }}
                     >
-                      <span>All</span>
+                      {label.name}
                     </button>
-                    {labels.map((label) => (
-                      <button
-                        key={label.name}
-                        className={`${
-                          filterLabel === label.value ? "active" : ""
-                        } inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-gray-300 focus:text-gray-300 rounded-full px-4 py-2`}
-                        id={label.name}
-                        onClick={(event) => {
-                          event.preventDefault();
-                          setFilterLabel(label.value);
-                          setAlbumList(
-                            albums.filter((a) => a.label.name === label.name)
-                          );
-                        }}
-                      >
-                        <span>{label.name}</span>
-                      </button>
-                    ))}
-                  </div>
+                  ))}
+                </div>
 
-                  <div className="bg-gray-900 text-sm text-gray-400 leading-none border-2 border-gray-800 rounded-full inline-flex justify-center">
+                <div
+                  className="inline-flex mr-2 rounded-full leading-none"
+                  role="group"
+                >
+                  <button
+                    className={`focus:outline-none bg-gray-900 text-gray-400 text-sm object-center rounded-full py-2.5 px-5 hover:bg-gray-800 hover:shadow-lg w-full sm:w-auto`}
+                    key="sort"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setSortingOrder(!sortingOrder);
+                      sortPosts();
+                    }}
+                  >
+                    {sortingOrder ? sortDn : sortUp}
+                  </button>
+                </div>
+
+                <div
+                  className="inline-flex mr-2 rounded-full leading-none"
+                  role="group"
+                >
+                  {rules.map((rule, idx) => (
                     <button
-                      className={` inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-gray-300 focus:text-gray-300 rounded-full px-4 py-2`}
-                      id="sort"
+                      type="button"
+                      className={`${
+                        selectedRule === rule.value
+                          ? "bg-gray-700"
+                          : "bg-gray-900"
+                      } focus:outline-none text-gray-400 text-sm py-2.5 px-5 
+                        ${rules[idx - 1] ? "" : "rounded-l-full"}
+                        ${rules[idx + 1] ? "" : "rounded-r-full"} 
+                        hover:bg-gray-800 hover:shadow-lg w-full sm:w-auto`}
+                      key={rule.name}
                       onClick={(event) => {
                         event.preventDefault();
-                        setSortingOrder(!sortingOrder);
-                        sortPosts();
+                        setSelectedRule(rule.value);
+                        sortPosts(rule.name.toLowerCase());
                       }}
                     >
-                      <span>{sortingOrder ? sortDn : sortUp}</span>
+                      {rule.name}
                     </button>
-                  </div>
-
-                  <div className="bg-gray-900 text-sm text-gray-400 leading-none border-2 border-gray-800 rounded-full inline-flex justify-between">
-                    {[
-                      { name: "New", value: "1" },
-                      { name: "Artist", value: "2" },
-                      { name: "Title", value: "3" },
-                    ].map((rule, idx) => (
-                      <button
-                        key={rule.name}
-                        className={`${
-                          selectedRule === rule.value ? "active" : ""
-                        } inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-gray-300 focus:text-gray-300 rounded-full px-4 py-2`}
-                        id={rule.name}
-                        onClick={(event) => {
-                          event.preventDefault();
-                          setSelectedRule(rule.value);
-                          sortPosts(rule.name.toLowerCase());
-                        }}
-                      >
-                        <span>{rule.name}</span>
-                      </button>
-                    ))}
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
