@@ -123,6 +123,9 @@ DAMonitor.on("up", async (res, state) => {
 DAMonitor.on("error", (error) =>
   console.log(`[${new Date(Date.now()).toLocaleString()}]: ERROR: ${error}`)
 );
+DAMonitor.on("down", (res, state) => {
+  console.log(`${res.website} is down`);
+});
 
 router.get("/getLatest", (req, res) => {
   const count = 5;
@@ -133,6 +136,12 @@ router.get("/getLatest", (req, res) => {
     .exec((err, docs) => {
       res.json(docs);
     });
+});
+
+router.get("/getAll", (req, res) => {
+  artModel.find({}, (err, docs) => {
+    res.json(docs);
+  });
 });
 
 module.exports = router;

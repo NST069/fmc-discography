@@ -14,6 +14,7 @@ function App() {
 
   const [albums, setAlbums] = useState([]);
   const [videos, setVideos] = useState([]);
+  const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingPage, setLoadingPage] = useState(false);
   const [currentAlbum, setCurrentAlbum] = useState({});
@@ -79,6 +80,23 @@ function App() {
       });
   };
 
+  const getArts = () => {
+    setLoading(true);
+    axios
+      .get(`${endpoint}/gallery/getAll`)
+      .then((res) => {
+        if (res.data.length === 0) throw new Error("No data returned");
+        else {
+          console.log(res.data);
+          setImages(res.data);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        new Promise((r) => setTimeout(r, 5000)).then(() => getArts());
+      });
+  };
+
   const getLatestFromLabel = (label, setResult, setResLoading) => {
     setResLoading(true);
     axios
@@ -131,6 +149,8 @@ function App() {
           currentAlbum={currentAlbum}
           videos={videos}
           getVideos={getVideos}
+          images={images}
+          getArts={getArts}
           getLatestFromLabel={getLatestFromLabel}
           getLatestArts={getLatestArts}
         />

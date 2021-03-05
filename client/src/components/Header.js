@@ -77,6 +77,15 @@ const Header = ({ setSelectedTab }) => {
           <p
             onClick={(event) => {
               event.preventDefault();
+              setSelectedTab("Gallery");
+            }}
+            className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
+          >
+            <span>Gallery</span>
+          </p>
+          <p
+            onClick={(event) => {
+              event.preventDefault();
               setSelectedTab("Fullwidth");
             }}
             className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"

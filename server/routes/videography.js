@@ -117,6 +117,9 @@ channelMonitor.on("up", async (res, state) => {
 channelMonitor.on("error", (error) =>
   console.log(`[${new Date(Date.now()).toLocaleString()}]: ERROR: ${error}`)
 );
+channelMonitor.on("down", (res, state) => {
+  console.log(`${res.website} is down`);
+});
 
 router.get("/getAllVideos", (req, res, next) => {
   // res.json(videosInfo);

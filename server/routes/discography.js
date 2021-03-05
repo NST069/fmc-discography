@@ -166,6 +166,9 @@ snhMonitor.on("up", async (res, state) => {
 snhMonitor.on("error", (error) =>
   console.log(`[${new Date(Date.now()).toLocaleString()}]: ERROR: ${error}`)
 );
+snhMonitor.on("down", (res, state) => {
+  console.log(`${res.website} is down`);
+});
 
 const snhouterMonitor = new Monitor({
   website: `https://snhouter.bandcamp.com`,
@@ -246,6 +249,9 @@ snhouterMonitor.on("up", async (res, state) => {
 snhouterMonitor.on("error", (error) =>
   console.log(`[${new Date(Date.now()).toLocaleString()}]: ERROR: ${error}`)
 );
+snhouterMonitor.on("down", (res, state) => {
+  console.log(`${res.website} is down`);
+});
 
 const composeAlbumInfo = (albumData, label) => {
   return {
