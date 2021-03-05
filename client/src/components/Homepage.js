@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from "react";
 
-import fullmoon from "./fullmoon.png";
-import snh_logo from "./snh_logo.png";
-import snhouter_logo from "./snhouter_logo.png";
-import snhart_logo from "./snhart_logo.png";
+import fullmoon from "./assets/img/fullmoon.png";
+import snh_logo from "./assets/img/snh_logo.png";
+import snhouter_logo from "./assets/img/snhouter_logo.png";
+import snhart_logo from "./assets/img/snhart_logo.png";
 
 import SmallReleaseCard from "./SmallReleaseCard";
+import SmallImageCard from "./SmallImageCard";
 
-const Homepage = ({ getLatestFromLabel }) => {
+const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
   const [snhLatest, setSnhLatest] = useState([]);
   const [snhLoading, setSnhLoading] = useState(false);
   const [snhOuterLatest, setSnhOuterLatest] = useState([]);
   const [snhOuterLoading, setSnhOuterLoading] = useState(false);
+  const [snhArtLatest, setSnhArtLatest] = useState([]);
+  const [snhArtLoading, setSnhArtLoading] = useState(false);
 
   useEffect(() => {
     getLatestFromLabel("Saturn Ashes", setSnhLatest, setSnhLoading);
     getLatestFromLabel("Outer Ring", setSnhOuterLatest, setSnhOuterLoading);
+    getLatestArts(setSnhArtLatest, setSnhArtLoading);
   }, []);
   return (
     <>
@@ -161,7 +165,7 @@ const Homepage = ({ getLatestFromLabel }) => {
             xmlns="http://www.w3.org/2000/svg"
             preserveAspectRatio="none"
             version="1.1"
-            viewBox="0 0 2560 100"
+            viewBox="0 0 250 100"
             x="0"
             y="0"
           >
@@ -192,24 +196,17 @@ const Homepage = ({ getLatestFromLabel }) => {
               </div>
             </div>
           </div>
-          <div className="flex flex-wrap text-center justify-center">
-            <div className="w-full lg:w-6/12 px-4">
-              <h2 className="text-4xl font-semibold text-white">
-                coming soon...
-              </h2>
-              <p className="text-lg leading-relaxed mt-4 mb-4 text-gray-500">
-                artstation:{" "}
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-light no-underline text-gray-400"
-                  href="https://nst069.artstation.com"
-                >
-                  NST069
-                </a>
-              </p>
+          {snhArtLoading ? (
+            <h1>Loading...</h1>
+          ) : (
+            <div className="flex items-center overflow-x-auto">
+              {snhArtLatest.map((art) => (
+                <div key={art.deviationId} className="inline-block px-3">
+                  <SmallImageCard art={art} />
+                </div>
+              ))}
             </div>
-          </div>
+          )}
         </div>
       </section>
     </>

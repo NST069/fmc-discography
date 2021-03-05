@@ -95,7 +95,7 @@ channelMonitor.on("up", async (res, state) => {
     let cont = videos.continuation;
     try {
       while (cont != null) {
-        console.log(cont);
+        //console.log(cont);
         await ytch.getChannelVideosMore(cont).then((videos) => {
           videosInfo = [...videosInfo, ...videos.items];
           //pushVideosToDatabase(videos.items);

@@ -23,6 +23,8 @@ const discography = require("./routes/discography");
 app.use("/discography", discography);
 const videography = require("./routes/videography");
 app.use("/videography", videography);
+const gallery = require("./routes/gallery");
+app.use("/gallery", gallery);
 
 app.listen(PORT, () => {
   console.log(`Running on port ${PORT}`);

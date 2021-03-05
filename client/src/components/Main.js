@@ -18,11 +18,15 @@ const Main = ({
   videos,
   getVideos,
   getLatestFromLabel,
+  getLatestArts,
 }) => {
   return (
     <>
       {selectedTab === "Home" ? (
-        <Homepage getLatestFromLabel={getLatestFromLabel} />
+        <Homepage
+          getLatestFromLabel={getLatestFromLabel}
+          getLatestArts={getLatestArts}
+        />
       ) : (
         <div className="container mx-auto max-w-screen-lg">
           {selectedTab === "Discography" ? (
