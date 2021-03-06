@@ -20,7 +20,7 @@ const Videography = ({ loading, videos, getVideos }) => {
           ) : (
             videos.map((video) => (
               <div key={video.videoId}>
-                <VideoCard id={video.videoId} title={video.title} />
+                <VideoCard video={video} />
               </div>
             ))
           )}

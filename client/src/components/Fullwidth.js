@@ -149,16 +149,16 @@ const Fullwidth = () => {
           </h2>
           <div className="grid gap-2 grid-cols-1 md:grid-cols-2 w-full px-3 mb-2 mt-2">
             <textarea
-              className="bg-gray-800 rounded border border-gray-700 leading-normal resize-y h-48 w-full py-2 px-3 text-gray-400 placeholder-gray-700 focus:outline-none focus:bg-gray-900"
+              className="bg-gray-800 rounded border border-gray-700 leading-normal resize-y h-20 xs:h-48 w-full py-2 px-3 text-gray-400 placeholder-gray-700 focus:outline-none focus:bg-gray-900"
               name="body"
               placeholder="ｈｅｌｌｏ ｓｔｒａｎｇｅｒ"
               value={text}
               onChange={(e) => setText(e.target.value)}
             ></textarea>
             <textarea
-              className="bg-gray-800 rounded border border-gray-700 leading-normal resize-y h-48 w-full py-2 px-3 text-gray-400 placeholder-gray-700 focus:outline-none focus:bg-gray-900"
+              className="bg-gray-800 rounded border border-gray-700 leading-normal resize-y h-20 xs:h-48 w-full py-2 px-3 text-gray-400 placeholder-gray-700 focus:outline-none focus:bg-gray-900"
               name="body"
-              readonly
+              readOnly
               value={result}
             ></textarea>
           </div>

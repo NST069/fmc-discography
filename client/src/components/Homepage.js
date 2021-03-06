@@ -44,9 +44,9 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
         </div>
         <div className="container relative mx-auto">
           <div className="items-center flex flex-wrap">
-            <div className="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center">
+            <div className="w-full px-4 ml-auto mr-auto text-center">
               <div className="pr-12">
-                <h1 className="text-white font-semibold text-4xl">
+                <h1 className="text-white font-semibold text-md sm:text-2xl md:text-4xl lg:text-5xl">
                   Ｆ Ｕ Ｌ Ｌ Ｍ Ｏ Ｏ Ｎ Ｃ Ｒ Ｅ Ｗ
                 </h1>
                 <p className="mt-4 text-lg text-gray-300">
@@ -79,8 +79,13 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
 
       <section className="pt-20 pb-48">
         <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center text-center mb-24 h-auto">
-            <div className="w-full lg:w-1/2 px-2">
+          <div className="flex sm:hidden flex-col ml-5 text-left">
+            <h1 className="text-white font-bold text-center text-4xl mb-5">
+              Saturn Ashes
+            </h1>
+          </div>
+          <div className="hidden sm:flex flex-wrap justify-center text-center mb-24 h-auto ">
+            <div className="w-full lg:w-2/3 xl:w-1/2 px-2">
               <div className=" bg-gray-900 p-5 rounded-md tracking-wide">
                 <div className="flex justify-around">
                   <img
@@ -117,8 +122,13 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
 
       <section className="pt-20 pb-48">
         <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center text-center mb-24 h-auto">
-            <div className="w-full lg:w-1/2 px-2">
+          <div className="flex sm:hidden flex-col ml-5 text-left">
+            <h1 className="text-white font-bold text-center text-4xl mb-5">
+              Outer Ring
+            </h1>
+          </div>
+          <div className="hidden sm:flex flex-wrap justify-center text-center mb-24 h-auto ">
+            <div className="w-full lg:w-2/3 xl:w-1/2 px-2">
               <div className=" bg-gray-900 p-5 rounded-md tracking-wide">
                 <div className="flex justify-around">
                   <img
@@ -176,8 +186,13 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
           </svg>
         </div>
         <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center text-center mb-24 h-auto">
-            <div className="w-full lg:w-1/2 px-2">
+          <div className="flex sm:hidden flex-col ml-5 text-left">
+            <h1 className="text-white font-bold text-center text-4xl mb-5">
+              snh.Art
+            </h1>
+          </div>
+          <div className="hidden sm:flex flex-wrap justify-center text-center mb-24 h-auto ">
+            <div className="w-full lg:w-2/3 xl:w-1/2 px-2">
               <div className=" bg-gray-900 p-5 rounded-md tracking-wide">
                 <div className="flex justify-around">
                   <img
@@ -188,7 +203,7 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
                   />
                   <div className="flex flex-col ml-5 text-left">
                     <h1 className="text-white font-semibold text-4xl mb-2">
-                      Snh.Art
+                      snh.Art
                     </h1>
                     <p className="text-gray-300 mt-2">NST069</p>
                   </div>
