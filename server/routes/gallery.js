@@ -20,27 +20,30 @@ let latestDeviations = [];
 const pushArtsToDatabase = (arts) => {
   const ids = [];
   arts.map((art) => {
-    ids.push(art.artId);
-    const model = new artModel(composeArtModel(art));
-    artModel.findOne({ artId: art.artId }, (err, doc) => {
+    const composedArt = composeArtModel(art);
+    ids.push(composedArt.deviationId);
+    const model = new artModel(composedArt);
+    artModel.findOne({ deviationId: composedArt.deviationId }, (err, doc) => {
       if (!err) {
         if (!doc) {
           doc = model;
-          console.log(`New art found: ${art.title}`);
+          console.log(`New art found: ${composedArt.title}`);
           doc.save((err) => (err ? console.log(err) : null));
         } /*if (!isUpToDate(alInfo, doc))*/ else {
-          artModel.updateOne({ artId: art.artId }, art, (err) =>
-            err ? console.log(err) : null
+          artModel.updateOne(
+            { deviationId: composedArt.deviationId },
+            composedArt,
+            (err) => (err ? console.log(err) : null)
           );
           //console.log(`Updated: ${art.title}`);
         }
       }
     });
   });
-  artModel.deleteMany({ artId: { $nin: ids } }, (err, res) => {
+  artModel.deleteMany({ deviationId: { $nin: ids } }, (err, res) => {
     if (err) console.log(err);
     else if (res.deletedCount > 0)
-      console.log(`Removed ${res.deletedCount} arts`);
+      console.log(`Removed ${res.deletedCount} arts`, res);
   });
 };
 
