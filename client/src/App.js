@@ -18,7 +18,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [loadingPage, setLoadingPage] = useState(false);
   const [currentAlbum, setCurrentAlbum] = useState({});
-  const [selectedTab, setSelectedTab] = useState("Discography");
+  const [selectedTab, setSelectedTab] = useState("Home");
 
   const getAllbyLabel = (label) => {
     setLoading(true);
@@ -57,7 +57,6 @@ function App() {
       if (res.data.length === 0) throw new Error("No data returned");
       else {
         setCurrentAlbum(res.data);
-        console.log(res.data);
         setLoadingPage(false);
       }
     });

@@ -16,6 +16,24 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
   const [snhArtLatest, setSnhArtLatest] = useState([]);
   const [snhArtLoading, setSnhArtLoading] = useState(false);
 
+  const snhResidents = [
+    "NST069",
+    "Kosmo Kryukov",
+    "hr3postnoi",
+    "lr",
+    "STVR FISSVRE",
+  ];
+  const snhOuterResidents = [
+    "P457",
+    "Digital Scar",
+    "夜間視力NIGHT VISION.Corp",
+    "セーラーBN",
+    "ＥＵ４ＩＯ",
+    "ｅｒ０ｄｅ．",
+    "恒星ｂｏｉ.ｊｐｇ",
+    "Kosmo Kryukov",
+  ];
+
   useEffect(() => {
     getLatestFromLabel("Saturn Ashes", setSnhLatest, setSnhLoading);
     getLatestFromLabel("Outer Ring", setSnhOuterLatest, setSnhOuterLoading);
@@ -45,14 +63,12 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
         <div className="container relative mx-auto">
           <div className="items-center flex flex-wrap">
             <div className="w-full px-4 ml-auto mr-auto text-center">
-              <div className="pr-12">
-                <h1 className="text-white font-semibold text-md sm:text-2xl md:text-4xl lg:text-5xl">
-                  Ｆ Ｕ Ｌ Ｌ Ｍ Ｏ Ｏ Ｎ Ｃ Ｒ Ｅ Ｗ
-                </h1>
-                <p className="mt-4 text-lg text-gray-300">
-                  Saturn Ashes, Outer Ring, Snh.Art
-                </p>
-              </div>
+              <h1 className="text-white font-semibold text-md sm:text-2xl md:text-4xl lg:text-5xl">
+                Ｆ Ｕ Ｌ Ｌ Ｍ Ｏ Ｏ Ｎ Ｃ Ｒ Ｅ Ｗ
+              </h1>
+              <p className="mt-4 text-lg text-gray-300">
+                Saturn Ashes, Outer Ring, Snh.Art
+              </p>
             </div>
           </div>
         </div>
@@ -90,17 +106,21 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
                 <div className="flex justify-around">
                   <img
                     alt="snh"
-                    className="w-45 rounded-md border-2 border-gray-800"
+                    className="w-45 rounded-md object-contain"
                     src={snh_logo}
                     width="200"
                   />
-                  <div className="flex flex-col ml-5 text-left">
+                  <div className="flex flex-grow flex-col ml-5 text-left">
                     <h1 className="text-white font-semibold text-4xl mb-2">
                       Saturn Ashes
                     </h1>
-                    <p className="text-gray-300 mt-2">
-                      NST069, Kosmo Kryukov, hr3postnoi, lr, STVR FISSVRE.
-                    </p>
+                    <div className="text-gray-300 mt-2 font-light">
+                      {snhResidents.map((resident) => (
+                        <p key={resident} className="p-1">
+                          {resident}
+                        </p>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -133,19 +153,21 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
                 <div className="flex justify-around">
                   <img
                     alt="snh.outer"
-                    className="w-45 rounded-md border-2 border-gray-800"
+                    className="w-45 rounded-md object-contain"
                     src={snhouter_logo}
                     width="200"
                   />
-                  <div className="flex flex-col ml-5 text-left">
+                  <div className="flex flex-grow flex-col ml-5 text-left">
                     <h1 className="text-white font-semibold text-4xl mb-2">
                       Outer Ring
                     </h1>
-                    <p className="text-gray-300 mt-2">
-                      P457, Kosmo Kryukov, Digital Scar, 夜間視力NIGHT
-                      VISION.Corp, セーラーBN, ＥＵ４ＩＯ, ｅｒ０ｄｅ．,
-                      恒星ｂｏｉ.ｊｐｇ.
-                    </p>
+                    <div className="text-gray-300 mt-2 font-light">
+                      {snhOuterResidents.map((resident) => (
+                        <p key={resident} className="p-1">
+                          {resident}
+                        </p>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -197,15 +219,15 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
                 <div className="flex justify-around">
                   <img
                     alt="mountain"
-                    className="w-45 rounded-md border-2 border-gray-800"
+                    className="w-45 rounded-md object-contain"
                     src={snhart_logo}
                     width="200"
                   />
-                  <div className="flex flex-col ml-5 text-left">
+                  <div className="flex flex-grow flex-col ml-5 text-left">
                     <h1 className="text-white font-semibold text-4xl mb-2">
                       snh.Art
                     </h1>
-                    <p className="text-gray-300 mt-2">NST069</p>
+                    <p className="text-gray-300 mt-2 font-light">NST069</p>
                   </div>
                 </div>
               </div>

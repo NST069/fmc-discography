@@ -256,9 +256,6 @@ const Discography = ({
               <ReleasePage
                 loading={loadingPage}
                 currentAlbum={currentAlbum}
-                //prev={albums[index-1]?albums[index-1]:null}
-                //next={albums[index+1]?albums[index+1]:null}
-                //video={getVideo(currentAlbum.id)}
                 getAlbumById={getAlbumById}
                 closeModal={closeModal}
               />

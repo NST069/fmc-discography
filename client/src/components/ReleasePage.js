@@ -83,31 +83,38 @@ const ReleasePage = ({ loading, currentAlbum, closeModal }) => {
                   </div>
                 ) : null}
                 <table className="rounded-t-lg m-5 w-full mx-auto bg-black text-gray-200">
-                  <tr className="text-left border-b border-gray-300">
-                    {currentAlbum.itemType === "album" ? (
-                      <th className="px-4 py-3">#</th>
-                    ) : null}
-                    <th className="flex-grow px-4 py-3">Title</th>
-                    <th className="px-4 py-3">Duration</th>
-                  </tr>
-                  {currentAlbum.tracks.map((track) => (
-                    <tr className="bg-gray-800 border-b border-gray-700">
+                  <thead>
+                    <tr className="text-left border-b border-gray-300">
                       {currentAlbum.itemType === "album" ? (
-                        <td className="px-4 py-3">{track.trackNum}</td>
+                        <th className="px-4 py-3">#</th>
                       ) : null}
-                      <td className="flex-grow px-4 py-3">{`${
-                        track.artist === currentAlbum.artist
-                          ? ""
-                          : `${track.artist} - `
-                      }${track.title}`}</td>
-                      <td className="px-4 py-3">{`${Math.floor(
-                        track.duration / 60
-                      )}:${
-                        (track.duration % 60 < 10 ? "0" : "") +
-                        (track.duration % 60)
-                      }`}</td>
+                      <th className="flex-grow px-4 py-3">Title</th>
+                      <th className="px-4 py-3">Duration</th>
                     </tr>
-                  ))}
+                  </thead>
+                  <tbody>
+                    {currentAlbum.tracks.map((track) => (
+                      <tr
+                        key={track.id}
+                        className="bg-gray-800 border-b border-gray-700"
+                      >
+                        {currentAlbum.itemType === "album" ? (
+                          <td className="px-4 py-3">{track.trackNum}</td>
+                        ) : null}
+                        <td className="flex-grow px-4 py-3">{`${
+                          track.artist === currentAlbum.artist
+                            ? ""
+                            : `${track.artist} - `
+                        }${track.title}`}</td>
+                        <td className="px-4 py-3">{`${Math.floor(
+                          track.duration / 60
+                        )}:${
+                          (track.duration % 60 < 10 ? "0" : "") +
+                          (track.duration % 60)
+                        }`}</td>
+                      </tr>
+                    ))}
+                  </tbody>
                 </table>
                 {currentAlbum.about
                   ? currentAlbum.about.split("\n").map((str, id) =>
