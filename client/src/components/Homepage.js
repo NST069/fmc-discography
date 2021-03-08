@@ -7,6 +7,7 @@ import snhart_logo from "./assets/img/snhart_logo.png";
 
 import SmallReleaseCard from "./SmallReleaseCard";
 import SmallImageCard from "./SmallImageCard";
+import Loading from "./Loading";
 
 const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
   const [snhLatest, setSnhLatest] = useState([]);
@@ -38,7 +39,8 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
     getLatestFromLabel("Saturn Ashes", setSnhLatest, setSnhLoading);
     getLatestFromLabel("Outer Ring", setSnhOuterLatest, setSnhOuterLoading);
     getLatestArts(setSnhArtLatest, setSnhArtLoading);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <>
       <div
@@ -104,12 +106,14 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
             <div className="w-full lg:w-2/3 xl:w-1/2 px-2">
               <div className=" bg-gray-900 p-5 rounded-md tracking-wide">
                 <div className="flex justify-around">
-                  <img
-                    alt="snh"
-                    className="w-45 rounded-md object-contain"
-                    src={snh_logo}
-                    width="200"
-                  />
+                  <div className="w-45 flex-none  object-contain">
+                    <img
+                      alt="snh"
+                      className="rounded-md"
+                      src={snh_logo}
+                      width="200"
+                    />
+                  </div>
                   <div className="flex flex-grow flex-col ml-5 text-left">
                     <h1 className="text-white font-semibold text-4xl mb-2">
                       Saturn Ashes
@@ -127,7 +131,7 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
             </div>
           </div>
           {snhLoading ? (
-            <h1>Loading...</h1>
+            <Loading />
           ) : (
             <div className="flex items-center overflow-x-auto">
               {snhLatest.map((album) => (
@@ -151,12 +155,14 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
             <div className="w-full lg:w-2/3 xl:w-1/2 px-2">
               <div className=" bg-gray-900 p-5 rounded-md tracking-wide">
                 <div className="flex justify-around">
-                  <img
-                    alt="snh.outer"
-                    className="w-45 rounded-md object-contain"
-                    src={snhouter_logo}
-                    width="200"
-                  />
+                  <div className="w-45 flex-none  object-contain">
+                    <img
+                      alt="snh.outer"
+                      className="rounded-md"
+                      src={snhouter_logo}
+                      width="200"
+                    />
+                  </div>
                   <div className="flex flex-grow flex-col ml-5 text-left">
                     <h1 className="text-white font-semibold text-4xl mb-2">
                       Outer Ring
@@ -174,7 +180,7 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
             </div>
           </div>
           {snhOuterLoading ? (
-            <h1>Loading...</h1>
+            <Loading />
           ) : (
             <div className="flex items-center overflow-x-auto">
               {snhOuterLatest.map((album) => (
@@ -217,12 +223,14 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
             <div className="w-full lg:w-2/3 xl:w-1/2 px-2">
               <div className=" bg-gray-900 p-5 rounded-md tracking-wide">
                 <div className="flex justify-around">
-                  <img
-                    alt="mountain"
-                    className="w-45 rounded-md object-contain"
-                    src={snhart_logo}
-                    width="200"
-                  />
+                  <div className="w-45 flex-none  object-contain">
+                    <img
+                      alt="snh.art"
+                      className="rounded-md"
+                      src={snhart_logo}
+                      width="200"
+                    />
+                  </div>
                   <div className="flex flex-grow flex-col ml-5 text-left">
                     <h1 className="text-white font-semibold text-4xl mb-2">
                       snh.Art
@@ -234,7 +242,7 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
             </div>
           </div>
           {snhArtLoading ? (
-            <h1>Loading...</h1>
+            <Loading />
           ) : (
             <div className="flex items-center overflow-x-auto">
               {snhArtLatest.map((art) => (

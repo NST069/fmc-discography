@@ -130,7 +130,7 @@ const Discography = ({
       </h1>
       <div className="grid place-items-center min-h-screen bg-gradient-to-b from-black to-gray-900 p-5">
         {loading ? (
-          <Loading />
+          <Loading absolute />
         ) : (
           <>
             <button

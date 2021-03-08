@@ -241,7 +241,7 @@ const Footer = () => {
     },
   ];
   return (
-    <nav className="footer flex flex-col md:flex-row justify-between z-20 border-t-2 border-gray-800">
+    <nav className="footer flex flex-col sm:flex-row justify-between z-20 border-t-2 border-gray-800">
       <div className="">
         {links.map((link) => (
           <div className="inline-block mx-2" key={link.name}>

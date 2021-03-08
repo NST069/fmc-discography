@@ -16,7 +16,7 @@ const Gallery = ({ loading, images, getArts }) => {
       <div className="grid place-items-center min-h-screen bg-gradient-to-b from-black to-gray-900 p-5">
         <section className="grid grid-cols-1 gap-4 mt-5">
           {loading ? (
-            <Loading />
+            <Loading absolute />
           ) : (
             images.map((image) => (
               <div key={image.deviationId}>

@@ -7,6 +7,7 @@ import axios from "axios";
 import Header from "./components/Header";
 import Main from "./components/Main";
 import Footer from "./components/Footer";
+import ToTop from "./components/ToTop";
 
 function App() {
   //const endpoint = "https://fmc-discography.herokuapp.com";
@@ -20,46 +21,38 @@ function App() {
   const [currentAlbum, setCurrentAlbum] = useState({});
   const [selectedTab, setSelectedTab] = useState("Home");
 
-  const getAllbyLabel = (label) => {
-    setLoading(true);
-    axios
-      .get(`${endpoint}/discography/getAllMetaFromLabel/${label}`)
-      .then((res) => {
-        setAlbums(res.data);
-        setLoading(false);
-      });
-  };
-
   const getAll = (setAlbs) => {
     setLoading(true);
-
     axios
       .get(`${endpoint}/discography/getAllMeta`)
       .then((res) => {
-        //console.log(res.data);
         if (res.data.length === 0) throw new Error("No data returned");
         else {
           setAlbums(res.data);
-          console.log(res.data);
           setAlbs(res.data);
           setLoading(false);
         }
       })
       .catch((err) => {
-        new Promise((r) => setTimeout(r, 5000)).then(() => getAll());
+        new Promise((r) => setTimeout(r, 5000)).then(() => getAll(setAlbs));
       });
   };
 
   const getAlbumById = (id) => {
     setLoadingPage(true);
     setCurrentAlbum({});
-    axios.get(`${endpoint}/discography/getFullAlbum/${id}`).then((res) => {
-      if (res.data.length === 0) throw new Error("No data returned");
-      else {
-        setCurrentAlbum(res.data);
-        setLoadingPage(false);
-      }
-    });
+    axios
+      .get(`${endpoint}/discography/getFullAlbum/${id}`)
+      .then((res) => {
+        if (res.data.length === 0) throw new Error("No data returned");
+        else {
+          setCurrentAlbum(res.data);
+          setLoadingPage(false);
+        }
+      })
+      .catch((err) => {
+        new Promise((r) => setTimeout(r, 5000)).then(() => getAlbumById(id));
+      });
   };
 
   const getVideos = () => {
@@ -69,7 +62,6 @@ function App() {
       .then((res) => {
         if (res.data.length === 0) throw new Error("No data returned");
         else {
-          console.log(res.data);
           setVideos(res.data);
           setLoading(false);
         }
@@ -86,7 +78,6 @@ function App() {
       .then((res) => {
         if (res.data.length === 0) throw new Error("No data returned");
         else {
-          console.log(res.data);
           setImages(res.data);
           setLoading(false);
         }
@@ -104,28 +95,33 @@ function App() {
         if (res.data.length === 0) throw new Error("No data returned");
         else {
           setResult(res.data);
-          console.log(res.data);
           setResLoading(false);
         }
+      })
+      .catch((err) => {
+        new Promise((r) => setTimeout(r, 5000)).then(() =>
+          getLatestFromLabel(label, setResult, setResLoading)
+        );
       });
   };
 
   const getLatestArts = (setResult, setResLoading) => {
     setResLoading(true);
-    axios.get(`${endpoint}/gallery/getLatest`).then((res) => {
-      if (res.data.length === 0) throw new Error("No data returned");
-      else {
-        setResult(res.data);
-        console.log(res.data);
-        setResLoading(false);
-      }
-    });
+    axios
+      .get(`${endpoint}/gallery/getLatest`)
+      .then((res) => {
+        if (res.data.length === 0) throw new Error("No data returned");
+        else {
+          setResult(res.data);
+          setResLoading(false);
+        }
+      })
+      .catch((err) => {
+        new Promise((r) => setTimeout(r, 5000)).then(() =>
+          getLatestArts(setResult, setResLoading)
+        );
+      });
   };
-
-  // useEffect(()=>{
-  //   getAll();
-  //   getVideos();
-  // }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="App bg-black flex flex-col min-h-screen">
@@ -142,7 +138,6 @@ function App() {
             { name: "Saturn Ashes", value: "1" },
             { name: "Outer Ring", value: "2" },
           ]}
-          getAllbyLabel={getAllbyLabel}
           getAll={getAll}
           getAlbumById={getAlbumById}
           currentAlbum={currentAlbum}
@@ -154,7 +149,7 @@ function App() {
           getLatestArts={getLatestArts}
         />
       </div>
-
+      <ToTop />
       <Footer />
     </div>
   );

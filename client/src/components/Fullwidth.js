@@ -79,10 +79,10 @@ const Fullwidth = () => {
     "\u0023": "\uff03",
     "\u0024": "\uff04",
     "\u0025": "\uff05",
-    "\u0026": "\uff26",
-    "\u0027": "\uff27",
-    "\u0028": "\uff28",
-    "\u0029": "\uff29",
+    "\u0026": "\uff06",
+    "\u0027": "\uff07",
+    "\u0028": "\uff08",
+    "\u0029": "\uff09",
     "\u002a": "\uff0a",
     "\u002b": "\uff0b",
     "\u002c": "\uff0c",
@@ -105,7 +105,7 @@ const Fullwidth = () => {
     "\u007b": "\uff5b",
     "\u007c": "\uff5c",
     "\u007d": "\uff5d",
-    "\u007e": "\uff7e",
+    "\u007e": "\uff5e",
   };
 
   var complete_map;
