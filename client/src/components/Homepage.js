@@ -69,7 +69,9 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
                 Ｆ Ｕ Ｌ Ｌ Ｍ Ｏ Ｏ Ｎ Ｃ Ｒ Ｅ Ｗ
               </h1>
               <p className="mt-4 text-lg text-gray-300">
-                Saturn Ashes, Outer Ring, Snh.Art
+                <a href="#snh">Saturn Ashes</a>,{" "}
+                <a href="#snhouter">Outer Ring</a>,{" "}
+                <a href="#snhart">Snh.Art</a>
               </p>
             </div>
           </div>
@@ -95,7 +97,7 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
         </div>
       </div>
 
-      <section className="pt-20 pb-48">
+      <section id="snh" className="pt-20 pb-48">
         <div className="container mx-auto px-4">
           <div className="flex sm:hidden flex-col ml-5 text-left">
             <h1 className="text-white font-bold text-center text-4xl mb-5">
@@ -144,7 +146,7 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
         </div>
       </section>
 
-      <section className="pt-20 pb-48">
+      <section id="snhouter" className="pt-20 pb-48">
         <div className="container mx-auto px-4">
           <div className="flex sm:hidden flex-col ml-5 text-left">
             <h1 className="text-white font-bold text-center text-4xl mb-5">
@@ -193,7 +195,7 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
         </div>
       </section>
 
-      <section className="pt-20 pb-20 block bg-gray-900">
+      <section id="snhart" className="pt-20 pb-20 block bg-gray-900">
         <div
           className="bottom-auto top-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden -mt-20"
           style={{ height: "80px", transform: "translateZ(0)" }}
