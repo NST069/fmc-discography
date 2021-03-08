@@ -82,26 +82,31 @@ const ReleasePage = ({ loading, currentAlbum, closeModal }) => {
                     ))}
                   </div>
                 ) : null}
-                <table className="table-auto border-collapse w-full rounded-lg">
-                  <tbody className="text-sm font-normal text-gray-400">
-                    <tr className="flex flex-row text-sm text-white font-medium bg-gray-700 text-left">
+                <table className="rounded-t-lg m-5 w-full mx-auto bg-black text-gray-200">
+                  <thead>
+                    <tr className="text-left border-b border-gray-300">
                       {currentAlbum.itemType === "album" ? (
-                        <th className="p-3 text-left">#</th>
+                        <th className="px-4 py-3">#</th>
                       ) : null}
-                      <th className="flex-grow p-3 text-left">Title</th>
-                      <th className="p-3 text-left">Duration</th>
+                      <th className="flex-grow px-4 py-3">Title</th>
+                      <th className="px-4 py-3">Duration</th>
                     </tr>
+                  </thead>
+                  <tbody>
                     {currentAlbum.tracks.map((track) => (
-                      <tr className="flex flex-row bg-gray-900 hover:bg-gray-800 ">
+                      <tr
+                        key={track.id}
+                        className="bg-gray-800 border-b border-gray-700"
+                      >
                         {currentAlbum.itemType === "album" ? (
-                          <td className="p-3">{track.trackNum}</td>
+                          <td className="px-4 py-3">{track.trackNum}</td>
                         ) : null}
-                        <td className="flex-grow p-3">{`${
+                        <td className="flex-grow px-4 py-3">{`${
                           track.artist === currentAlbum.artist
                             ? ""
                             : `${track.artist} - `
                         }${track.title}`}</td>
-                        <td className="p-3">{`${Math.floor(
+                        <td className="px-4 py-3">{`${Math.floor(
                           track.duration / 60
                         )}:${
                           (track.duration % 60 < 10 ? "0" : "") +

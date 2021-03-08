@@ -189,7 +189,7 @@ const Footer = () => {
           focusable="false"
           data-prefix="fab"
           data-icon="spotify"
-          class="svg-inline--fa fa-spotify fa-w-16"
+          className="svg-inline--fa fa-spotify fa-w-16"
           role="img"
           viewBox="0 0 496 512"
         >
@@ -241,7 +241,7 @@ const Footer = () => {
     },
   ];
   return (
-    <nav className="footer flex flex-col md:flex-row justify-between z-20 border-t-2 border-gray-800">
+    <nav className="footer flex flex-col sm:flex-row justify-between z-20 border-t-2 border-gray-800">
       <div className="">
         {links.map((link) => (
           <div className="inline-block mx-2" key={link.name}>

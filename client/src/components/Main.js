@@ -1,8 +1,10 @@
 import React from "react";
 
-import Fullwidth from "./Fullwidth";
+import Homepage from "./Homepage";
 import Discography from "./Discography";
 import Videography from "./Videography";
+import Gallery from "./Gallery";
+import Fullwidth from "./Fullwidth";
 
 const Main = ({
   selectedTab,
@@ -16,27 +18,42 @@ const Main = ({
   labels,
   videos,
   getVideos,
+  images,
+  getArts,
+  getLatestFromLabel,
+  getLatestArts,
 }) => {
   return (
-    <div className="container mx-auto max-w-screen-lg">
-      {selectedTab === "Home" ? null : null}
-      {selectedTab === "Discography" ? (
-        <Discography
-          loading={loading}
-          setLoading={setLoading}
-          loadingPage={loadingPage}
-          albums={albums}
-          currentAlbum={currentAlbum}
-          labels={labels}
-          getAll={getAll}
-          getAlbumById={getAlbumById}
+    <>
+      {selectedTab === "Home" ? (
+        <Homepage
+          getLatestFromLabel={getLatestFromLabel}
+          getLatestArts={getLatestArts}
         />
-      ) : null}
-      {selectedTab === "Videography" ? (
-        <Videography videos={videos} getVideos={getVideos} />
-      ) : null}
-      {selectedTab === "Fullwidth" ? <Fullwidth /> : null}
-    </div>
+      ) : (
+        <div className="container mx-auto max-w-screen-lg">
+          {selectedTab === "Discography" ? (
+            <Discography
+              loading={loading}
+              setLoading={setLoading}
+              loadingPage={loadingPage}
+              albums={albums}
+              currentAlbum={currentAlbum}
+              labels={labels}
+              getAll={getAll}
+              getAlbumById={getAlbumById}
+            />
+          ) : null}
+          {selectedTab === "Videography" ? (
+            <Videography videos={videos} getVideos={getVideos} />
+          ) : null}
+          {selectedTab === "Gallery" ? (
+            <Gallery images={images} getArts={getArts} />
+          ) : null}
+          {selectedTab === "Fullwidth" ? <Fullwidth /> : null}
+        </div>
+      )}
+    </>
   );
 };
 
