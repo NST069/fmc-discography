@@ -35,9 +35,12 @@ const ToTop = () => {
   }, []);
 
   return (
-    <div className="fixed bottom-20 right-10 transition duration-500 ease-in-out">
+    <div className="fixed bottom-20 right-2 sm:right-10 transition duration-500 ease-in-out">
       {isVisible ? (
-        <div className="bg-gray-900 rounded-md p-2" onClick={scrollToTop}>
+        <div
+          className="bg-gray-900 rounded-md p-2 cursor-pointer"
+          onClick={scrollToTop}
+        >
           {arrow}
         </div>
       ) : null}

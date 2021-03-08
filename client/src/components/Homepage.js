@@ -65,7 +65,7 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
         <div className="container relative mx-auto">
           <div className="items-center flex flex-wrap">
             <div className="w-full px-4 ml-auto mr-auto text-center">
-              <h1 className="text-white font-semibold text-md sm:text-2xl md:text-4xl lg:text-5xl">
+              <h1 className="text-white font-semibold text-xl sm:text-2xl md:text-4xl lg:text-5xl">
                 Ｆ Ｕ Ｌ Ｌ Ｍ Ｏ Ｏ Ｎ Ｃ Ｒ Ｅ Ｗ
               </h1>
               <p className="mt-4 text-lg text-gray-300">
@@ -100,7 +100,7 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
       <section id="snh" className="pt-20 pb-48">
         <div className="container mx-auto px-4">
           <div className="flex sm:hidden flex-col ml-5 text-left">
-            <h1 className="text-white font-bold text-center text-4xl mb-5">
+            <h1 className="text-white font-bold text-center text-xl mb-5">
               Saturn Ashes
             </h1>
           </div>
@@ -149,7 +149,7 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
       <section id="snhouter" className="pt-20 pb-48">
         <div className="container mx-auto px-4">
           <div className="flex sm:hidden flex-col ml-5 text-left">
-            <h1 className="text-white font-bold text-center text-4xl mb-5">
+            <h1 className="text-white font-bold text-center text-xl mb-5">
               Outer Ring
             </h1>
           </div>
@@ -217,7 +217,7 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
         </div>
         <div className="container mx-auto px-4">
           <div className="flex sm:hidden flex-col ml-5 text-left">
-            <h1 className="text-white font-bold text-center text-4xl mb-5">
+            <h1 className="text-white font-bold text-center text-xl mb-5">
               snh.Art
             </h1>
           </div>

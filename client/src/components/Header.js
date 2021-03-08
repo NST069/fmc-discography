@@ -46,51 +46,51 @@ const Header = ({ setSelectedTab }) => {
         } top-navbar w-full lg:inline-flex lg:flex-grow lg:w-auto`}
         id="navigation"
       >
-        <div className="lg:inline-flex lg:flex-row lg:ml-auto lg:w-auto w-full lg:items-center items-start  flex flex-col lg:h-auto">
+        <div className="lg:inline-flex lg:flex-row lg:ml-auto lg:w-auto w-full lg:items-center items-start flex flex-col lg:h-auto">
           <p
             onClick={(event) => {
               event.preventDefault();
               setSelectedTab("Home");
             }}
-            className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
+            className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white cursor-pointer"
           >
-            <span>Home</span>
+            Home
           </p>
           <p
             onClick={(event) => {
               event.preventDefault();
               setSelectedTab("Discography");
             }}
-            className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
+            className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white cursor-pointer"
           >
-            <span>Discography</span>
+            Discography
           </p>
           <p
             onClick={(event) => {
               event.preventDefault();
               setSelectedTab("Videography");
             }}
-            className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
+            className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white cursor-pointer"
           >
-            <span>Videography</span>
+            Videography
           </p>
           <p
             onClick={(event) => {
               event.preventDefault();
               setSelectedTab("Gallery");
             }}
-            className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
+            className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white cursor-pointer"
           >
-            <span>Gallery</span>
+            Gallery
           </p>
           <p
             onClick={(event) => {
               event.preventDefault();
               setSelectedTab("Fullwidth");
             }}
-            className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
+            className="lg:inline-flex lg:w-auto w-full px-3 py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white cursor-pointer"
           >
-            <span>{starIcon}</span>
+            {starIcon}
           </p>
         </div>
       </div>

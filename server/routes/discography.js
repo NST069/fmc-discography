@@ -330,19 +330,21 @@ router.get("/getAllMetaFromLabel/:label", async (req, res, next) => {
 });
 
 router.get("/getAll", async (req, res, next) => {
-  albumModel.find({}, (err, docs) => {
-    res.json(docs);
-  });
+  albumModel
+    .find({})
+    .sort({ releaseDate: -1 })
+    .exec((err, docs) => {
+      res.json(docs);
+    });
 });
 
 router.get("/getAllMeta", async (req, res, next) => {
-  albumModel.find(
-    {},
-    "artist title imageUrl id releaseDate label",
-    (err, docs) => {
+  albumModel
+    .find({}, "artist title imageUrl id releaseDate label")
+    .sort({ releaseDate: -1 })
+    .exec((err, docs) => {
       res.json(docs);
-    }
-  );
+    });
 });
 
 router.get("/getLatestFromLabel/:label", async (req, res, next) => {
