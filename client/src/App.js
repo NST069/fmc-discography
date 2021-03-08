@@ -9,9 +9,10 @@ import Main from "./components/Main";
 import Footer from "./components/Footer";
 import ToTop from "./components/ToTop";
 
+import env from "react-dotenv";
+
 function App() {
-  //const endpoint = "https://fmc-discography.herokuapp.com";
-  const endpoint = process.env.ENDPOINT || "http://localhost:5000";
+  const endpoint = env.ENDPOINT || "http://localhost:5000";
 
   const [albums, setAlbums] = useState([]);
   const [videos, setVideos] = useState([]);
