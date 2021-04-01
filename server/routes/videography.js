@@ -49,7 +49,9 @@ router.get("/channelInfo", (req, res, next) => {
 
 const pushVideosToDatabase = (videos) => {
   const ids = [];
-  videos.map((video) => {
+  // It's okay if the new video appears to be the latest one
+  // TODO: deal with hidden ones
+  videos.reverse().map((video) => {
     ids.push(video.videoId);
     const vid = new videoModel({ ...video });
     videoModel.findOne({ videoId: video.videoId }, (err, doc) => {
@@ -126,7 +128,7 @@ router.get("/getAllVideos", (req, res, next) => {
   videoModel.find(
     {},
     /* null, { sort: publishedText },*/ (err, docs) => {
-      res.json(docs);
+      res.json(docs.reverse());
     }
   );
 });
