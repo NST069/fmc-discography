@@ -125,33 +125,44 @@ function App() {
   };
 
   return (
-    <div className="App bg-black flex flex-col min-h-screen">
-      <Header setSelectedTab={setSelectedTab} />
+    <div className={`App bg-black `}>
+      <div
+        className={`flex flex-col h-screen ${
+          /*
+          selectedTab !== "Home" ? "md:h-screen" : ""*/ ""
+        }`}
+      >
+        <header>
+          <Header setSelectedTab={setSelectedTab} />
+        </header>
 
-      <div className="flex-grow">
-        <Main
-          selectedTab={selectedTab}
-          loading={loading}
-          setLoading={setLoading}
-          loadingPage={loadingPage}
-          albums={albums}
-          labels={[
-            { name: "Saturn Ashes", value: "1" },
-            { name: "Outer Ring", value: "2" },
-          ]}
-          getAll={getAll}
-          getAlbumById={getAlbumById}
-          currentAlbum={currentAlbum}
-          videos={videos}
-          getVideos={getVideos}
-          images={images}
-          getArts={getArts}
-          getLatestFromLabel={getLatestFromLabel}
-          getLatestArts={getLatestArts}
-        />
+        <main className="flex-grow overflow-y-auto">
+          <Main
+            selectedTab={selectedTab}
+            loading={loading}
+            setLoading={setLoading}
+            loadingPage={loadingPage}
+            albums={albums}
+            labels={[
+              { name: "Saturn Ashes", value: "1" },
+              { name: "Outer Ring", value: "2" },
+            ]}
+            getAll={getAll}
+            getAlbumById={getAlbumById}
+            currentAlbum={currentAlbum}
+            videos={videos}
+            getVideos={getVideos}
+            images={images}
+            getArts={getArts}
+            getLatestFromLabel={getLatestFromLabel}
+            getLatestArts={getLatestArts}
+          />
+          <ToTop />
+        </main>
+        <footer>
+          <Footer />
+        </footer>
       </div>
-      <ToTop />
-      <Footer />
     </div>
   );
 }

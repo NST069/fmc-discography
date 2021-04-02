@@ -31,7 +31,7 @@ const Main = ({
           getLatestArts={getLatestArts}
         />
       ) : (
-        <div className="container mx-auto max-w-screen-lg">
+        <div className="h-full">
           {selectedTab === "Discography" ? (
             <Discography
               loading={loading}

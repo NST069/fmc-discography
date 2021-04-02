@@ -4,7 +4,7 @@ import ReactPlayer from "react-player/lazy";
 
 const VideoCard = ({ video }) => {
   return (
-    <div className="py-10">
+    <div className="p-10">
       <div className="max-w-md mx-auto xl:max-w-5xl lg:max-w-5xl md:max-w-2xl bg-gray-900 max-h-screen shadow-2xl flex-row rounded relative">
         <div className="p-2 bg-gray-800  rounded-t-md">
           <h5 className="text-white text-2xl font-medium">{video.title}</h5>
