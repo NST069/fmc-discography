@@ -133,4 +133,10 @@ router.get("/getAllVideos", (req, res, next) => {
   );
 });
 
+router.get("/test", (req, res, next) => {
+  ytch.getChannelVideos(channelId, "newest").then(async (videos) => {
+    res.json(videos);
+  });
+});
+
 module.exports = router;
