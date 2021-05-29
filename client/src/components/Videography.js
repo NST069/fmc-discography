@@ -1,18 +1,35 @@
 import React, { useState, useEffect } from "react";
 
 import VideoCard from "./VideoCard";
-//import VideoPage from "./VideoPage";
-import SmallVideoCard from "./SmallVideoCard";
+import VideoPage from "./VideoPage";
 import Loading from "./Loading";
+
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const Videography = ({ loading, videos, getVideos }) => {
   const [selectedId, setSelectedId] = useState(
     videos.length > 0 ? videos[0].videoId : ""
   );
 
+  const settings = {
+    infinite: false,
+    speed: 1000,
+    slidesToShow: 5,
+    slidesToScroll: 1,
+    focusOnSelect: true,
+    centerMode: true,
+    afterChange: (current) => setSelectedId(videos[current].videoId),
+  };
+
   useEffect(() => {
     getVideos();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    setSelectedId(videos.length > 0 ? videos[0].videoId : "");
+  }, [videos]);
 
   return (
     <>
@@ -35,36 +52,28 @@ const Videography = ({ loading, videos, getVideos }) => {
         </div>
       </div>
       <div className="hidden lg:contents">
-        <div className="h-full flex ">
-          <div className="flex-1">
-            {selectedId === "" ? null : (
-              <div className="w-full xl:w-9/12 justify-self-center">
-                <VideoCard
-                  video={videos.find((v) => v.videoId === selectedId)}
-                />
+        <div className="h-1/2">
+          {loading ? (
+            <Loading />
+          ) : (
+            <>
+              <div classname="h-2/3">
+                {selectedId === "" ? null : (
+                  <VideoPage
+                    video={videos.find((v) => v.videoId === selectedId)}
+                  />
+                )}
               </div>
-            )}
-          </div>
-          <div className="flex overflow-hidden w-96">
-            <div className="flex-1 overflow-y-scroll bg-gradient-to-b from-black to-gray-900 p-5">
-              <div className="grid place-items-center">
-                <section className="grid grid-cols-1 gap-4 mt-5">
-                  {loading ? (
-                    <Loading />
-                  ) : (
-                    videos.map((video) => (
-                      <div key={video.videoId}>
-                        <SmallVideoCard
-                          video={video}
-                          setSelectedId={setSelectedId}
-                        />
-                      </div>
-                    ))
-                  )}
-                </section>
+
+              <div className="h-1/3">
+                <Slider className="mx-10" {...settings}>
+                  {videos.map((video) => (
+                    <img src={video.videoThumbnails[3].url} alt={video.title} />
+                  ))}
+                </Slider>
               </div>
-            </div>
-          </div>
+            </>
+          )}
         </div>
       </div>
     </>
