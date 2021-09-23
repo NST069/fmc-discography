@@ -24,7 +24,7 @@ const Main = ({
   getLatestArts,
 }) => {
   return (
-    <>
+    <div>
       {selectedTab === "Home" ? (
         <Homepage
           getLatestFromLabel={getLatestFromLabel}
@@ -53,7 +53,7 @@ const Main = ({
           {selectedTab === "Fullwidth" ? <Fullwidth /> : null}
         </div>
       )}
-    </>
+    </div>
   );
 };
 

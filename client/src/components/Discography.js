@@ -124,7 +124,7 @@ const Discography = ({
   };
 
   return (
-    <>
+    <div>
       <h1 className=" text-4xl sm:text-5xl md:text-7xl font-bold text-gray-200 my-5 text-center">
         Discography
       </h1>
@@ -132,7 +132,7 @@ const Discography = ({
         {loading ? (
           <Loading absolute />
         ) : (
-          <>
+          <div>
             <button
               className="text-white inline-flex p-3 hover:bg-gray-900 rounded sm:hidden ml-auto hover:text-white outline-none nav-toggler"
               data-target="#navigation"
@@ -245,12 +245,12 @@ const Discography = ({
                 </div>
               ))}
             </section>
-          </>
+          </div>
         )}
       </div>
 
       {showModal ? (
-        <>
+        <div>
           <div className="justify-center items-center container md:flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
             <div className="relative w-auto my-6 mx-auto max-w-3xl">
               <ReleasePage
@@ -262,9 +262,9 @@ const Discography = ({
             </div>
           </div>
           <div className="opacity-25 fixed inset-0 z-10 bg-black"></div>
-        </>
+        </div>
       ) : null}
-    </>
+    </div>
   );
 };
 

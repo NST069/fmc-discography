@@ -12,7 +12,7 @@ const Gallery = ({ loading, images, getArts }) => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <>
+    <div>
       <div className="contents lg:hidden">
         <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-200 my-5 text-center">
           Gallery
@@ -64,7 +64,7 @@ const Gallery = ({ loading, images, getArts }) => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

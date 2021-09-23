@@ -14,13 +14,31 @@ const Videography = ({ loading, videos, getVideos }) => {
   );
 
   const settings = {
+    dots: true,
+    lazyLoad: true,
     infinite: false,
-    speed: 1000,
-    slidesToShow: 5,
-    slidesToScroll: 1,
-    focusOnSelect: true,
-    centerMode: true,
-    afterChange: (current) => setSelectedId(videos[current].videoId),
+    speed: 500,
+    slidesToShow: 3,
+    initialSlide: 1,
+    // dotsClass: "slick-dots slick-thumb",
+    // customPaging: (i) => {
+    //   // <img
+    //   //   src={videos[i].videoThumbnails ? videos[i].videoThumbnails[3].url : ""}
+    //   //   alt={videos[i].title}
+    //   // />;
+    //   <a>
+    //     <img key={i} src="" alt="" />;
+    //   </a>;
+    // },
+    responsive: [
+      {
+        breakpoint: 1920,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
 
   useEffect(() => {
@@ -32,7 +50,7 @@ const Videography = ({ loading, videos, getVideos }) => {
   }, [videos]);
 
   return (
-    <>
+    <div>
       <div className="contents lg:hidden">
         <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-200 my-5 text-center">
           Videography
@@ -56,27 +74,19 @@ const Videography = ({ loading, videos, getVideos }) => {
           {loading ? (
             <Loading />
           ) : (
-            <>
-              <div classname="h-2/3">
-                {selectedId === "" ? null : (
-                  <VideoPage
-                    video={videos.find((v) => v.videoId === selectedId)}
-                  />
-                )}
-              </div>
-
-              <div className="h-1/3">
-                <Slider className="mx-10" {...settings}>
-                  {videos.map((video) => (
-                    <img src={video.videoThumbnails[3].url} alt={video.title} />
-                  ))}
-                </Slider>
-              </div>
-            </>
+            <div>
+              <Slider className="mx-10" {...settings}>
+                {videos.map((video) => (
+                  <div key={video.videoId}>
+                    <VideoPage video={video} />
+                  </div>
+                ))}
+              </Slider>
+            </div>
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

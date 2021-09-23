@@ -42,7 +42,7 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <>
+    <div>
       <div
         className="relative pt-16 pb-32 flex content-center items-center justify-center"
         style={{
@@ -256,7 +256,7 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
           )}
         </div>
       </section>
-    </>
+    </div>
   );
 };
 

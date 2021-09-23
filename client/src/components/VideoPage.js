@@ -4,8 +4,8 @@ import ReactPlayer from "react-player/lazy";
 
 const VideoPage = ({ video }) => {
   return (
-    <div className="p-10">
-      <div className="max-h-full max-w-md mx-auto xl:max-w-5xl lg:max-w-5xl md:max-w-2xl bg-gray-900 shadow-2xl flex-row rounded relative">
+    <div className="pt-5">
+      <div className="h-4/5 max-w-md mx-auto xl:max-w-4xl lg:max-w-2xl md:max-w-2xl bg-gray-900 shadow-2xl flex-row rounded relative">
         <div className="p-2 bg-gray-800  rounded-t-md">
           <h5 className="text-white text-2xl font-medium">{video.title}</h5>
         </div>

@@ -34,7 +34,7 @@ const ReleasePage = ({ loading, currentAlbum, closeModal }) => {
   );
 
   return (
-    <>
+    <div>
       {loading ? (
         <Loading />
       ) : (
@@ -176,7 +176,7 @@ const ReleasePage = ({ loading, currentAlbum, closeModal }) => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

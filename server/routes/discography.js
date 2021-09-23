@@ -370,7 +370,7 @@ router.get("/getFullAlbum/:id", async (req, res, next) => {
 router.get("/getRawAlbum", async (req, res, next) => {
   const getAlbumInfo = util.promisify(bcScraper.getAlbumInfo);
   res.json(
-    await getAlbumInfo("https://saturnashes.bandcamp.com/album/zen-vol-5")
+    await getAlbumInfo("https://saturnashes.bandcamp.com/album/railgun")
   );
 });
 
