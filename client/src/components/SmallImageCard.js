@@ -1,14 +1,8 @@
 import React from "react";
 
-const SmallImageCard = ({ image, setSelectedId }) => {
+const SmallImageCard = ({ image }) => {
   return (
-    <div
-      className="bg-gray-900 shadow-lg rounded "
-      onClick={(e) => {
-        e.preventDefault();
-        setSelectedId(image.deviationId);
-      }}
-    >
+    <div className="bg-gray-900 shadow-lg rounded ">
       <div className="group relative">
         <img
           className="w-full block rounded self-center"
@@ -18,9 +12,15 @@ const SmallImageCard = ({ image, setSelectedId }) => {
         />
       </div>
       <div className="p-5">
-        <h3 className="text-white text-lg">
+        <p className="text-gray-400">
           {image === undefined ? "" : image.title}
-        </h3>
+        </p>
+      </div>
+
+      <div className="p-5">
+        <a href={image.url} target="_blank" rel="noopener noreferrer">
+          <button className="button button-dark">Show</button>
+        </a>
       </div>
     </div>
   );

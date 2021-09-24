@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import VideoCard from "./VideoCard";
 import VideoPage from "./VideoPage";
@@ -9,27 +9,14 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const Videography = ({ loading, videos, getVideos }) => {
-  const [selectedId, setSelectedId] = useState(
-    videos.length > 0 ? videos[0].videoId : ""
-  );
-
   const settings = {
-    dots: true,
+    dots: false,
+    fade: true,
     lazyLoad: true,
     infinite: false,
     speed: 500,
     slidesToShow: 3,
-    initialSlide: 1,
-    // dotsClass: "slick-dots slick-thumb",
-    // customPaging: (i) => {
-    //   // <img
-    //   //   src={videos[i].videoThumbnails ? videos[i].videoThumbnails[3].url : ""}
-    //   //   alt={videos[i].title}
-    //   // />;
-    //   <a>
-    //     <img key={i} src="" alt="" />;
-    //   </a>;
-    // },
+    initialSlide: 0,
     responsive: [
       {
         breakpoint: 1920,
@@ -44,10 +31,6 @@ const Videography = ({ loading, videos, getVideos }) => {
   useEffect(() => {
     getVideos();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    setSelectedId(videos.length > 0 ? videos[0].videoId : "");
-  }, [videos]);
 
   return (
     <div>

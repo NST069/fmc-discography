@@ -1,11 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import ImageCard from "./ImageCard";
-import SmallImageCard from "./SmallImageCard";
+import ImagePage from "./ImagePage";
 import Loading from "./Loading";
 
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 const Gallery = ({ loading, images, getArts }) => {
-  const [selectedId, setSelectedId] = useState("");
+  const settings = {
+    dots: false,
+    lazyLoad: true,
+    infinite: true,
+    adaptiveHeight: true,
+    slidesToShow: 1,
+    initialSlide: 0,
+    speed: 1000,
+  };
 
   useEffect(() => {
     getArts();
@@ -32,36 +44,20 @@ const Gallery = ({ loading, images, getArts }) => {
         </div>
       </div>
       <div className="hidden lg:contents">
-        <div className="h-full flex ">
-          <div className="flex-1">
-            {selectedId === "" ? null : (
-              <div className="w-full xl:w-9/12 justify-self-center">
-                <ImageCard
-                  image={images.find((i) => i.deviationId === selectedId)}
-                />
-              </div>
-            )}
-          </div>
-          <div className="flex overflow-hidden w-96">
-            <div className="flex-1 overflow-y-scroll bg-gradient-to-b from-black to-gray-900 p-5">
-              <div className="grid place-items-center">
-                <section className="grid grid-cols-1 gap-4 mt-5">
-                  {loading ? (
-                    <Loading />
-                  ) : (
-                    images.map((image) => (
-                      <div key={image.deviationId}>
-                        <SmallImageCard
-                          image={image}
-                          setSelectedId={setSelectedId}
-                        />
-                      </div>
-                    ))
-                  )}
-                </section>
-              </div>
+        <div className="h-1/2">
+          {loading ? (
+            <Loading />
+          ) : (
+            <div>
+              <Slider className="mx-10" {...settings}>
+                {images.map((image) => (
+                  <div key={image.deviationId}>
+                    <ImagePage image={image} index={images.indexOf(image)} />
+                  </div>
+                ))}
+              </Slider>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

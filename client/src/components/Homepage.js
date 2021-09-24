@@ -249,7 +249,7 @@ const Homepage = ({ getLatestFromLabel, getLatestArts }) => {
             <div className="flex items-center overflow-x-auto">
               {snhArtLatest.map((art) => (
                 <div key={art.deviationId} className="inline-block px-3">
-                  <SmallImageCard art={art} />
+                  <SmallImageCard image={art} />
                 </div>
               ))}
             </div>

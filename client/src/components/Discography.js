@@ -132,7 +132,7 @@ const Discography = ({
         {loading ? (
           <Loading absolute />
         ) : (
-          <div>
+          <div className="text-center">
             <button
               className="text-white inline-flex p-3 hover:bg-gray-900 rounded sm:hidden ml-auto hover:text-white outline-none nav-toggler"
               data-target="#navigation"
