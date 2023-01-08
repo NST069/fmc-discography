@@ -117,7 +117,11 @@ channelMonitor.on("up", async (res, state) => {
   });
 });
 channelMonitor.on("error", (error) =>
-  console.log(`[${new Date(Date.now()).toLocaleString()}]: ERROR: ${error}`)
+  console.log(
+    `[${new Date(Date.now()).toLocaleString()}]: ${
+      channelMonitor.title
+    }: ${error}`
+  )
 );
 channelMonitor.on("down", (res, state) => {
   console.log(`${res.website} is down`);

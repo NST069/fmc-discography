@@ -3,6 +3,8 @@ const router = express.Router();
 
 const util = require("util");
 const bcScraper = require("bandcamp-scraper");
+
+const bcfetch = require("bandcamp-fetch");
 const Monitor = require("ping-monitor");
 
 const isObject = require("lodash/isObject");
@@ -15,6 +17,7 @@ mongoose.connect(process.env.MONGO_URL, {
 });
 const albumSchema = require("../schemas/album");
 const albumModel = mongoose.model("album", albumSchema);
+console.log(mongoose.connection);
 
 const labels = [
   {
@@ -88,6 +91,34 @@ const pushAlbumsToDatabase = (albums) => {
   );
 };
 
+const UpdateAlbum = (album) => {
+  albumModel.updateOne({ id: album.id }, album, (err, res) =>
+    err ? console.log(err) : null
+  );
+};
+
+const FixImageUrl = (url, albList) => {
+  return new Promise((resolve, reject) => {
+    bcfetch
+      .getAlbumInfo(url)
+      .then(
+        (alb) => {
+          //album cover fix (temp)
+          let ai = albList.findIndex((a) => a.url == alb.url);
+          albList[ai].imageUrl = alb.imageUrl;
+          UpdateAlbum(albList[ai]);
+          resolve(true);
+        },
+        (error) => {
+          reject(error);
+        }
+      )
+      .catch((err) => {
+        reject(err.message);
+      });
+  });
+};
+
 const snhMonitor = new Monitor({
   website: `https://saturnashes.bandcamp.com`,
   title: "Saturn Ashes",
@@ -152,6 +183,7 @@ snhMonitor.on("up", async (res, state) => {
         }),
       });
       metaList = [...metaList, curAlbumMeta];
+      FixImageUrl(alInfo.url, albList);
     });
 
     pushAlbumsToDatabase(albList);
@@ -164,7 +196,9 @@ snhMonitor.on("up", async (res, state) => {
   });
 });
 snhMonitor.on("error", (error) =>
-  console.log(`[${new Date(Date.now()).toLocaleString()}]: ERROR: ${error}`)
+  console.log(
+    `[${new Date(Date.now()).toLocaleString()}]: ${snhMonitor.title}: ${error}`
+  )
 );
 snhMonitor.on("down", (res, state) => {
   console.log(`${res.website} is down`);
@@ -235,9 +269,37 @@ snhouterMonitor.on("up", async (res, state) => {
       });
       metaList = [...metaList, curAlbumMeta];
     });
+
     pushAlbumsToDatabase(albList);
     currentLabel.albumData = albList; //placing info objects
     currentLabel.metaAlbumData = metaList;
+
+    albList.map((alInfo) => {
+      Promise.resolve(FixImageUrl(alInfo.url, albList))
+        .then(
+          (result) => {
+            console.log(
+              `[${new Date(Date.now()).toLocaleString()}]: ${alInfo.title} by ${
+                alInfo.artist
+              }: Cover updated, ${result}`
+            );
+          },
+          (error) => {
+            console.log(
+              `[${new Date(Date.now()).toLocaleString()}]: ${alInfo.title} by ${
+                alInfo.artist
+              }: ${error}`
+            );
+          }
+        )
+        .catch((err) => {
+          console.log(
+            `[${new Date(Date.now()).toLocaleString()}]: ${alInfo.title} by ${
+              alInfo.artist
+            }: Exception: ${err.message}`
+          );
+        });
+    });
 
     console.log(
       `[${new Date(Date.now()).toLocaleString()}]: ${
@@ -247,7 +309,11 @@ snhouterMonitor.on("up", async (res, state) => {
   });
 });
 snhouterMonitor.on("error", (error) =>
-  console.log(`[${new Date(Date.now()).toLocaleString()}]: ERROR: ${error}`)
+  console.log(
+    `[${new Date(Date.now()).toLocaleString()}]: ${
+      snhouterMonitor.title
+    }: ${error}`
+  )
 );
 snhouterMonitor.on("down", (res, state) => {
   console.log(`${res.website} is down`);
@@ -372,6 +438,55 @@ router.get("/getRawAlbum", async (req, res, next) => {
   res.json(
     await getAlbumInfo("https://saturnashes.bandcamp.com/album/railgun")
   );
+});
+
+var fs = require("fs");
+var log_file = fs.createWriteStream(__dirname + "/debug.log", { flags: "w" });
+var log_stdout = process.stdout;
+
+console.log = function (d) {
+  //
+  log_file.write(util.format(d) + "\n");
+  log_stdout.write(util.format(d) + "\n");
+};
+
+let rrr = [];
+router.get("/testDiscog", async (req, res, next) => {
+  bcfetch.getDiscography(`https://snhouter.bandcamp.com`).then((r) => {
+    console.log(`[${new Date(Date.now()).toLocaleString()}]: r:`);
+    console.log(r);
+    r.map((item, idx) => {
+      bcfetch.getAlbumInfo(item.url).then((ai) => {
+        console.log(`[${new Date(Date.now()).toLocaleString()}]: item_${idx}:`);
+        console.log(ai);
+        rrr = [...rrr, ai];
+        //console.log(rrr);
+      });
+    }).then(() => {
+      console.log(`[${new Date(Date.now()).toLocaleString()}]: rrr:`);
+      console.log(rrr);
+      res.json(rrr);
+    });
+  });
+});
+
+router.get("/discogGet", async (req, res, next) => res.json(rrr));
+
+router.get("/testDiscog2", async (req, res, next) => {
+  const geturls = util.promisify(bcScraper.getAlbumUrls);
+  const getAlbumInfo = util.promisify(bcScraper.getAlbumInfo);
+
+  var urlsList = await geturls(`https://snhouter.bandcamp.com`);
+  console.log(`[${new Date(Date.now()).toLocaleString()}]: urls:`);
+  console.log(urlsList);
+  var albumsList = urlsList.map(async (url) => {
+    return await getAlbumInfo(url);
+  });
+  await Promise.all(albumsList).then((albums) => {
+    console.log(`[${new Date(Date.now()).toLocaleString()}]: albums:`);
+    console.log(albums);
+    res.json(albums);
+  });
 });
 
 module.exports = router;

@@ -4,6 +4,7 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
+    "bandcamp-fetch": "^0.2.1-b.20211020b",
     "bandcamp-scraper": "^1.4.1",
     "cors": "^2.8.5",
     "deviantnode": "^0.2.1",
