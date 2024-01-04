@@ -59,10 +59,7 @@ const isUpToDate = (fresh, staged) => {
   return true;
 };
 
-const pushAlbumsToDatabase = (albums) => {
-  const ids = [];
-  albums.map((album) => {
-    ids.push(album.id);
+const pushAlbumToDatabase = (album) => {
     const curAlbum = new albumModel({ ...album });
     albumModel.findOne({ id: curAlbum.id }, (err, doc) => {
       if (!err) {
@@ -72,30 +69,68 @@ const pushAlbumsToDatabase = (albums) => {
             `New release found: ${curAlbum.title} by ${curAlbum.artist}`
           );
           doc.save((err) => (err ? console.log(err) : null));
-        } /*if (!isUpToDate(alInfo, doc))*/ else {
+        } if (!isUpToDate(album, doc)) {
           albumModel.updateOne({ id: curAlbum.id }, album, (err, res) =>
             err ? console.log(err) : null
           );
-          //console.log(`Updated: ${curAlbum.title} by ${curAlbum.artist}`);
+          console.log(`Updated: ${curAlbum.title} by ${curAlbum.artist}`);
         }
       }
-    });
   });
-  albumModel.deleteMany(
-    { id: { $nin: ids }, label: { name: albums[0].label.name } },
-    (err, res) => {
-      if (err) console.log(err);
-      else if (res.deletedCount > 0)
-        console.log(`Removed ${res.deletedCount} releases`);
-    }
-  );
 };
+
+const getAlbumsFromLabel = (monitor) => {
+  var albumsList = [];
+  var currentLabel = labels.find((lbl) => lbl.name === monitor.title);
+  try{
+  bcScraper.getAlbumUrls(currentLabel.url, async (err, albumUrls)=>{
+    if(err) console.log(err);
+    else {
+      currentLabel.albumUrls = albumUrls;
+      await albumUrls.map((url, i) => {
+        bcScraper.getAlbumInfo(url, async(err, albumInfo)=>{
+          if(err) console.log(err);
+          else {
+            const alInfo = composeAlbumInfo(albumInfo, {
+              name: monitor.title,
+              website: monitor.website,
+            });
+            albumsList=[...albumsList, alInfo]
+            await pushAlbumToDatabase(alInfo);
+          }
+          if(i>=albumUrls.length-1){
+            currentLabel.albumData = albumsList;
+            HideMissedAlbums(currentLabel);
+            
+            console.log(
+              `[${new Date(Date.now()).toLocaleString()}]: ${
+                monitor.title
+              } updated`
+            );
+          }
+        })
+      })
+    }
+  });
+}catch(err){
+    console.log(
+      `[${new Date(Date.now()).toLocaleString()}]: Exception: ${err.message}`
+    );
+  }
+}
 
 const UpdateAlbum = (album) => {
   albumModel.updateOne({ id: album.id }, album, (err, res) =>
     err ? console.log(err) : null
   );
 };
+
+const HideMissedAlbums = (label)=>{
+  albumModel.updateMany({id: {$nin: [...label.albumData.map(a=>a.id)]}, label: {name: label.name}}, { $set: { isAvailable: false } }, (err, res)=>{
+    err ? console.log(err) : null
+  })
+
+}
 
 const FixImageUrl = (url, albList) => {
   return new Promise((resolve, reject) => {
@@ -132,68 +167,8 @@ snhMonitor.on("up", async (res, state) => {
       snhMonitor.title
     }...`
   );
-  let currentLabel = labels.find((lbl) => lbl.name === snhMonitor.title);
 
-  const geturls = util.promisify(bcScraper.getAlbumUrls);
-  const getAlbumInfo = util.promisify(bcScraper.getAlbumInfo);
-
-  var urlsList = await geturls(currentLabel.url);
-  await Promise.all(urlsList).then((urls) => {
-    currentLabel.albumUrls = urls; //placing urls
-  });
-
-  var albumsList = currentLabel.albumUrls.map(async (url) => {
-    return await getAlbumInfo(url);
-  });
-  await Promise.all(albumsList).then((albums) => {
-    let albList = [],
-      metaList = [];
-    albums.map(async (album) => {
-      const alInfo = composeAlbumInfo(album, {
-        name: snhMonitor.title,
-        website: snhMonitor.website,
-      });
-      // const curAlbum = new albumModel({
-      //   ...composeAlbumInfo(album, {
-      //     name: snhMonitor.title,
-      //     website: snhMonitor.website,
-      //   }),
-      // });
-      // albumModel.findOne({ id: curAlbum.id }, (err, doc) => {
-      //   if (!err) {
-      //     if (!doc) {
-      //       doc = curAlbum;
-      //       console.log(
-      //         `New release found: ${curAlbum.title} by ${curAlbum.artist}`
-      //       );
-      //       doc.save((err) => (err ? console.log(err) : null));
-      //     } /*if (!isUpToDate(alInfo, doc))*/ else {
-      //       albumModel.updateOne({ id: curAlbum.id }, alInfo, (err) =>
-      //         err ? console.log(err) : null
-      //       );
-      //       //console.log(`Updated: ${curAlbum.title} by ${curAlbum.artist}`);
-      //     }
-      //   }
-      // });
-      albList = [...albList, alInfo];
-      const curAlbumMeta = new albumModel({
-        ...composeMetaAlbumInfo(album, {
-          name: snhMonitor.title,
-          website: snhMonitor.website,
-        }),
-      });
-      metaList = [...metaList, curAlbumMeta];
-      FixImageUrl(alInfo.url, albList);
-    });
-
-    pushAlbumsToDatabase(albList);
-    currentLabel.albumData = albList; //placing info objects
-    currentLabel.metaAlbumData = metaList;
-
-    console.log(
-      `[${new Date(Date.now()).toLocaleString()}]: ${snhMonitor.title} updated`
-    );
-  });
+  getAlbumsFromLabel(snhMonitor);
 });
 snhMonitor.on("error", (error) =>
   console.log(
@@ -217,96 +192,8 @@ snhouterMonitor.on("up", async (res, state) => {
       snhouterMonitor.title
     }...`
   );
-  let currentLabel = labels.find((lbl) => lbl.name === snhouterMonitor.title);
 
-  const geturls = util.promisify(bcScraper.getAlbumUrls);
-  const getAlbumInfo = util.promisify(bcScraper.getAlbumInfo);
-
-  var urlsList = await geturls(currentLabel.url);
-  await Promise.all(urlsList).then((urls) => {
-    currentLabel.albumUrls = urls; //placing urls
-  });
-
-  var albumsList = currentLabel.albumUrls.map(async (url) => {
-    return await getAlbumInfo(url);
-  });
-  await Promise.all(albumsList).then((albums) => {
-    let albList = [],
-      metaList = [];
-    albums.map(async (album) => {
-      const alInfo = composeAlbumInfo(album, {
-        name: snhouterMonitor.title,
-        website: snhouterMonitor.website,
-      });
-      // const curAlbum = new albumModel({
-      //   ...composeAlbumInfo(album, {
-      //     name: snhouterMonitor.title,
-      //     website: snhouterMonitor.website,
-      //   }),
-      // });
-      // albumModel.findOne({ id: curAlbum.id }, (err, doc) => {
-      //   if (!err) {
-      //     if (!doc) {
-      //       doc = curAlbum;
-      //       console.log(
-      //         `New release found: ${curAlbum.title} by ${curAlbum.artist}`
-      //       );
-      //       doc.save((err) => (err ? console.log(err) : null));
-      //     } /*if (!isUpToDate(alInfo, doc))*/ else {
-      //       albumModel.updateOne({ id: curAlbum.id }, alInfo, (err) =>
-      //         err ? console.log(err) : null
-      //       );
-      //       //console.log(`Updated: ${curAlbum.title} by ${curAlbum.artist}`);
-      //     }
-      //   }
-      // });
-      albList = [...albList, alInfo];
-      const curAlbumMeta = new albumModel({
-        ...composeMetaAlbumInfo(album, {
-          name: snhouterMonitor.title,
-          website: snhouterMonitor.website,
-        }),
-      });
-      metaList = [...metaList, curAlbumMeta];
-    });
-
-    pushAlbumsToDatabase(albList);
-    currentLabel.albumData = albList; //placing info objects
-    currentLabel.metaAlbumData = metaList;
-
-    albList.map((alInfo) => {
-      Promise.resolve(FixImageUrl(alInfo.url, albList))
-        .then(
-          (result) => {
-            console.log(
-              `[${new Date(Date.now()).toLocaleString()}]: ${alInfo.title} by ${
-                alInfo.artist
-              }: Cover updated, ${result}`
-            );
-          },
-          (error) => {
-            console.log(
-              `[${new Date(Date.now()).toLocaleString()}]: ${alInfo.title} by ${
-                alInfo.artist
-              }: ${error}`
-            );
-          }
-        )
-        .catch((err) => {
-          console.log(
-            `[${new Date(Date.now()).toLocaleString()}]: ${alInfo.title} by ${
-              alInfo.artist
-            }: Exception: ${err.message}`
-          );
-        });
-    });
-
-    console.log(
-      `[${new Date(Date.now()).toLocaleString()}]: ${
-        snhouterMonitor.title
-      } updated`
-    );
-  });
+  getAlbumsFromLabel(snhouterMonitor);
 });
 snhouterMonitor.on("error", (error) =>
   console.log(
@@ -357,6 +244,7 @@ const composeAlbumInfo = (albumData, label) => {
     about: albumData.raw.current.about,
     credits: albumData.raw.current.credits,
     label: label,
+    isAvailable: true,
   };
 };
 

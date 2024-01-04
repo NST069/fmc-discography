@@ -31,6 +31,7 @@ const albumSchema = mongoose.Schema({
   about: String,
   credits: String,
   label: { name: String, website: String },
+  isAvailable: Boolean,
 });
 
 module.exports = albumSchema;
