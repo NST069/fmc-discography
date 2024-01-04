@@ -91,14 +91,14 @@ channelMonitor.on("up", async (res, state) => {
     }...`
   );
 
-  ytch.getChannelVideos(channelId, "newest").then(async (videos) => {
+  ytch.getChannelVideos({channelId: channelId, sortBy: "newest"}).then(async (videos) => {
     videosInfo = videos.items;
     //pushVideosToDatabase(videos.items);
     let cont = videos.continuation;
     try {
       while (cont != null) {
         //console.log(cont);
-        await ytch.getChannelVideosMore(cont).then((videos) => {
+        await ytch.getChannelVideosMore({continuation: cont}).then((videos) => {
           videosInfo = [...videosInfo, ...videos.items];
           //pushVideosToDatabase(videos.items);
           cont = videos.continuation;
