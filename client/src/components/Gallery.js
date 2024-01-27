@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
+import ImageCardSmall from "./ImageCardSmall";
 import ImageCard from "./ImageCard";
-import ImagePage from "./ImagePage";
 import Loading from "./Loading";
 
 import Slider from "react-slick";
@@ -36,7 +36,7 @@ const Gallery = ({ loading, images, getArts }) => {
             ) : (
               images.map((image) => (
                 <div key={image.deviationId}>
-                  <ImageCard image={image} />
+                  <ImageCardSmall image={image} />
                 </div>
               ))
             )}
@@ -48,14 +48,14 @@ const Gallery = ({ loading, images, getArts }) => {
           {loading ? (
             <Loading />
           ) : (
-            <div>
-              <Slider className="mx-10" {...settings}>
+            <div className="grid place-items-center min-h-screen bg-gradient-to-b from-black to-gray-900 p-5">
+              <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-5">
                 {images.map((image) => (
                   <div key={image.deviationId}>
-                    <ImagePage image={image} index={images.indexOf(image)} />
+                    <ImageCard image={image} index={images.indexOf(image)} />
                   </div>
                 ))}
-              </Slider>
+              </section>
             </div>
           )}
         </div>
