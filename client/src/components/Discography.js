@@ -251,8 +251,8 @@ const Discography = ({
 
       {showModal ? (
         <div>
-          <div className="justify-center items-center container md:flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-            <div className="relative w-auto my-6 mx-auto max-w-3xl">
+          <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none h-screen">
+            <div className="relative w-auto my-6 mx-auto" style={{maxHeight: "80vh"}}>
               <ReleasePage
                 loading={loadingPage}
                 currentAlbum={currentAlbum}

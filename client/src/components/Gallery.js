@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import ImageCardSmall from "./ImageCardSmall";
 import ImageCard from "./ImageCard";
@@ -22,6 +22,17 @@ const Gallery = ({ loading, images, getArts }) => {
   useEffect(() => {
     getArts();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const [showModal, setShowModal] = useState(false);
+  const [selectedImage, setSelectedImage] = useState({});
+
+  useEffect(() => {
+    showModal && (document.body.style.overflow = "hidden");
+    !showModal && (document.body.style.overflow = "unset");
+  }, [showModal]);
+
+  const openModal = () => setShowModal(true);
+  const closeModal = () => setShowModal(false);
 
   return (
     <div>
@@ -52,7 +63,7 @@ const Gallery = ({ loading, images, getArts }) => {
               <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-5">
                 {images.map((image) => (
                   <div key={image.deviationId}>
-                    <ImageCard image={image} index={images.indexOf(image)} />
+                    <ImageCard image={image} index={images.indexOf(image)} openModal={openModal} setSelectedImage={setSelectedImage} />
                   </div>
                 ))}
               </section>
@@ -60,6 +71,22 @@ const Gallery = ({ loading, images, getArts }) => {
           )}
         </div>
       </div>
+
+      {showModal ? (
+        <div>
+          <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+            <div className="relative w-auto my-6 mx-auto">
+              <img className="max-h-screen rounded-lg" src={selectedImage.content.src} alt={selectedImage.title} onClick={()=>{
+                setSelectedImage();
+                closeModal();
+                }
+              }/>
+              
+            </div>
+          </div>
+          <div className="opacity-25 fixed inset-0 z-10 bg-black"></div>
+        </div>
+      ) : null}
     </div>
   );
 };

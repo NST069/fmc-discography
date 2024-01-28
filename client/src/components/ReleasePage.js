@@ -38,7 +38,7 @@ const ReleasePage = ({ loading, currentAlbum, closeModal }) => {
       {loading ? (
         <Loading />
       ) : (
-        <div className="bg-gray-900 rounded-md flex-grow md:overflow-hidden">
+        <div className="bg-gray-900 rounded-md flex-grow">
           <div className="flex flex-col md:flex-row justify-between bg-gray-800">
             <button
               onClick={(event) => {
@@ -53,7 +53,7 @@ const ReleasePage = ({ loading, currentAlbum, closeModal }) => {
               {currentAlbum.title} by {currentAlbum.artist}
             </p>
           </div>
-          <div className="m-3">
+          <div className="m-3 overflow-x-hidden overflow-y-auto">
             <div className="flex flex-wrap -mx-2">
               <div className="w-full md:w-1/3 px-2">
                 <img
